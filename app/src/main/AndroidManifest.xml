@@ -13,13 +13,13 @@
         android:theme="@style/Theme.YouTube"
         tools:targetApi="31">
         <activity
-            android:name=".videoDisplay.VideoDisplay"
+            android:name=".videoDisplay.VideoDisplayActivity"
             android:exported="false" />
         <activity
-            android:name=".addVideo.AddVideo"
+            android:name=".addVideo.AddVideoActivity"
             android:exported="false" />
         <activity
-            android:name=".MainActivity"
+            android:name=".videoListDisplay.MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
