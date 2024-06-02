@@ -3,10 +3,10 @@ package com.example.youtube.videoListDisplay;
 public class Video {
     private String title;
     private String description;
-    private int videoResId;
+    private String videoResId;
 
     // Constructor
-    public Video(String title, String description, int videoResId) {
+    public Video(String title, String description, String videoResId) {
         this.title = title;
         this.description = description;
         this.videoResId = videoResId;
@@ -29,9 +29,11 @@ public class Video {
         this.description = description;
     }
 
-    public int getVideoResId() { return videoResId; }
+    public String getVideoResId() {
+        return videoResId;
+    }
 
-    public void setVideoResId(int videoResId) {
+    public void setVideoResId(String videoResId) {
         this.videoResId = videoResId;
     }
 }

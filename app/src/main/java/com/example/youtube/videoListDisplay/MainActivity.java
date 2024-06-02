@@ -1,8 +1,9 @@
 package com.example.youtube.videoListDisplay;
 
+import static android.content.ContentValues.TAG;
+
 import android.os.Bundle;
-import android.text.Editable;
-import android.text.TextWatcher;
+import android.util.Log;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -13,9 +14,15 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.youtube.R;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
-import java.util.ArrayList;
+import java.io.IOException;
+import java.io.InputStream;
+import java.lang.reflect.Type;
 import java.util.List;
+import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
     private RecyclerView recyclerView;
@@ -42,13 +49,16 @@ public class MainActivity extends AppCompatActivity {
         // Initialize RecyclerView
         recyclerView = findViewById(R.id.rvListVideo);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
+// Load videos from JSON
+        videoList = loadVideosFromJson();
 
-        // Initialize Adapter
-        videoAdapter = new VideoAdapter(videoList);
-        recyclerView.setAdapter(videoAdapter);
+        if (videoList != null) {
+            videoAdapter = new VideoAdapter(videoList, this);
+            recyclerView.setAdapter(videoAdapter);
+        } else {
+            Log.e(TAG, "Failed to load video list.");
+        }
 
-        // Load initial data
-        loadVideos();
 
         etSearchBar = findViewById(R.id.etSearchBar);
         // Implement the search functionality
@@ -56,22 +66,31 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    private void loadVideos() {
-        // Add sample videos to the list
-        videoList.add(new Video("video 1", "Description for video 1", R.raw.video1));
-        videoList.add(new Video("video 2", "Description for video 2", R.raw.video1));
-        videoList.add(new Video("video 3", "Description for video 3", R.raw.video1));
-        videoList.add(new Video("video 4", "Description for video 4", R.raw.video1));
-        videoList.add(new Video("video 5", "Description for video 5", R.raw.video1));
-        videoList.add(new Video("video 6", "Description for video 6", R.raw.video1));
-        videoList.add(new Video("video 7", "Description for video 7", R.raw.video1));
-        videoList.add(new Video("video 8", "Description for video 8", R.raw.video1));
-        videoList.add(new Video("video 9", "Description for video 9", R.raw.video1));
-        videoList.add(new Video("video 10", "Description for video 10", R.raw.video1));
+    private List<Video> loadVideosFromJson() {
+        String json = null;
 
-        // Notify the adapter that the data set has changed
-        videoAdapter.notifyDataSetChanged();
+        try {
+            InputStream is = getAssets().open("videos.json");
+            int size = is.available();
+            byte[] buffer = new byte[size];
+            is.read(buffer);
+            is.close();
+            json = new String(buffer, StandardCharsets.UTF_8);
+            Log.d(TAG, "JSON content: " + json);  // Debugging statement
+        } catch (IOException ex) {
+            ex.printStackTrace();
+            return null;
+        }
+
+
+        Gson gson = new Gson();
+        Type videoListType = new TypeToken<List<Video>>() {
+        }.getType();
+        return gson.fromJson(json, videoListType);
     }
 
+    public int getRawResIdByName(String resName) {
+        String packageName = getPackageName();
+        return getResources().getIdentifier(resName, "raw", packageName);
+    }
 }
-

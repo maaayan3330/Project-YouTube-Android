@@ -13,18 +13,15 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.youtube.R;
 
-import java.util.ArrayList;
 import java.util.List;
 
-public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.VideoViewHolder>  {
+public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.VideoViewHolder> {
     private List<Video> videoList;
-    private List<Video> videoListFull;
     private Context context;
 
-    VideoAdapter(List<Video> videoList) {
+    public VideoAdapter(List<Video> videoList, Context context) {
         this.videoList = videoList;
-        this.videoListFull = new ArrayList<>(videoList); // Make a copy of the full list
-
+        this.context = context;
     }
 
 
@@ -58,8 +55,10 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.VideoViewHol
         holder.tvTitle.setText(video.getTitle());
         holder.tvDescription.setText(video.getDescription());
 
-        // Set the video path for the VideoView
-        String videoPath = "android.resource://" + context.getPackageName() + "/" + video.getVideoResId();
+        // Get the video resource ID
+        int videoResId = ((MainActivity) context).getRawResIdByName(video.getVideoResId());
+        String videoPath = "android.resource://" + context.getPackageName() + "/" + videoResId;
+
         holder.vvVideo.setVideoPath(videoPath);
         holder.vvVideo.seekTo(1); // Seek to 1 ms to show the first frame as a preview
 
