@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">YouTube</string>
+    <string name="username">Username</string>
+    <string name="password">Password</string>
+    <string name="log_in">Log in</string>
+    <string name="regist_click">Not registered yet? click here</string>
+    <string name="password_restrictions">Password must be 8 characters long, and contain numbers, English letters, uppercase letters and symbols.</string>
 </resources>
