@@ -1,6 +1,8 @@
 package com.example.youtube.videoListDisplay;
 
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -19,6 +21,8 @@ public class MainActivity extends AppCompatActivity {
     private RecyclerView recyclerView;
     private VideoAdapter videoAdapter;
     private List<Video> videoList = new ArrayList<>();
+    private EditText etSearchBar;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,24 +32,27 @@ public class MainActivity extends AppCompatActivity {
 
 
         Button btnSignIn = findViewById(R.id.btnSignIn);
-        EditText searchBar = findViewById(R.id.etSearchBar);
-
         // Set up sign-in button click listener
         btnSignIn.setOnClickListener(v -> {
             // Handle sign-in action
             Toast.makeText(this, "Sign In Clicked", Toast.LENGTH_SHORT).show();
         });
 
+
         // Initialize RecyclerView
         recyclerView = findViewById(R.id.rvListVideo);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         // Initialize Adapter
-         videoAdapter = new VideoAdapter(videoList);
+        videoAdapter = new VideoAdapter(videoList);
         recyclerView.setAdapter(videoAdapter);
 
         // Load initial data
         loadVideos();
+
+        etSearchBar = findViewById(R.id.etSearchBar);
+        // Implement the search functionality
+
 
     }
 

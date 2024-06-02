@@ -4,22 +4,27 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Filter;
+import android.widget.Filterable;
 import android.widget.TextView;
 import android.widget.VideoView;
 
-import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.youtube.R;
 
+import java.util.ArrayList;
 import java.util.List;
 
-public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.VideoViewHolder> {
+public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.VideoViewHolder>  {
     private List<Video> videoList;
+    private List<Video> videoListFull;
     private Context context;
 
     VideoAdapter(List<Video> videoList) {
         this.videoList = videoList;
+        this.videoListFull = new ArrayList<>(videoList); // Make a copy of the full list
+
     }
 
 
@@ -48,7 +53,7 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.VideoViewHol
 
     // Method to bind data to the views in each ViewHolder
     @Override
-    public void onBindViewHolder( VideoViewHolder holder, int position) {
+    public void onBindViewHolder(VideoViewHolder holder, int position) {
         Video video = videoList.get(position);
         holder.tvTitle.setText(video.getTitle());
         holder.tvDescription.setText(video.getDescription());
@@ -67,9 +72,4 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.VideoViewHol
         return videoList.size();
     }
 
-    // Method to update the video list and notify the adapter
-    public void updateVideoList(List<Video> newVideoList) {
-        videoList = newVideoList;
-        notifyDataSetChanged();
-    }
 }

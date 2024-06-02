@@ -20,7 +20,7 @@
 
         <!-- YouTube Logo -->
         <ImageView
-            android:id="@+id/imageView"
+            android:id="@+id/ivLogo"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="5dp"
@@ -40,23 +40,22 @@
         <EditText
             android:id="@+id/etSearchBar"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:hint="Search"
+            android:layout_height="0dp"
             android:layout_marginStart="5dp"
             android:layout_marginEnd="5dp"
-
+            android:hint="Search"
             android:minHeight="48dp"
             android:padding="8dp"
+
+            android:singleLine="true"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/btnSignIn"
             app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toEndOf="@+id/imageView"
+            app:layout_constraintStart_toEndOf="@+id/ivLogo"
             app:layout_constraintTop_toTopOf="parent"
-
             app:layout_constraintVertical_bias="0.5" />
 
         <Button
-
             android:id="@+id/btnSignIn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
