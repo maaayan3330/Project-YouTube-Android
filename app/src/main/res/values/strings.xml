@@ -5,4 +5,8 @@
     <string name="log_in">Log in</string>
     <string name="regist_click">Not registered yet? click here</string>
     <string name="password_restrictions">Password must be 8 characters long, and contain numbers, English letters, uppercase letters and symbols.</string>
+    <string name="Verificationpassword">Password verification</string>
+    <string name="sign_up">Sign Up</string>
+    <string name="SignUp_click">Already registered? Click here</string>
+    <string name="Nickname">Nickname</string>
 </resources>
