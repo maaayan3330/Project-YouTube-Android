@@ -9,4 +9,9 @@
     <string name="sign_up">Sign Up</string>
     <string name="SignUp_click">Already registered? Click here</string>
     <string name="Nickname">Nickname</string>
+
+
+    // alon
+    <string name="youtube_logo">youTube</string>
+
 </resources>
