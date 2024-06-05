@@ -2,6 +2,9 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <uses-feature
+        android:name="android.hardware.camera"
+        android:required="false" />
     <application
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
@@ -13,10 +16,19 @@
         android:theme="@style/Theme.YouTube"
         tools:targetApi="31">
         <activity
+            android:name=".SignUpActivity"
+            android:exported="false"/>
+        <activity
+            android:name=".addVideo.AddVideoActivity"
+            android:exported="false" />
+        <activity
+            android:name=".videoDisplay.VideoDisplayActivity"
+            android:exported="false" />
+        <activity
             android:name=".RegistrationActivity2"
             android:exported="false" />
         <activity
-            android:name=".SignUpActivity"
+            android:name=".videoListDisplay.MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
