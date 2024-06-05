@@ -38,6 +38,7 @@ public class MainActivity extends AppCompatActivity {
         // Set the layout for this activity
         setContentView(R.layout.activity_main);
 
+        // -----------------------------------------------------change button
         // Initialize sign-in button and set its click listener
         Button btnSignIn = findViewById(R.id.btnSignIn);
         btnSignIn.setOnClickListener(v -> {
