@@ -7,7 +7,7 @@
     android:layout_marginTop="10dp"
     android:background="@color/white"
     android:orientation="vertical"
-    tools:context=".videoListDisplay.MainActivity">
+    tools:context=".videoList.VideoListActivity">
 
     <!-- RecyclerView for displaying the list of videos -->
     <androidx.constraintlayout.widget.ConstraintLayout

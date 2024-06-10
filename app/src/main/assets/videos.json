@@ -2,51 +2,51 @@
   {
     "title": "Inception",
     "description": "A mind-bending thriller by Christopher Nolan.",
-    "videoResId": "video1"
+    "videoResId": "inception"
   },
   {
     "title": "The Shawshank Redemption",
     "description": "An inspiring story of hope and friendship.",
-    "videoResId": "video1"
+    "videoResId": "the_shawshank_redemption"
   },
   {
     "title": "The Godfather",
     "description": "A classic mafia drama.",
-    "videoResId": "video1"
+    "videoResId": "the_godfather"
   },
   {
     "title": "The Dark Knight",
     "description": "Batman faces off against the Joker.",
-    "videoResId": "video1"
+    "videoResId": "the_dark_knight"
   },
   {
     "title": "Pulp Fiction",
     "description": "A series of interconnected stories by Quentin Tarantino.",
-    "videoResId": "video1"
+    "videoResId": "pulp_fiction"
   },
   {
     "title": "Schindler's List",
     "description": "A true story of a man who saved thousands during the Holocaust.",
-    "videoResId": "video1"
+    "videoResId": "schindlers_list"
   },
   {
     "title": "The Lord of the Rings: The Return of the King",
     "description": "The epic conclusion to the Lord of the Rings trilogy.",
-    "videoResId": "video1"
+    "videoResId": "the_lord_of_the_rings"
   },
   {
     "title": "Fight Club",
     "description": "A dark and twisted tale of identity and rebellion.",
-    "videoResId": "video1"
+    "videoResId": "fight_club"
   },
   {
     "title": "Forrest Gump",
     "description": "The life story of an extraordinary man.",
-    "videoResId": "video1"
+    "videoResId": "forrest_gump"
   },
   {
     "title": "The Matrix",
     "description": "A hacker discovers the reality is an illusion.",
-    "videoResId": "video1"
+    "videoResId": "the_matrix"
   }
 ]
