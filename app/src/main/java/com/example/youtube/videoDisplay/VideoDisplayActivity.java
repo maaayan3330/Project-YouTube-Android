@@ -2,7 +2,10 @@ package com.example.youtube.videoDisplay;
 
 import android.content.res.Configuration;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 import android.widget.VideoView;
 import android.view.ViewGroup;
 
@@ -56,6 +59,21 @@ public class VideoDisplayActivity extends AppCompatActivity {
         // Set the video path and start playing
         vvVideo.setVideoPath(videoPath);
         vvVideo.start();
+
+        ImageView likeButton = findViewById(R.id.iv_like);
+        likeButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                v.setSelected(!v.isSelected());
+                if (v.isSelected()) {
+                    // Perform actions when selected
+                    Toast.makeText(getApplicationContext(), "Liked!", Toast.LENGTH_SHORT).show();
+                } else {
+                    // Perform actions when unselected
+                    Toast.makeText(getApplicationContext(), "Unliked!", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
     }
 
     /**
