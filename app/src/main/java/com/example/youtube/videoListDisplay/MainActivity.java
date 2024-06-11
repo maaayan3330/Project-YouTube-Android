@@ -1,5 +1,6 @@
 package com.example.youtube.videoListDisplay;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.Toast;
@@ -10,6 +11,8 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.youtube.R;
+
+import com.example.youtube.SignUpPage.SignUpActivity;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
@@ -38,14 +41,6 @@ public class MainActivity extends AppCompatActivity {
         // Set the layout for this activity
         setContentView(R.layout.activity_main);
 
-        // -----------------------------------------------------change button
-        // Initialize sign-in button and set its click listener
-        Button btnSignIn = findViewById(R.id.btnSignIn);
-        btnSignIn.setOnClickListener(v -> {
-            // Handle sign-in action
-            Toast.makeText(this, "Sign In Clicked", Toast.LENGTH_SHORT);
-        });
-
         // Initialize RecyclerView
         rvListVideo = findViewById(R.id.rvListVideo);
         rvListVideo.setLayoutManager(new LinearLayoutManager(this)); // Set layout manager
@@ -56,6 +51,16 @@ public class MainActivity extends AppCompatActivity {
         // Set adapter to the RecyclerView
         videoAdapter = new VideoAdapter(videoList, this);
         rvListVideo.setAdapter(videoAdapter);
+
+
+        // here i connect the button to the next page - sign up only if the user is not have an account
+        //like hemi explain
+        Button buttonForSignUp = findViewById(R.id.btnSignIn);
+        buttonForSignUp.setOnClickListener(v -> {
+            Intent intent = new Intent(this, SignUpActivity.class);
+            //start a new activity
+            startActivity(intent);
+        });
     }
 
     /**

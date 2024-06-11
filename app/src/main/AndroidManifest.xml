@@ -16,7 +16,7 @@
         android:theme="@style/Theme.YouTube"
         tools:targetApi="31">
         <activity
-            android:name=".SignUpActivity"
+            android:name=".SignUpPage.SignUpActivity"
             android:exported="false"/>
         <activity
             android:name=".addVideo.AddVideoActivity"
@@ -25,7 +25,7 @@
             android:name=".videoDisplay.VideoDisplayActivity"
             android:exported="false" />
         <activity
-            android:name=".RegistrationActivity2"
+            android:name=".RegistrationPage.RegistrationActivity2"
             android:exported="false" />
         <activity
             android:name=".videoListDisplay.MainActivity"
