@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white"
+    android:visibility="visible"
     tools:context=".videoDisplay.VideoDisplayActivity">
 
     <!-- Video view for playing the video -->
@@ -14,8 +14,8 @@
         android:id="@+id/vvVideo"
         android:layout_width="wrap_content"
         android:layout_height="200dp"
-        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBaseline_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -27,9 +27,9 @@
         android:padding="8dp"
         android:text="Title video"
         android:textStyle="bold"
-        app:layout_constraintTop_toBottomOf="@+id/vvVideo"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/vvVideo" />
 
     <!-- Description of the video -->
     <TextView
@@ -38,9 +38,9 @@
         android:layout_height="wrap_content"
         android:padding="8dp"
         android:text="Description video"
-        app:layout_constraintTop_toBottomOf="@+id/tvTitle"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/tvTitle" />
 
     <!-- Buttons for like, share, and comment actions -->
     <LinearLayout
@@ -54,13 +54,13 @@
             android:id="@+id/iv_like"
             android:layout_width="48dp"
             android:layout_height="48dp"
-            android:src="@drawable/like_button_selector"
-            android:contentDescription="@string/like_button_desc"
-            android:padding="8dp"
             android:background="?attr/selectableItemBackgroundBorderless"
-            android:scaleType="centerInside"
             android:clickable="true"
-            android:focusable="true" />
+            android:contentDescription="@string/like_button_desc"
+            android:focusable="true"
+            android:padding="8dp"
+            android:scaleType="centerInside"
+            android:src="@drawable/like_button_selector" />
 
         <Button
             android:id="@+id/shareButton"
@@ -78,8 +78,8 @@
         android:layout_height="wrap_content"
         android:background="@drawable/edit_text_background"
         android:hint="Add a comment"
-        android:singleLine="true"
         android:minHeight="48dp"
+        android:singleLine="true"
         app:layout_constraintEnd_toStartOf="@+id/postCommentButton"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/llButtons" />
@@ -98,7 +98,7 @@
         android:id="@+id/rvComments"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@+id/postCommentButton"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/postCommentButton" />
 </androidx.constraintlayout.widget.ConstraintLayout>

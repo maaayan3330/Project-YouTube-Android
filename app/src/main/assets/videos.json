@@ -2,51 +2,151 @@
   {
     "title": "Inception",
     "description": "A mind-bending thriller by Christopher Nolan.",
-    "videoResId": "inception"
+    "videoResId": "inception",
+    "comments": [
+      {
+        "author": "User1",
+        "comment": "Great movie!"
+      },
+      {
+        "author": "User2",
+        "comment": "Loved the ending!"
+      }
+    ]
   },
   {
     "title": "The Shawshank Redemption",
     "description": "An inspiring story of hope and friendship.",
-    "videoResId": "the_shawshank_redemption"
+    "videoResId": "the_shawshank_redemption",
+    "comments": [
+      {
+        "author": "User3",
+        "comment": "A must-watch!"
+      },
+      {
+        "author": "User4",
+        "comment": "Timeless classic."
+      }
+    ]
   },
   {
     "title": "The Godfather",
     "description": "A classic mafia drama.",
-    "videoResId": "the_godfather"
+    "videoResId": "the_godfather",
+    "comments": [
+      {
+        "author": "User5",
+        "comment": "Best mafia movie ever!"
+      },
+      {
+        "author": "User6",
+        "comment": "Al Pacino was amazing."
+      }
+    ]
   },
   {
     "title": "The Dark Knight",
     "description": "Batman faces off against the Joker.",
-    "videoResId": "the_dark_knight"
+    "videoResId": "the_dark_knight",
+    "comments": [
+      {
+        "author": "User7",
+        "comment": "Heath Ledger was phenomenal."
+      },
+      {
+        "author": "User8",
+        "comment": "Best Batman movie!"
+      }
+    ]
   },
   {
     "title": "Pulp Fiction",
     "description": "A series of interconnected stories by Quentin Tarantino.",
-    "videoResId": "pulp_fiction"
+    "videoResId": "pulp_fiction",
+    "comments": [
+      {
+        "author": "User9",
+        "comment": "A masterpiece of storytelling."
+      },
+      {
+        "author": "User10",
+        "comment": "Tarantino's best work."
+      }
+    ]
   },
   {
     "title": "Schindler's List",
     "description": "A true story of a man who saved thousands during the Holocaust.",
-    "videoResId": "schindlers_list"
+    "videoResId": "schindlers_list",
+    "comments": [
+      {
+        "author": "User11",
+        "comment": "A very touching and important movie."
+      },
+      {
+        "author": "User12",
+        "comment": "Liam Neeson was incredible."
+      }
+    ]
   },
   {
     "title": "The Lord of the Rings: The Return of the King",
     "description": "The epic conclusion to the Lord of the Rings trilogy.",
-    "videoResId": "the_lord_of_the_rings"
+    "videoResId": "the_lord_of_the_rings",
+    "comments": [
+      {
+        "author": "User13",
+        "comment": "An epic finale to an amazing trilogy."
+      },
+      {
+        "author": "User14",
+        "comment": "Peter Jackson did a fantastic job."
+      }
+    ]
   },
   {
     "title": "Fight Club",
     "description": "A dark and twisted tale of identity and rebellion.",
-    "videoResId": "fight_club"
+    "videoResId": "fight_club",
+    "comments": [
+      {
+        "author": "User15",
+        "comment": "Mind-blowing movie."
+      },
+      {
+        "author": "User16",
+        "comment": "One of the best plot twists ever."
+      }
+    ]
   },
   {
     "title": "Forrest Gump",
     "description": "The life story of an extraordinary man.",
-    "videoResId": "forrest_gump"
+    "videoResId": "forrest_gump",
+    "comments": [
+      {
+        "author": "User17",
+        "comment": "Inspiring and heartwarming."
+      },
+      {
+        "author": "User18",
+        "comment": "Tom Hanks' best performance."
+      }
+    ]
   },
   {
     "title": "The Matrix",
     "description": "A hacker discovers the reality is an illusion.",
-    "videoResId": "the_matrix"
+    "videoResId": "the_matrix",
+    "comments": [
+      {
+        "author": "User19",
+        "comment": "A groundbreaking sci-fi movie."
+      },
+      {
+        "author": "User20",
+        "comment": "Changed the way we see action movies."
+      }
+    ]
   }
 ]

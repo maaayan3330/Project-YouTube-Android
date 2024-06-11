@@ -15,9 +15,13 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.youtube.R;
 import com.example.youtube.videoList.Video;
+
+import java.util.List;
 
 
 /**
@@ -25,6 +29,8 @@ import com.example.youtube.videoList.Video;
  */
 public class VideoDisplayActivity extends AppCompatActivity {
     private VideoView vvVideo; // VideoView for playing the video
+    private RecyclerView rvCommentsRecyclerView;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,13 +45,13 @@ public class VideoDisplayActivity extends AppCompatActivity {
 
         // Initialize views
         vvVideo = findViewById(R.id.vvVideo);
-        // TextView for displaying the video title
         TextView titleView = findViewById(R.id.tvTitle);
-        // TextView for displaying the video description
         TextView tvDescription = findViewById(R.id.tvDescription);
+        rvCommentsRecyclerView = findViewById(R.id.rvComments);
+        rvCommentsRecyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         // Get data from intent
-        Video video= (Video) getIntent().getSerializableExtra("extra_video");
+        Video video = (Video) getIntent().getSerializableExtra("extra_video");
 
 
         // Set data to views
@@ -74,6 +80,12 @@ public class VideoDisplayActivity extends AppCompatActivity {
                 }
             }
         });
+
+        List<Comment> commentList = video.getComments();
+        if (commentList != null) {
+            CommentAdapter commentAdapter = new CommentAdapter(commentList);
+            rvCommentsRecyclerView.setAdapter(commentAdapter);
+        }
     }
 
     /**
