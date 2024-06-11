@@ -6,6 +6,9 @@ import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.graphics.Insets;
+import androidx.core.view.ViewCompat;
+import androidx.core.view.WindowInsetsCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -24,19 +27,17 @@ import java.util.ArrayList;
  * MainActivity class for displaying a list of videos.
  */
 public class VideoListActivity extends AppCompatActivity {
-    private RecyclerView rvListVideo; // RecyclerView for displaying the video list
-    private VideoAdapter videoAdapter; // Adapter for the RecyclerView
-    private List<Video> videoList = new ArrayList<>(); // List to hold video data
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        // Enable edge-to-edge content
         EdgeToEdge.enable(this);
-
-        // Set the layout for this activity
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_list_video);
+        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
+            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
+            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
+            return insets;
+        });
 
         // -----------------------------------------------------change button
         // Initialize sign-in button and set its click listener
@@ -47,14 +48,17 @@ public class VideoListActivity extends AppCompatActivity {
         });
 
         // Initialize RecyclerView
-        rvListVideo = findViewById(R.id.rvListVideo);
+        // RecyclerView for displaying the video list
+        RecyclerView rvListVideo = findViewById(R.id.rvListVideo);
         rvListVideo.setLayoutManager(new LinearLayoutManager(this)); // Set layout manager
 
         // Load videos from JSON
-        videoList = loadVideosFromJson();
+        // List to hold video data
+        List<Video> videoList = loadVideosFromJson();
 
         // Set adapter to the RecyclerView
-        videoAdapter = new VideoAdapter(videoList, this);
+        // Adapter for the RecyclerView
+        VideoAdapter videoAdapter = new VideoAdapter(videoList, this);
         rvListVideo.setAdapter(videoAdapter);
     }
 

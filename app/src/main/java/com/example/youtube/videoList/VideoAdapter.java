@@ -92,9 +92,7 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.VideoViewHol
         // Set click listener to play video on click
         holder.itemView.setOnClickListener(v -> {
             Intent intent = new Intent(context, VideoDisplayActivity.class);
-            intent.putExtra("title", video.getTitle());
-            intent.putExtra("description", video.getDescription());
-            intent.putExtra("videoResId", video.getVideoResId());
+            intent.putExtra("extra_video", video);
             context.startActivity(intent);
         });
     }

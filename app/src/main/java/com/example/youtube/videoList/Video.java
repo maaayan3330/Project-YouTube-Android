@@ -1,9 +1,12 @@
 package com.example.youtube.videoList;
 
+
+import java.io.Serializable;
+
 /**
  * Represents a video with a title, description, and resource ID.
  */
-public class Video {
+public class Video implements Serializable {
     private String title;       // Title of the video
     private String description; // Description of the video
     private String videoResId;  // Resource ID of the video

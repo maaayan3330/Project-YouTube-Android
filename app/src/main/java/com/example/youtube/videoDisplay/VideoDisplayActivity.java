@@ -6,10 +6,15 @@ import android.widget.TextView;
 import android.widget.VideoView;
 import android.view.ViewGroup;
 
+import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.graphics.Insets;
+import androidx.core.view.ViewCompat;
+import androidx.core.view.WindowInsetsCompat;
 
 import com.example.youtube.R;
+import com.example.youtube.videoList.Video;
 
 
 /**
@@ -17,30 +22,35 @@ import com.example.youtube.R;
  */
 public class VideoDisplayActivity extends AppCompatActivity {
     private VideoView vvVideo; // VideoView for playing the video
-    private TextView titleView; // TextView for displaying the video title
-    private TextView tvDescription; // TextView for displaying the video description
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        EdgeToEdge.enable(this);
         setContentView(R.layout.activity_video_display);
+        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
+            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
+            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
+            return insets;
+        });
 
         // Initialize views
         vvVideo = findViewById(R.id.vvVideo);
-        titleView = findViewById(R.id.tvTitle);
-        tvDescription = findViewById(R.id.tvDescription);
+        // TextView for displaying the video title
+        TextView titleView = findViewById(R.id.tvTitle);
+        // TextView for displaying the video description
+        TextView tvDescription = findViewById(R.id.tvDescription);
 
         // Get data from intent
-        String title = getIntent().getStringExtra("title");
-        String description = getIntent().getStringExtra("description");
-        String videoResId = getIntent().getStringExtra("videoResId");
+        Video video= (Video) getIntent().getSerializableExtra("extra_video");
+
 
         // Set data to views
-        titleView.setText(title);
-        tvDescription.setText(description);
+        titleView.setText(video.getTitle());
+        tvDescription.setText(video.getDescription());
 
         // Get the video resource ID
-        int videoResIdInt = getRawResIdByName(videoResId);
+        int videoResIdInt = getRawResIdByName(video.getVideoResId());
         String videoPath = "android.resource://" + getPackageName() + "/" + videoResIdInt;
 
         // Set the video path and start playing
