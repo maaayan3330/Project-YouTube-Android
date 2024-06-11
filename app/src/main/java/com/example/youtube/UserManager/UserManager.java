@@ -5,9 +5,17 @@ import java.util.List;
 
 public class UserManager {
     private List<User> userList;
+    private static UserManager instance;
 
-    public UserManager() {
+    private UserManager() {
         userList = new ArrayList<>();
+    }
+
+    public static UserManager getInstance() {
+        if (instance == null) {
+            instance = new UserManager();
+        }
+        return instance;
     }
 
     public void addUser(String username, String password, String nickname) {
@@ -27,15 +35,7 @@ public class UserManager {
         }
         return false;
     }
-    public boolean getUserPassword(String password) {
-        for (User user : userList) {
-            if (user.getPassword().equals(password)) {
-                return true;
-            }
-        }
-        return false;
-    }
-    // for match password and username
+
     public boolean matchAccount(String username, String password) {
         for (User user : userList) {
             if (user.getPassword().equals(password) && user.getUsername().equals(username)) {

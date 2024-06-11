@@ -27,7 +27,7 @@ public class SignUpActivity extends AppCompatActivity {
         setContentView(R.layout.activity_sign_up);
 
         // Initialize UserManager
-        userManager = new UserManager();
+        userManager = UserManager.getInstance();
 
         // Find views by ID
         ImageView logoImage = findViewById(R.id.logoImage);
@@ -51,7 +51,6 @@ public class SignUpActivity extends AppCompatActivity {
 
             // Check if the user exists in the list of users
             boolean answerForUser = userManager.getUserName(username);
-            boolean answerForPassword = userManager.getUserPassword(password);
             boolean result = userManager.matchAccount(username, password);
 
             // If the user exists, navigate to the home page
@@ -71,6 +70,7 @@ public class SignUpActivity extends AppCompatActivity {
             }
         });
     }
+
     private void showCustomToast(String message) {
         LayoutInflater inflater = getLayoutInflater();
         View layout = inflater.inflate(R.layout.custom_toast, findViewById(R.id.custom_toast_container));
@@ -83,5 +83,4 @@ public class SignUpActivity extends AppCompatActivity {
         toast.setView(layout);
         toast.show();
     }
-
 }

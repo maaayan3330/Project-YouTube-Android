@@ -41,6 +41,7 @@ public class RegistrationActivity2 extends AppCompatActivity {
 
         passwordValidator = new PasswordValidator();
         uploadImage = new UploadImage(this);
+        userManager = UserManager.getInstance(); // קבלת instance של UserManager
 
         usernameEditText = findViewById(R.id.TextUserName);
         passwordEditText = findViewById(R.id.TextPassword);
@@ -64,7 +65,6 @@ public class RegistrationActivity2 extends AppCompatActivity {
             startActivity(intent);
         });
 
-
         // Add button click listener for registration
         Button registerButton = findViewById(R.id.registerButton);
         registerButton.setOnClickListener(new View.OnClickListener() {
@@ -83,7 +83,6 @@ public class RegistrationActivity2 extends AppCompatActivity {
 
                 // If the user is registered successfully, navigate to the login page
                 if (resultMessage.equals("User registered successfully")) {
-
                     // and also add the user to the list of users
                     userManager.addUser(usernameEditText.getText().toString(), passwordEditText.getText().toString(),
                             nicknameEditText.getText().toString());
