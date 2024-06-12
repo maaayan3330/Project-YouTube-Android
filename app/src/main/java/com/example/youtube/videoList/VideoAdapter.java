@@ -108,4 +108,9 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.VideoViewHol
     public int getItemCount() {
         return videoList.size();
     }
+
+    public void setFilterList(List<Video> filterList){
+        this.videoList=filterList;
+        notifyDataSetChanged();
+    }
 }

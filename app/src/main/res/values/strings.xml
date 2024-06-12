@@ -17,5 +17,7 @@
     <string name="share">share</string>
     <string name="post">post</string>
     <string name="add_a_comment">Add a comment</string>
+    <string name="search">search</string>
+    <string name="sign_in">sign in</string>
 
 </resources>

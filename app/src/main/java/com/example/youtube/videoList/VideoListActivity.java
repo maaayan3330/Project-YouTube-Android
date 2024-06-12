@@ -1,11 +1,13 @@
 package com.example.youtube.videoList;
 
+import android.content.Intent;
 import android.os.Bundle;
-import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.SearchView;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
@@ -13,20 +15,23 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.youtube.R;
+import com.example.youtube.SignUpActivity;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Type;
+import java.util.ArrayList;
 import java.util.List;
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
 
 /**
  * MainActivity class for displaying a list of videos.
  */
 public class VideoListActivity extends AppCompatActivity {
+    List<Video> videoList;
+    VideoAdapter videoAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,13 +44,6 @@ public class VideoListActivity extends AppCompatActivity {
             return insets;
         });
 
-        // -----------------------------------------------------change button
-        // Initialize sign-in button and set its click listener
-        Button btnSignIn = findViewById(R.id.btnSignIn);
-        btnSignIn.setOnClickListener(v -> {
-            // Handle sign-in action
-            Toast.makeText(this, "Sign In Clicked", Toast.LENGTH_SHORT);
-        });
 
         // Initialize RecyclerView
         // RecyclerView for displaying the video list
@@ -54,13 +52,39 @@ public class VideoListActivity extends AppCompatActivity {
 
         // Load videos from JSON
         // List to hold video data
-        List<Video> videoList = loadVideosFromJson();
+        videoList = loadVideosFromJson();
 
         // Set adapter to the RecyclerView
         // Adapter for the RecyclerView
-        VideoAdapter videoAdapter = new VideoAdapter(videoList, this);
+        videoAdapter = new VideoAdapter(videoList, this);
         rvListVideo.setAdapter(videoAdapter);
+
+        //sign in function
+        ImageView iv_sign_in = findViewById(R.id.ivSignIn);
+        iv_sign_in.setOnClickListener(v -> {
+            Intent intent = new Intent(this, SignUpActivity.class);
+            startActivity(intent);
+        });
+
+        //search function
+        SearchView sv_search = findViewById(R.id.svSearch);
+        sv_search.clearFocus();
+        sv_search.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                filterVideoList(newText);
+                return true;
+            }
+        });
+
+
     }
+
 
     /**
      * Loads video data from the videos.json file in the assets folder.
@@ -68,7 +92,7 @@ public class VideoListActivity extends AppCompatActivity {
      * @return A list of Video objects.
      */
     private List<Video> loadVideosFromJson() {
-        String json = null;
+        String json;
 
         try {
             // Open the JSON file
@@ -95,7 +119,8 @@ public class VideoListActivity extends AppCompatActivity {
 
         // Parse JSON using Gson
         Gson gson = new Gson();
-        Type videoListType = new TypeToken<List<Video>>() {}.getType();
+        Type videoListType = new TypeToken<List<Video>>() {
+        }.getType();
 
         // Return the list of videos parsed from JSON
         return gson.fromJson(json, videoListType);
@@ -113,5 +138,20 @@ public class VideoListActivity extends AppCompatActivity {
 
         // Get the resource ID
         return getResources().getIdentifier(resName, "raw", packageName);
+    }
+
+    private void filterVideoList(String text) {
+        List<Video> filteredList = new ArrayList<>();
+        for (Video video : videoList) {
+            if (video.getTitle().toLowerCase().contains(text.toLowerCase())) {
+                filteredList.add(video);
+            }
+        }
+
+        if (filteredList.isEmpty()) {
+            Toast.makeText(this, "No video found", Toast.LENGTH_SHORT).show();
+        } else {
+            videoAdapter.setFilterList(filteredList);
+        }
     }
 }
