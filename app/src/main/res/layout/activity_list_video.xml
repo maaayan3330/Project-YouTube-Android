@@ -47,7 +47,7 @@
             android:focusable="true"
             android:padding="8dp"
             android:scaleType="centerInside"
-            android:src="@drawable/ic_search" />
+            android:src="@drawable/ic_upload" />
 
         <ImageView
             android:id="@+id/ivSignIn"
