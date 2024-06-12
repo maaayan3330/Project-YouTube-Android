@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -22,6 +23,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.youtube.R;
 import com.example.youtube.videoList.Video;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -30,6 +32,7 @@ import java.util.List;
  */
 public class VideoDisplayActivity extends AppCompatActivity {
     private VideoView vvVideo; // VideoView for playing the video
+
 
 
     @Override
@@ -43,46 +46,59 @@ public class VideoDisplayActivity extends AppCompatActivity {
             return insets;
         });
 
-        // Initialize views
-        vvVideo = findViewById(R.id.vvVideo);
-        TextView titleView = findViewById(R.id.tvTitle);
-        TextView tvDescription = findViewById(R.id.tvDescription);
-        RecyclerView rvCommentsRecyclerView = findViewById(R.id.rvComments);
-        rvCommentsRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-
         // Get data from intent
         Video video = (Video) getIntent().getSerializableExtra("extra_video");
 
-
-        // Set data to views
+        // Initialize views and Set data to views
+        vvVideo = findViewById(R.id.vvVideo);
+        TextView titleView = findViewById(R.id.tvTitle);
+        TextView tvDescription = findViewById(R.id.tvDescription);
         titleView.setText(video.getTitle());
         tvDescription.setText(video.getDescription());
 
         // Get the video resource ID
         int videoResIdInt = getRawResIdByName(video.getVideoResId());
         String videoPath = "android.resource://" + getPackageName() + "/" + videoResIdInt;
-
         // Set the video path and start playing
         vvVideo.setVideoPath(videoPath);
         vvVideo.start();
 
-        ImageView iv_like = findViewById(R.id.iv_like);
-        iv_like.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                v.setSelected(!v.isSelected());
-                if (v.isSelected()) {
-                    // Perform actions when selected
-                    Toast.makeText(getApplicationContext(), "Liked!", Toast.LENGTH_SHORT).show();
-                } else {
-                    // Perform actions when unselected
-                    Toast.makeText(getApplicationContext(), "Unliked!", Toast.LENGTH_SHORT).show();
-                }
+        //comment list
+        RecyclerView rvCommentsRecyclerView = findViewById(R.id.rvComments);
+        List<Comment> commentList = video.getComments() != null ? video.getComments() : new ArrayList<>();
+        CommentAdapter commentAdapter = new CommentAdapter(commentList);
+        rvCommentsRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        rvCommentsRecyclerView.setAdapter(commentAdapter);
+        //new comment function
+        ImageView iv_post=findViewById(R.id.iv_post);
+        EditText et_CommentInput = findViewById(R.id.et_CommentInput);
+        iv_post.setOnClickListener(view ->{
+            String commentText = et_CommentInput.getText().toString().trim();
+            if (!commentText.isEmpty()) {
+                Comment newComment = new Comment("User", commentText);
+                // Replace "User" with actual user name if available
+                commentAdapter.addComment(newComment);
+                et_CommentInput.setText("");
+            } else {
+                Toast.makeText(this, "Comment cannot be empty", Toast.LENGTH_SHORT).show();
             }
         });
-        
-        ImageView iv_share=findViewById(R.id.iv_share);
-        iv_share.setOnClickListener(view->{
+
+        // like function:
+        ImageView iv_like = findViewById(R.id.iv_like);
+        iv_like.setOnClickListener(view -> {
+            view.setSelected(!view.isSelected());
+            if (view.isSelected()) {
+                // Perform actions when selected
+                Toast.makeText(getApplicationContext(), "Liked!", Toast.LENGTH_SHORT).show();
+            } else {
+                // Perform actions when unselected
+                Toast.makeText(getApplicationContext(), "Unliked!", Toast.LENGTH_SHORT).show();
+            }
+        });
+        // share function:
+        ImageView iv_share = findViewById(R.id.iv_share);
+        iv_share.setOnClickListener(view -> {
             Intent intent = new Intent(Intent.ACTION_SEND);
             intent.setType("text/plain");
             intent.putExtra(Intent.EXTRA_SUBJECT, video.getTitle());
@@ -90,12 +106,6 @@ public class VideoDisplayActivity extends AppCompatActivity {
 
             startActivity(Intent.createChooser(intent, "Share Video"));
         });
-
-        List<Comment> commentList = video.getComments();
-        if (commentList != null) {
-            CommentAdapter commentAdapter = new CommentAdapter(commentList);
-            rvCommentsRecyclerView.setAdapter(commentAdapter);
-        }
     }
 
     /**
@@ -108,22 +118,20 @@ public class VideoDisplayActivity extends AppCompatActivity {
         String packageName = getPackageName();
         return getResources().getIdentifier(resName, "raw", packageName);
     }
+
     @Override
     public void onConfigurationChanged(@NonNull Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
+        ViewGroup.LayoutParams params = vvVideo.getLayoutParams();
         if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE) {
             // Landscape mode
-            ViewGroup.LayoutParams params = vvVideo.getLayoutParams();
             params.width = ViewGroup.LayoutParams.MATCH_PARENT;
             params.height = ViewGroup.LayoutParams.MATCH_PARENT;
-            vvVideo.setLayoutParams(params);
         } else if (newConfig.orientation == Configuration.ORIENTATION_PORTRAIT) {
             // Portrait mode
-            ViewGroup.LayoutParams params = vvVideo.getLayoutParams();
             params.width = ViewGroup.LayoutParams.MATCH_PARENT;
             params.height = (int) getResources().getDimension(R.dimen.video_height);
-            vvVideo.setLayoutParams(params);
         }
-
+        vvVideo.setLayoutParams(params);
     }
 }

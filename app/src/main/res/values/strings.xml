@@ -16,5 +16,6 @@
     <string name="like_button_desc" >like</string>
     <string name="share">share</string>
     <string name="post">post</string>
+    <string name="add_a_comment">Add a comment</string>
 
 </resources>

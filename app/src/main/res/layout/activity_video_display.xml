@@ -80,14 +80,16 @@
 
     </LinearLayout>
 
+
+
     <!-- Input field for adding a new comment -->
     <EditText
-        android:id="@+id/commentInput"
+        android:id="@+id/et_CommentInput"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginBottom="5dp"
         android:background="@drawable/edit_text_background"
-        android:hint="Add a comment"
+        android:hint="@string/add_a_comment"
         android:minHeight="48dp"
         android:singleLine="true"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -107,15 +109,15 @@
         android:scaleType="centerInside"
         android:src="@drawable/ic_post"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/commentInput"
-        app:layout_constraintTop_toTopOf="@+id/commentInput" />
+        app:layout_constraintStart_toEndOf="@+id/et_CommentInput"
+        app:layout_constraintTop_toTopOf="@+id/et_CommentInput" />
 
     <!-- RecyclerView for displaying comments -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rvComments"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:layout_constraintBottom_toTopOf="@+id/commentInput"
+        app:layout_constraintBottom_toTopOf="@+id/et_CommentInput"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/llButtons"
