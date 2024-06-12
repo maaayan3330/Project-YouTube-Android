@@ -13,6 +13,8 @@
 
     // alon
     <string name="youtube_logo">youTube</string>
-    <string name="like_button_desc" />
+    <string name="like_button_desc" >like</string>
+    <string name="share">share</string>
+    <string name="post">post</string>
 
 </resources>

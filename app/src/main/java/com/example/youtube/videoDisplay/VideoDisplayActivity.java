@@ -1,5 +1,6 @@
 package com.example.youtube.videoDisplay;
 
+import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.view.View;
@@ -29,7 +30,6 @@ import java.util.List;
  */
 public class VideoDisplayActivity extends AppCompatActivity {
     private VideoView vvVideo; // VideoView for playing the video
-    private RecyclerView rvCommentsRecyclerView;
 
 
     @Override
@@ -47,7 +47,7 @@ public class VideoDisplayActivity extends AppCompatActivity {
         vvVideo = findViewById(R.id.vvVideo);
         TextView titleView = findViewById(R.id.tvTitle);
         TextView tvDescription = findViewById(R.id.tvDescription);
-        rvCommentsRecyclerView = findViewById(R.id.rvComments);
+        RecyclerView rvCommentsRecyclerView = findViewById(R.id.rvComments);
         rvCommentsRecyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         // Get data from intent
@@ -66,8 +66,8 @@ public class VideoDisplayActivity extends AppCompatActivity {
         vvVideo.setVideoPath(videoPath);
         vvVideo.start();
 
-        ImageView likeButton = findViewById(R.id.iv_like);
-        likeButton.setOnClickListener(new View.OnClickListener() {
+        ImageView iv_like = findViewById(R.id.iv_like);
+        iv_like.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 v.setSelected(!v.isSelected());
@@ -79,6 +79,16 @@ public class VideoDisplayActivity extends AppCompatActivity {
                     Toast.makeText(getApplicationContext(), "Unliked!", Toast.LENGTH_SHORT).show();
                 }
             }
+        });
+        
+        ImageView iv_share=findViewById(R.id.iv_share);
+        iv_share.setOnClickListener(view->{
+            Intent intent = new Intent(Intent.ACTION_SEND);
+            intent.setType("text/plain");
+            intent.putExtra(Intent.EXTRA_SUBJECT, video.getTitle());
+            intent.putExtra(Intent.EXTRA_TEXT, "Check out this video: " + videoPath);
+
+            startActivity(Intent.createChooser(intent, "Share Video"));
         });
 
         List<Comment> commentList = video.getComments();
@@ -98,8 +108,6 @@ public class VideoDisplayActivity extends AppCompatActivity {
         String packageName = getPackageName();
         return getResources().getIdentifier(resName, "raw", packageName);
     }
-
-
     @Override
     public void onConfigurationChanged(@NonNull Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
