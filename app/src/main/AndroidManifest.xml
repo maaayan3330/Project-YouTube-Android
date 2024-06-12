@@ -24,7 +24,6 @@
         <activity
             android:name=".videoDisplay.VideoDisplayActivity"
             android:configChanges="orientation|screenSize"
-            android:windowSoftInputMode="adjustResize"
             android:exported="false" />
         <activity
             android:name=".RegistrationActivity2"

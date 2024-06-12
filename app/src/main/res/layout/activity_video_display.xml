@@ -76,50 +76,50 @@
             android:padding="8dp"
             android:scaleType="centerInside"
             android:src="@drawable/ic_share" />
-
-
     </LinearLayout>
-
-
-
-    <!-- Input field for adding a new comment -->
-    <EditText
-        android:id="@+id/et_CommentInput"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="5dp"
-        android:background="@drawable/edit_text_background"
-        android:hint="@string/add_a_comment"
-        android:minHeight="48dp"
-        android:singleLine="true"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/iv_post"
-        app:layout_constraintStart_toStartOf="parent" />
-
-    <!-- Button to post a new comment -->
-    <ImageView
-        android:id="@+id/iv_post"
-        android:layout_width="48dp"
-        android:layout_height="48dp"
-        android:background="?attr/selectableItemBackgroundBorderless"
-        android:clickable="true"
-        android:contentDescription="@string/post"
-        android:focusable="true"
-        android:padding="8dp"
-        android:scaleType="centerInside"
-        android:src="@drawable/ic_post"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/et_CommentInput"
-        app:layout_constraintTop_toTopOf="@+id/et_CommentInput" />
-
     <!-- RecyclerView for displaying comments -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rvComments"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:layout_constraintBottom_toTopOf="@+id/et_CommentInput"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/llButtons"
-        app:layout_constraintVertical_bias="0.0" />
+        app:layout_constraintTop_toBottomOf="@+id/commentLayout" />
+
+    <!-- Layout for comment input and post button -->
+    <LinearLayout
+        android:id="@+id/commentLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="8dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/llButtons">
+
+        <!-- Input field for adding a new comment -->
+        <EditText
+            android:id="@+id/et_CommentInput"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@drawable/edit_text_background"
+            android:hint="@string/add_a_comment"
+            android:minHeight="48dp"
+            android:singleLine="true" />
+
+        <!-- Button to post a new comment -->
+        <ImageView
+            android:id="@+id/iv_post"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:clickable="true"
+            android:contentDescription="@string/post"
+            android:focusable="true"
+            android:padding="8dp"
+            android:scaleType="centerInside"
+            android:src="@drawable/ic_post" />
+    </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
