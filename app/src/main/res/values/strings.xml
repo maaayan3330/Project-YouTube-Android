@@ -15,6 +15,12 @@
 
     // alon
     <string name="youtube_logo">youTube</string>
+    <string name="like_button_desc" >like</string>
+    <string name="share">share</string>
+    <string name="post">post</string>
+    <string name="add_a_comment">Add a comment</string>
+    <string name="search">search</string>
+    <string name="sign_in">sign in</string>
     <string name="lighting_mode">Change mode</string>
     <string name="upload_video">Upload video</string>
     <string name="login">Login</string>

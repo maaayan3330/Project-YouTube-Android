@@ -31,16 +31,17 @@
             android:exported="false" />
         <activity
             android:name=".videoDisplay.VideoDisplayActivity"
+            android:configChanges="orientation|screenSize"
             android:exported="false" />
         <activity
             android:name=".RegistrationPage.RegistrationActivity2"
             android:exported="false" />
         <activity
-            android:name=".videoListDisplay.MainActivity"
+            android:name=".videoList.VideoListActivity"
+            android:windowSoftInputMode="adjustResize"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
