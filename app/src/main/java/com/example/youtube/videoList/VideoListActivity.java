@@ -2,11 +2,19 @@ package com.example.youtube.videoList;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.MenuItem;
+import android.view.View;
+import android.widget.ImageView;
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBarDrawerToggle;
 import android.widget.ImageView;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.view.GravityCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.appcompat.widget.SearchView;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
@@ -14,8 +22,14 @@ import androidx.core.view.WindowInsetsCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+
+
 import com.example.youtube.R;
-import com.example.youtube.SignUpActivity;
+import com.example.youtube.SignUpPage.SignUpActivity;
+import com.example.youtube.addVideo.AddVideoActivity;
+import com.example.youtube.design.CustomToast;
+import com.example.youtube.videoList.VideoAdapter;
+import com.google.android.material.navigation.NavigationView;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
@@ -25,6 +39,8 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * MainActivity class for displaying a list of videos.
@@ -32,18 +48,67 @@ import java.nio.charset.StandardCharsets;
 public class VideoListActivity extends AppCompatActivity {
     List<Video> videoList;
     VideoAdapter videoAdapter;
+    private DrawerLayout drawerLayout;
+    private NavigationView navigationView;
+    private ActionBarDrawerToggle drawerToggle;
+    private Toolbar toolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_list_video);
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
+        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.drawer_layout), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
 
+        // Initialize Toolbar
+        toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+
+        // Initialize DrawerLayout and NavigationView
+        drawerLayout = findViewById(R.id.drawer_layout);
+        navigationView = findViewById(R.id.nav_view);
+
+        // Initialize DrawerToggle
+        drawerToggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.open, R.string.close);
+        drawerLayout.addDrawerListener(drawerToggle);
+        drawerToggle.syncState();
+
+        navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            // that is for the menu pass from evey option to his dest
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                int itemId = item.getItemId();
+                if (itemId == R.id.login_yes) {
+                    Intent intentForLogIn = new Intent(VideoListActivity.this, SignUpActivity.class);
+                    CustomToast.showToast(VideoListActivity.this, "Login");
+                    startActivity(intentForLogIn);
+                    return true;
+                } else if (itemId == R.id.logout_yes) {
+                    CustomToast.showToast(VideoListActivity.this, "Logout");
+                    return true;
+                } else if (itemId == R.id.upload_data_yes) {
+                    Intent intentForVideo = new Intent(VideoListActivity.this, AddVideoActivity.class);
+                    CustomToast.showToast(VideoListActivity.this, "Upload video");
+                    startActivity(intentForVideo);
+                    return true;
+                } else if (itemId == R.id.dark_mode_yes) {
+                    CustomToast.showToast(VideoListActivity.this, "Change Mode");
+                    return true;
+                } else if (itemId == R.id.Help) {
+                    CustomToast.showToast(VideoListActivity.this, "Help");
+                    return true;
+                } else if (itemId == R.id.Setting) {
+                    CustomToast.showToast(VideoListActivity.this, "Setting");
+                    return true;
+                } else {
+                    return false;
+                }
+            }
+        });
 
         // Initialize RecyclerView
         // RecyclerView for displaying the video list
@@ -58,13 +123,6 @@ public class VideoListActivity extends AppCompatActivity {
         // Adapter for the RecyclerView
         videoAdapter = new VideoAdapter(videoList, this);
         rvListVideo.setAdapter(videoAdapter);
-
-        //sign in function
-        ImageView iv_sign_in = findViewById(R.id.ivSignIn);
-        iv_sign_in.setOnClickListener(v -> {
-            Intent intent = new Intent(this, SignUpActivity.class);
-            startActivity(intent);
-        });
 
         //search function
         SearchView sv_search = findViewById(R.id.svSearch);
@@ -81,16 +139,27 @@ public class VideoListActivity extends AppCompatActivity {
                 return true;
             }
         });
-
-
     }
 
 
-    /**
-     * Loads video data from the videos.json file in the assets folder.
-     *
-     * @return A list of Video objects.
-     */
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        if (drawerToggle.onOptionsItemSelected(item)) {
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
+            drawerLayout.closeDrawer(GravityCompat.START);
+        } else {
+            super.onBackPressed();
+        }
+    }
+
     private List<Video> loadVideosFromJson() {
         String json;
 
@@ -113,8 +182,8 @@ public class VideoListActivity extends AppCompatActivity {
             // Convert the buffer to a String
             json = new String(buffer, StandardCharsets.UTF_8);
         } catch (IOException ex) {
-            ex.printStackTrace(); // Print the stack trace for debugging
-            return null; // Return null if an exception occurs
+            ex.printStackTrace();
+            return null;
         }
 
         // Parse JSON using Gson

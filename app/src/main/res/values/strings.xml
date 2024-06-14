@@ -9,6 +9,8 @@
     <string name="sign_up">Sign Up</string>
     <string name="SignUp_click">Already registered? Click here</string>
     <string name="Nickname">Nickname</string>
+    <string name="open">Open Navigation Drawer</string>
+    <string name="close">Close Navigation Drawer</string>
 
 
     // alon
@@ -19,5 +21,13 @@
     <string name="add_a_comment">Add a comment</string>
     <string name="search">search</string>
     <string name="sign_in">sign in</string>
+    <string name="lighting_mode">Change mode</string>
+    <string name="upload_video">Upload video</string>
+    <string name="login">Login</string>
+    <string name="info">info</string>
+    <string name="Help">Help</string>
+    <string name="Setting">Setting</string>
+    <string name="logout">Logout</string>
+    <string name="menu_icon">Menu</string>
 
 </resources>

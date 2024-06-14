@@ -1,4 +1,4 @@
-package com.example.youtube;
+package com.example.youtube.UserManager;
 
 public class User {
     private String username;
