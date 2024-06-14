@@ -3,9 +3,7 @@ package com.example.youtube.RegistrationPage;
 import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.net.Uri;
-import android.os.Bundle;
 import android.provider.MediaStore;
 import androidx.appcompat.app.AlertDialog;
 
@@ -40,18 +38,5 @@ public class UploadImage {
             }
         });
         builder.show();
-    }
-
-    public void handleActivityResult(int requestCode, int resultCode, Intent data) {
-        if (resultCode == Activity.RESULT_OK) {
-            if (requestCode == PICK_IMAGE) {
-                Uri selectedImage = data.getData();
-                // Do something with the selected image URI
-            } else if (requestCode == TAKE_PHOTO) {
-                Bundle extras = data.getExtras();
-                Bitmap imageBitmap = (Bitmap) extras.get("data");
-                // Do something with the photo
-            }
-        }
     }
 }
