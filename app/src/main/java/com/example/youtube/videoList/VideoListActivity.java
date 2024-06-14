@@ -1,4 +1,4 @@
-package com.example.youtube.videoListDisplay;
+package com.example.youtube.videoList;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -25,10 +25,10 @@ import androidx.recyclerview.widget.RecyclerView;
 
 
 import com.example.youtube.R;
-import com.example.youtube.SignUpActivity;
 import com.example.youtube.SignUpPage.SignUpActivity;
 import com.example.youtube.addVideo.AddVideoActivity;
 import com.example.youtube.design.CustomToast;
+import com.example.youtube.videoList.VideoAdapter;
 import com.google.android.material.navigation.NavigationView;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -58,7 +58,7 @@ public class VideoListActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_list_video);
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
+        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.drawer_layout), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
@@ -83,26 +83,26 @@ public class VideoListActivity extends AppCompatActivity {
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 int itemId = item.getItemId();
                 if (itemId == R.id.login_yes) {
-                    Intent intentForLogIn = new Intent(MainActivity.this, SignUpActivity.class);
-                    CustomToast.showToast(MainActivity.this, "Login");
+                    Intent intentForLogIn = new Intent(VideoListActivity.this, SignUpActivity.class);
+                    CustomToast.showToast(VideoListActivity.this, "Login");
                     startActivity(intentForLogIn);
                     return true;
                 } else if (itemId == R.id.logout_yes) {
-                    CustomToast.showToast(MainActivity.this, "Logout");
+                    CustomToast.showToast(VideoListActivity.this, "Logout");
                     return true;
                 } else if (itemId == R.id.upload_data_yes) {
-                    Intent intentForVideo = new Intent(MainActivity.this, AddVideoActivity.class);
-                    CustomToast.showToast(MainActivity.this, "Upload video");
+                    Intent intentForVideo = new Intent(VideoListActivity.this, AddVideoActivity.class);
+                    CustomToast.showToast(VideoListActivity.this, "Upload video");
                     startActivity(intentForVideo);
                     return true;
                 } else if (itemId == R.id.dark_mode_yes) {
-                    CustomToast.showToast(MainActivity.this, "Change Mode");
+                    CustomToast.showToast(VideoListActivity.this, "Change Mode");
                     return true;
                 } else if (itemId == R.id.Help) {
-                    CustomToast.showToast(MainActivity.this, "Help");
+                    CustomToast.showToast(VideoListActivity.this, "Help");
                     return true;
                 } else if (itemId == R.id.Setting) {
-                    CustomToast.showToast(MainActivity.this, "Setting");
+                    CustomToast.showToast(VideoListActivity.this, "Setting");
                     return true;
                 } else {
                     return false;

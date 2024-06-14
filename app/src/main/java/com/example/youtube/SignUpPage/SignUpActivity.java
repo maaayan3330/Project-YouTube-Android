@@ -13,7 +13,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.example.youtube.UserManager.UserManager;
 import com.example.youtube.R;
 import com.example.youtube.RegistrationPage.RegistrationActivity2;
-import com.example.youtube.videoListDisplay.MainActivity;
+import com.example.youtube.videoList.VideoListActivity;
+
 
 public class SignUpActivity extends AppCompatActivity {
     private UserManager userManager;
@@ -55,7 +56,7 @@ public class SignUpActivity extends AppCompatActivity {
 
             // If the user exists, navigate to the home page
             if (result) {
-                Intent intent = new Intent(this, MainActivity.class);
+                Intent intent = new Intent(this, VideoListActivity.class);
                 // Start a new activity
                 startActivity(intent);
                 showCustomToast("Login successfully!");
