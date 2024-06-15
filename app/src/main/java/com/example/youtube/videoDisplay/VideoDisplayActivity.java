@@ -1,6 +1,7 @@
 package com.example.youtube.videoDisplay;
 
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.view.View;
@@ -15,6 +16,7 @@ import android.view.ViewGroup;
 import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
@@ -27,14 +29,13 @@ import com.example.youtube.videoList.Video;
 import java.util.ArrayList;
 import java.util.List;
 
-
 /**
  * Activity to display and play a selected video.
  */
 public class VideoDisplayActivity extends AppCompatActivity {
     private VideoView vvVideo; // VideoView for playing the video
-    private boolean isPlaying = false;//play indicator
-
+    private ConstraintLayout clControl; // Control buttons layout
+    private boolean isFullScreen = false; // Fullscreen indicator
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,15 +51,15 @@ public class VideoDisplayActivity extends AppCompatActivity {
         // Get data from intent
         Video video = (Video) getIntent().getSerializableExtra("extra_video");
 
-        // Initialize views and Set data to views
+        // Initialize views and set data to views
         vvVideo = findViewById(R.id.vvVideo);
         TextView titleView = findViewById(R.id.tvTitle);
         TextView tvDescription = findViewById(R.id.tvDescription);
         titleView.setText(video.getTitle());
         tvDescription.setText(video.getDescription());
-        TextView tv_like=findViewById(R.id.tv_like);
-        TextView tv_views=findViewById(R.id.tv_view);
-        TextView tv_author =findViewById(R.id.tv_author);
+        TextView tv_like = findViewById(R.id.tv_like);
+        TextView tv_views = findViewById(R.id.tv_view);
+        TextView tv_author = findViewById(R.id.tv_author);
         tv_like.setText("Likes: " + video.getLikes());
         tv_views.setText("Author: " + video.getAuthor());
 
@@ -72,16 +73,16 @@ public class VideoDisplayActivity extends AppCompatActivity {
         vvVideo.setVideoPath(videoPath);
         vvVideo.start();
 
-        //comment list
+        // Comment list
         RecyclerView rvCommentsRecyclerView = findViewById(R.id.rvComments);
         List<Comment> commentList = video.getComments() != null ? video.getComments() : new ArrayList<>();
         CommentAdapter commentAdapter = new CommentAdapter(commentList);
         rvCommentsRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         rvCommentsRecyclerView.setAdapter(commentAdapter);
-        //new comment function
-        ImageView iv_post=findViewById(R.id.iv_post);
+        // New comment function
+        ImageView iv_post = findViewById(R.id.iv_post);
         EditText et_CommentInput = findViewById(R.id.et_CommentInput);
-        iv_post.setOnClickListener(view ->{
+        iv_post.setOnClickListener(view -> {
             String commentText = et_CommentInput.getText().toString().trim();
             if (!commentText.isEmpty()) {
                 Comment newComment = new Comment("User", commentText);
@@ -93,9 +94,8 @@ public class VideoDisplayActivity extends AppCompatActivity {
             }
         });
 
-        // like function:
+        // Like function:
         ImageView iv_like = findViewById(R.id.iv_like);
-
         iv_like.setOnClickListener(view -> {
             view.setSelected(!view.isSelected());
             if (view.isSelected()) {
@@ -111,7 +111,8 @@ public class VideoDisplayActivity extends AppCompatActivity {
                 Toast.makeText(getApplicationContext(), "Unliked!", Toast.LENGTH_SHORT).show();
             }
         });
-        // share function:
+
+        // Share function:
         ImageView iv_share = findViewById(R.id.iv_share);
         iv_share.setOnClickListener(view -> {
             Intent intent = new Intent(Intent.ACTION_SEND);
@@ -123,11 +124,13 @@ public class VideoDisplayActivity extends AppCompatActivity {
         });
 
         // Video control buttons
+        clControl = findViewById(R.id.clControl);
         ImageButton btnPlayPause = findViewById(R.id.btnPlayPause);
         ImageButton btnForward = findViewById(R.id.btnForward);
         ImageButton btnRewind = findViewById(R.id.btnRewind);
+        ImageButton btnFullscreen = findViewById(R.id.btnFullscreen);
 
-        // video control function
+        // Video control function
         btnPlayPause.setOnClickListener(view -> {
             view.setSelected(!view.isSelected());
             if (view.isSelected()) {
@@ -156,11 +159,29 @@ public class VideoDisplayActivity extends AppCompatActivity {
             }
         });
 
+        btnFullscreen.setOnClickListener(v -> {
+            if (isFullScreen) {
+                setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+                isFullScreen = false;
+            } else {
+                setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+                isFullScreen = true;
+            }
+        });
 
+        // Show control buttons when user touches the video
+        vvVideo.setOnClickListener(v -> {
+                if (clControl.getVisibility() == View.GONE) {
+                    clControl.setVisibility(View.VISIBLE);
+                    clControl.postDelayed(() -> clControl.setVisibility(View.GONE), 3000); // Hide after 3 seconds
+                } else {
+                    clControl.setVisibility(View.GONE);
+                }
+        });
     }
 
     /**
-     * Retrieves the resource ID of a raw rese eource by its name.
+     * Retrieves the resource ID of a raw resource by its name.
      *
      * @param resName The name of the raw resource.
      * @return The resource ID of the raw resource.

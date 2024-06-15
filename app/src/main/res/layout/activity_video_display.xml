@@ -13,13 +13,78 @@
         android:id="@+id/vvVideo"
         android:layout_width="match_parent"
         android:layout_height="200dp"
+        android:layout_marginBottom="10dp"
         app:layout_constraintBaseline_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <!-- Title of the video -->
+    <!-- Control buttons -->
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/clControl"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:gravity="center"
+        android:padding="10dp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="@+id/vvVideo"
+        app:layout_constraintEnd_toEndOf="@id/vvVideo"
+        app:layout_constraintStart_toStartOf="@id/vvVideo"
+        app:layout_constraintTop_toTopOf="@+id/vvVideo">
 
+        <ImageButton
+            android:id="@+id/btnRewind"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_marginStart="32dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="@string/rewind"
+            android:scaleType="centerInside"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/ic_backward" />
+
+        <ImageButton
+            android:id="@+id/btnPlayPause"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="@string/pause_play"
+            android:scaleType="centerInside"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/btnForward"
+            app:layout_constraintStart_toEndOf="@+id/btnRewind"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/pause_button_selector" />
+
+        <ImageButton
+            android:id="@+id/btnForward"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_marginEnd="32dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="forward"
+            android:scaleType="centerInside"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/ic_forward" />
+
+        <ImageButton
+            android:id="@+id/btnFullscreen"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="fullscreen"
+            android:scaleType="centerInside"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:srcCompat="@drawable/ic_fullscreen" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <!-- Title of the video -->
     <TextView
         android:id="@+id/tvTitle"
         android:layout_width="0dp"
@@ -30,8 +95,6 @@
         app:layout_constraintEnd_toStartOf="@+id/tv_like"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/vvVideo" />
-
-
 
     <!-- Description of the video -->
     <TextView
@@ -76,7 +139,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@+id/tvTitle" />
 
-
     <LinearLayout
         android:id="@+id/llButtons"
         android:layout_width="match_parent"
@@ -110,6 +172,7 @@
             android:scaleType="centerInside"
             android:src="@drawable/ic_share" />
     </LinearLayout>
+
     <!-- RecyclerView for displaying comments -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rvComments"
@@ -154,48 +217,6 @@
             android:padding="8dp"
             android:scaleType="centerInside"
             android:src="@drawable/ic_post" />
-
     </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/llControl"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        app:layout_constraintBottom_toBottomOf="@+id/vvVideo"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="@+id/vvVideo"
-        app:layout_constraintTop_toTopOf="@+id/vvVideo">
-
-        <ImageButton
-            android:id="@+id/btnRewind"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
-            android:layout_marginEnd="60dp"
-            android:background="?attr/selectableItemBackgroundBorderless"
-            android:contentDescription="@string/rewind"
-            android:scaleType="centerInside"
-            app:srcCompat="@drawable/ic_backward" />
-
-        <ImageButton
-            android:id="@+id/btnPlayPause"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
-            android:background="?attr/selectableItemBackgroundBorderless"
-            android:contentDescription="@string/pause_play"
-            android:scaleType="centerInside"
-            app:srcCompat="@drawable/pause_button_selector" />
-
-        <ImageButton
-            android:id="@+id/btnForward"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
-            android:layout_marginStart="60dp"
-            android:background="?attr/selectableItemBackgroundBorderless"
-            android:contentDescription="forward"
-            android:scaleType="centerInside"
-            app:srcCompat="@drawable/ic_forward" />
-    </LinearLayout>
-
 
 </androidx.constraintlayout.widget.ConstraintLayout>
