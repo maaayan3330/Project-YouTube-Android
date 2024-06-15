@@ -5,6 +5,7 @@ import android.content.res.Configuration;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -32,7 +33,7 @@ import java.util.List;
  */
 public class VideoDisplayActivity extends AppCompatActivity {
     private VideoView vvVideo; // VideoView for playing the video
-
+    private boolean isPlaying = false;//play indicator
 
 
     @Override
@@ -55,7 +56,15 @@ public class VideoDisplayActivity extends AppCompatActivity {
         TextView tvDescription = findViewById(R.id.tvDescription);
         titleView.setText(video.getTitle());
         tvDescription.setText(video.getDescription());
+        TextView tv_like=findViewById(R.id.tv_like);
+        TextView tv_views=findViewById(R.id.tv_view);
+        TextView tv_author =findViewById(R.id.tv_author);
+        tv_like.setText("Likes: " + video.getLikes());
+        tv_views.setText("Author: " + video.getAuthor());
 
+        // Increment views count when the video starts playing
+        video.setViews(video.getViews() + 1);
+        tv_views.setText("Views: " + video.getViews());
         // Get the video resource ID
         int videoResIdInt = getRawResIdByName(video.getVideoResId());
         String videoPath = "android.resource://" + getPackageName() + "/" + videoResIdInt;
@@ -86,13 +95,19 @@ public class VideoDisplayActivity extends AppCompatActivity {
 
         // like function:
         ImageView iv_like = findViewById(R.id.iv_like);
+
         iv_like.setOnClickListener(view -> {
             view.setSelected(!view.isSelected());
             if (view.isSelected()) {
-                // Perform actions when selected
+                // Increment likes count and update TextView
+                video.setLikes(video.getLikes() + 1);
+                tv_like.setText("Likes: " + video.getLikes());
                 Toast.makeText(getApplicationContext(), "Liked!", Toast.LENGTH_SHORT).show();
+
             } else {
-                // Perform actions when unselected
+                // Decrement likes count and update TextView
+                video.setLikes(video.getLikes() - 1);
+                tv_like.setText("Likes: " + video.getLikes());
                 Toast.makeText(getApplicationContext(), "Unliked!", Toast.LENGTH_SHORT).show();
             }
         });
@@ -106,10 +121,46 @@ public class VideoDisplayActivity extends AppCompatActivity {
 
             startActivity(Intent.createChooser(intent, "Share Video"));
         });
+
+        // Video control buttons
+        ImageButton btnPlayPause = findViewById(R.id.btnPlayPause);
+        ImageButton btnForward = findViewById(R.id.btnForward);
+        ImageButton btnRewind = findViewById(R.id.btnRewind);
+
+        // video control function
+        btnPlayPause.setOnClickListener(view -> {
+            view.setSelected(!view.isSelected());
+            if (view.isSelected()) {
+                vvVideo.pause();
+            } else {
+                vvVideo.start();
+            }
+        });
+
+        btnForward.setOnClickListener(v -> {
+            int currentPosition = vvVideo.getCurrentPosition();
+            int duration = vvVideo.getDuration();
+            if (currentPosition + 10000 < duration) {
+                vvVideo.seekTo(currentPosition + 10000);
+            } else {
+                vvVideo.seekTo(duration);
+            }
+        });
+
+        btnRewind.setOnClickListener(v -> {
+            int currentPosition = vvVideo.getCurrentPosition();
+            if (currentPosition - 10000 > 0) {
+                vvVideo.seekTo(currentPosition - 10000);
+            } else {
+                vvVideo.seekTo(0);
+            }
+        });
+
+
     }
 
     /**
-     * Retrieves the resource ID of a raw resource by its name.
+     * Retrieves the resource ID of a raw rese eource by its name.
      *
      * @param resName The name of the raw resource.
      * @return The resource ID of the raw resource.

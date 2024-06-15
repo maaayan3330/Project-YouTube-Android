@@ -38,7 +38,7 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.VideoViewHol
      * ViewHolder class to hold the views for each video item.
      */
     public static class VideoViewHolder extends RecyclerView.ViewHolder {
-        public TextView tvTitle, tvDescription; // TextViews for title and description
+        public TextView tvTitle, tvDescription,tvViews,tvLikes,tvAuthor; // TextViews for title, description, views, likes
         public VideoView vvVideo; // VideoView for displaying the video
 
         /**
@@ -51,6 +51,10 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.VideoViewHol
             tvTitle = itemView.findViewById(R.id.tvTitle);
             tvDescription = itemView.findViewById(R.id.tvDescription);
             vvVideo = itemView.findViewById(R.id.vvVideo);
+            tvViews = itemView.findViewById(R.id.tv_view);
+            tvLikes = itemView.findViewById(R.id.tv_like);
+            tvAuthor = itemView.findViewById(R.id.tv_author);
+
         }
     }
 
@@ -80,6 +84,9 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.VideoViewHol
         Video video = videoList.get(position);
         holder.tvTitle.setText(video.getTitle());
         holder.tvDescription.setText(video.getDescription());
+        holder.tvViews.setText("Views: " + video.getViews());
+        holder.tvLikes.setText("Likes: " + video.getLikes());
+        holder.tvAuthor.setText("Author: " + video.getAuthor());
 
         // Get the video resource ID
         int videoResId = ((VideoListActivity) context).getRawResIdByName(video.getVideoResId());
