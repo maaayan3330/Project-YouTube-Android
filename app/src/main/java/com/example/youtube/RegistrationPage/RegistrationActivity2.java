@@ -1,23 +1,22 @@
 package com.example.youtube.RegistrationPage;
 
-import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
-import android.view.LayoutInflater;
-import android.view.View;
+import android.content.Intent;
 import android.widget.Button;
+import android.view.View;
 import android.widget.EditText;
-import android.widget.TextView;
 import android.widget.Toast;
+import android.view.LayoutInflater;
+import android.widget.TextView;
 
 import com.example.youtube.R;
 import com.example.youtube.SignUpPage.SignUpActivity;
 import com.example.youtube.UserManager.UserManager;
+
 
 public class RegistrationActivity2 extends AppCompatActivity {
     private EditText usernameEditText;
@@ -27,7 +26,6 @@ public class RegistrationActivity2 extends AppCompatActivity {
     private PasswordValidator passwordValidator;
     private UploadImage uploadImage;
     private UserManager userManager;
-    private Uri selectedImageUri; // משתנה לשמירת ה-URI של התמונה
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,38 +50,47 @@ public class RegistrationActivity2 extends AppCompatActivity {
 
         // Add button click listener for image upload
         Button uploadImageButton = findViewById(R.id.button_upload_image);
-        uploadImageButton.setOnClickListener(v -> uploadImage.showImagePickerDialog());
+        uploadImageButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                uploadImage.showImagePickerDialog();
+            }
+        });
 
-        // כאן אני מקשר את הכפתור לדף ההתחברות - אם המשתמש כבר רשום
+        // here i connect the button to the next page - if the user is allready register
         Button buttonForSignUp = findViewById(R.id.alredyReg);
         buttonForSignUp.setOnClickListener(v -> {
             Intent intent = new Intent(this, SignUpActivity.class);
+            //start a new activity
             startActivity(intent);
         });
 
         // Add button click listener for registration
         Button registerButton = findViewById(R.id.registerButton);
-        registerButton.setOnClickListener(v -> {
-            String resultMessage = passwordValidator.registerUser(
-                    RegistrationActivity2.this,
-                    usernameEditText.getText().toString(),
-                    passwordEditText.getText().toString(),
-                    confirmPasswordEditText.getText().toString(),
-                    nicknameEditText.getText().toString()
-            );
+        registerButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String resultMessage = passwordValidator.registerUser(
+                        RegistrationActivity2.this,
+                        usernameEditText.getText().toString(),
+                        passwordEditText.getText().toString(),
+                        confirmPasswordEditText.getText().toString(),
+                        nicknameEditText.getText().toString()
+                );
 
-            // Display a custom toast message
-            showCustomToast(resultMessage);
+                // Display a custom toast message
+                showCustomToast(resultMessage);
 
-            // If the user is registered successfully, navigate to the login page
-            if (resultMessage.equals("User registered successfully")) {
-                // הוספת המשתמש לרשימת המשתמשים עם התמונה שנבחרה
-                userManager.addUser(usernameEditText.getText().toString(), passwordEditText.getText().toString(),
-                        nicknameEditText.getText().toString(), selectedImageUri);
+                // If the user is registered successfully, navigate to the login page
+                if (resultMessage.equals("User registered successfully")) {
+                    // and also add the user to the list of users
+                    userManager.addUser(usernameEditText.getText().toString(), passwordEditText.getText().toString(),
+                            nicknameEditText.getText().toString());
 
-                // מעבר לדף הבא לאחר הרשמה מוצלחת
-                Intent intent = new Intent(RegistrationActivity2.this, SignUpActivity.class);
-                startActivity(intent);
+                    // move to the next page back after the user register good
+                    Intent intent = new Intent(RegistrationActivity2.this, SignUpActivity.class);
+                    startActivity(intent);
+                }
             }
         });
     }
@@ -102,13 +109,8 @@ public class RegistrationActivity2 extends AppCompatActivity {
     }
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode == RESULT_OK) {
-            if (requestCode == UploadImage.PICK_IMAGE || requestCode == UploadImage.TAKE_PHOTO) {
-                selectedImageUri = data.getData();
-                // עדכון התמונה שנבחרה או צולמה
-            }
-        }
+        uploadImage.handleActivityResult(requestCode, resultCode, data);
     }
 }

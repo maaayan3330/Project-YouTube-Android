@@ -1,7 +1,5 @@
 package com.example.youtube.UserManager;
 
-import android.net.Uri;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,11 +16,6 @@ public class UserManager {
             instance = new UserManager();
         }
         return instance;
-    }
-
-    public void addUser(String username, String password, String nickname, Uri imageUri) {
-        User user = new User(username, password, nickname, imageUri);
-        userList.add(user);
     }
 
     public void addUser(String username, String password, String nickname) {
