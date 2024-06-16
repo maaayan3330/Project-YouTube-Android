@@ -90,12 +90,8 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.VideoViewHol
         holder.tvLikes.setText("Likes: " + video.getLikes());
         holder.tvAuthor.setText("Author: " + video.getAuthor());
 
-        // Get the video resource ID
-        int videoResId = ((VideoListActivity) context).getRawResIdByName(video.getVideoResId());
-        String videoPath = "android.resource://" + context.getPackageName() + "/" + videoResId;
-
-        // Set the video path and seek to 1 ms to show the first frame as a preview
-        holder.vvVideo.setVideoPath(videoPath);
+        // Set the video URI
+        holder.vvVideo.setVideoURI(Uri.parse(video.getVideoUri()));
         holder.vvVideo.seekTo(50000);
 
         // Set click listener to play video on click

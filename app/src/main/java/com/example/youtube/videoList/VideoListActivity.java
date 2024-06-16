@@ -3,6 +3,7 @@ package com.example.youtube.videoList;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.ImageView;
 import android.widget.Toast;
 
@@ -19,8 +20,12 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.youtube.R;
 import com.example.youtube.SignUpActivity;
 import com.example.youtube.addVideo.AddVideoActivity;
+import com.example.youtube.videoDisplay.Comment;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -128,28 +133,40 @@ public class VideoListActivity extends AppCompatActivity {
             return null; // Return null if an exception occurs
         }
 
-        // Parse JSON using Gson
-        Gson gson = new Gson();
-        Type videoListType = new TypeToken<List<Video>>() {
-        }.getType();
+        // Parse JSON manually
+        List<Video> videos = new ArrayList<>();
+        try {
+            JSONArray jsonArray = new JSONArray(json);
+            for (int i = 0; i < jsonArray.length(); i++) {
+                JSONObject jsonObject = jsonArray.getJSONObject(i);
 
-        // Return the list of videos parsed from JSON
-        return gson.fromJson(json, videoListType);
+                String title = jsonObject.getString("title");
+                String description = jsonObject.getString("description");
+                String videoUri = jsonObject.getString("videoUri");
+                String author = jsonObject.getString("author");
+                int likes = jsonObject.getInt("likes");
+                int views = jsonObject.getInt("views");
+
+                List<Comment> comments = new ArrayList<>();
+                if (jsonObject.has("comments")) {
+                    JSONArray commentsArray = jsonObject.getJSONArray("comments");
+                    for (int j = 0; j < commentsArray.length(); j++) {
+                        JSONObject commentObject = commentsArray.getJSONObject(j);
+                        String commentAuthor = commentObject.getString("author");
+                        String commentText = commentObject.getString("comment");
+                        comments.add(new Comment(commentAuthor, commentText));
+                    }
+                }
+
+                videos.add(new Video(title, description, videoUri, author, likes, views, comments));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return videos;
     }
 
-    /**
-     * Retrieves the resource ID of a raw resource by its name.
-     *
-     * @param resName The name of the raw resource.
-     * @return The resource ID of the raw resource.
-     */
-    public int getRawResIdByName(String resName) {
-        // Get the package name of the application
-        String packageName = getPackageName();
-
-        // Get the resource ID
-        return getResources().getIdentifier(resName, "raw", packageName);
-    }
 
     private void filterVideoList(String text) {
         List<Video> filteredList = new ArrayList<>();

@@ -3,6 +3,7 @@ package com.example.youtube.videoDisplay;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
@@ -66,11 +67,9 @@ public class VideoDisplayActivity extends AppCompatActivity {
         // Increment views count when the video starts playing
         video.setViews(video.getViews() + 1);
         tv_views.setText("Views: " + video.getViews());
-        // Get the video resource ID
-        int videoResIdInt = getRawResIdByName(video.getVideoResId());
-        String videoPath = "android.resource://" + getPackageName() + "/" + videoResIdInt;
-        // Set the video path and start playing
-        vvVideo.setVideoPath(videoPath);
+
+        // Set the video URI and start playing
+        vvVideo.setVideoURI(Uri.parse(video.getVideoUri()));
         vvVideo.start();
 
         // Comment list
@@ -118,7 +117,7 @@ public class VideoDisplayActivity extends AppCompatActivity {
             Intent intent = new Intent(Intent.ACTION_SEND);
             intent.setType("text/plain");
             intent.putExtra(Intent.EXTRA_SUBJECT, video.getTitle());
-            intent.putExtra(Intent.EXTRA_TEXT, "Check out this video: " + videoPath);
+            intent.putExtra(Intent.EXTRA_TEXT, "Check out this video: " + video.getVideoUri());
 
             startActivity(Intent.createChooser(intent, "Share Video"));
         });

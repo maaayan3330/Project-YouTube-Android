@@ -69,9 +69,10 @@ public class AddVideoActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == SELECT_VIDEO && resultCode == Activity.RESULT_OK && data != null) {
             Uri selectedVideoUri = data.getData();
+
             if (selectedVideoUri != null) {
                 videoPath = selectedVideoUri.toString();
-                Log.d("alon", videoPath);
+                Log.d("alon12", videoPath);
                 Toast.makeText(this, "Video Selected: " + videoPath, Toast.LENGTH_SHORT).show();
                  VideoView vvVideo=findViewById(R.id.vvTest); vvVideo.setVideoURI(selectedVideoUri);vvVideo.start();
             }
@@ -90,7 +91,7 @@ public class AddVideoActivity extends AppCompatActivity {
 
         // Create a new Video object
         Video newVideo = new Video(title, description, videoPath, "Author Name", 0, 0, new ArrayList<>());
-
+///fix hear
         // Create an intent to send the video back to the VideoListActivity
         Intent resultIntent = new Intent();
         resultIntent.putExtra("newVideo", newVideo);

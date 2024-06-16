@@ -12,7 +12,7 @@ import android.net.Uri;
 public class Video implements Serializable {
     private String title;       // Title of the video
     private String description; // Description of the video
-    private Uri videoUri;       // URI of the video
+    private String videoUri;       // URI of the video
     private String author;      // Author of the video
     private int likes;          // Number of likes
     private int views;          // Number of views
@@ -29,10 +29,10 @@ public class Video implements Serializable {
      * @param views       The number of views for the video.
      * @param comments    The comments on the video.
      */
-    public Video(String title, String description, Uri videoUri, String author, int likes, int views, List<Comment> comments) {
+    public Video(String title, String description, String videoUri, String author, int likes, int views, List<Comment> comments) {
         this.title = title;
         this.description = description;
-        this.videoUri = videoUri;
+        this.videoUri = videoUri; // Convert String to Uri
         this.author = author;
         this.likes = likes;
         this.views = views;
@@ -57,11 +57,11 @@ public class Video implements Serializable {
         this.description = description;
     }
 
-    public Uri getVideoUri() {
+    public String getVideoUri() {
         return videoUri;
     }
 
-    public void setVideoUri(Uri videoUri) {
+    public void setVideoUri(String videoUri) {
         this.videoUri = videoUri;
     }
 
