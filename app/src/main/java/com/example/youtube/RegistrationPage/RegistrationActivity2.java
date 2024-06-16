@@ -1,19 +1,18 @@
 package com.example.youtube.RegistrationPage;
 
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.TextView;
+import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
-import android.content.Intent;
-import android.widget.Button;
-import android.view.View;
-import android.widget.EditText;
-import android.widget.Toast;
-import android.view.LayoutInflater;
-import android.widget.TextView;
-
 import com.example.youtube.MainData.UploadImage;
 import com.example.youtube.R;
 import com.example.youtube.SignUpPage.SignUpActivity;
@@ -59,11 +58,11 @@ public class RegistrationActivity2 extends AppCompatActivity {
             }
         });
 
-        // here i connect the button to the next page - if the user is already registered
+        // כאן אני מחבר את הכפתור לדף הבא - אם המשתמש כבר רשום
         Button buttonForSignUp = findViewById(R.id.alredyReg);
         buttonForSignUp.setOnClickListener(v -> {
             Intent intent = new Intent(this, SignUpActivity.class);
-            //start a new activity
+            // Start a new activity
             startActivity(intent);
         });
 
