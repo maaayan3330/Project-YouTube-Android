@@ -1,11 +1,13 @@
 package com.example.youtube.videoList;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.widget.ImageView;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SearchView;
 import androidx.core.graphics.Insets;
@@ -16,6 +18,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.youtube.R;
 import com.example.youtube.SignUpActivity;
+import com.example.youtube.addVideo.AddVideoActivity;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
@@ -32,6 +35,8 @@ import java.nio.charset.StandardCharsets;
 public class VideoListActivity extends AppCompatActivity {
     List<Video> videoList;
     VideoAdapter videoAdapter;
+    private static final int REQUEST_CODE_VIDEO_PICK = 1;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -82,6 +87,12 @@ public class VideoListActivity extends AppCompatActivity {
             }
         });
 
+
+        ImageView ivAdd = findViewById(R.id.ivAdd);
+        ivAdd.setOnClickListener(v -> {
+            Intent intent = new Intent(this, AddVideoActivity.class);
+            startActivityForResult(intent, REQUEST_CODE_VIDEO_PICK);
+        });
 
     }
 
@@ -152,6 +163,20 @@ public class VideoListActivity extends AppCompatActivity {
             Toast.makeText(this, "No video found", Toast.LENGTH_SHORT).show();
         } else {
             videoAdapter.setFilterList(filteredList);
+        }
+    }
+
+
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == REQUEST_CODE_VIDEO_PICK && resultCode == Activity.RESULT_OK && data != null) {
+            Video newVideo = (Video) data.getSerializableExtra("newVideo");
+            if (newVideo != null) {
+                videoList.add(newVideo);
+                videoAdapter.notifyItemInserted(videoList.size() - 1);
+            }
         }
     }
 }

@@ -38,7 +38,7 @@
 
 
         <ImageView
-            android:id="@+id/ivSearch"
+            android:id="@+id/ivAdd"
             android:layout_width="48dp"
             android:layout_height="48dp"
             android:background="?attr/selectableItemBackgroundBorderless"

@@ -93,4 +93,13 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/btnAddVideo" />
 
+    <VideoView
+        android:id="@+id/vvTest"
+        android:layout_width="206dp"
+        android:layout_height="127dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btnCancel" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

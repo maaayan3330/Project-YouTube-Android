@@ -2,7 +2,7 @@
   {
     "title": "Inception",
     "description": "A mind-bending thriller by Christopher Nolan.",
-    "videoResId": "inception",
+    "videoResId": "content://com.example.youtube/videos/inception",
     "author": "Christopher Nolan",
     "likes": 123,
     "views": 4567,
@@ -20,7 +20,7 @@
   {
     "title": "The Shawshank Redemption",
     "description": "An inspiring story of hope and friendship.",
-    "videoResId": "the_shawshank_redemption",
+    "videoResId": "content://com.example.youtube/videos/the_shawshank_redemption",
     "author": "Frank Darabont",
     "likes": 234,
     "views": 5678,
@@ -38,7 +38,7 @@
   {
     "title": "The Godfather",
     "description": "A classic mafia drama.",
-    "videoResId": "the_godfather",
+    "videoResId": "content://com.example.youtube/videos/the_godfather",
     "author": "Francis Ford Coppola",
     "likes": 345,
     "views": 6789,
@@ -56,7 +56,7 @@
   {
     "title": "The Dark Knight",
     "description": "Batman faces off against the Joker.",
-    "videoResId": "the_dark_knight",
+    "videoResId": "content://com.example.youtube/videos/the_dark_knight",
     "author": "Christopher Nolan",
     "likes": 456,
     "views": 7890,
@@ -74,7 +74,7 @@
   {
     "title": "Pulp Fiction",
     "description": "A series of interconnected stories by Quentin Tarantino.",
-    "videoResId": "pulp_fiction",
+    "videoResId": "content://com.example.youtube/videos/pulp_fiction",
     "author": "Quentin Tarantino",
     "likes": 567,
     "views": 8901,
@@ -92,7 +92,7 @@
   {
     "title": "Schindler's List",
     "description": "A true story of a man who saved thousands during the Holocaust.",
-    "videoResId": "schindlers_list",
+    "videoResId": "content://com.example.youtube/videos/schindlers_list",
     "author": "Steven Spielberg",
     "likes": 678,
     "views": 9012,
@@ -110,7 +110,7 @@
   {
     "title": "The Lord of the Rings: The Return of the King",
     "description": "The epic conclusion to the Lord of the Rings trilogy.",
-    "videoResId": "the_lord_of_the_rings",
+    "videoResId": "content://com.example.youtube/videos/the_lord_of_the_rings",
     "author": "Peter Jackson",
     "likes": 789,
     "views": 12345,
@@ -128,7 +128,7 @@
   {
     "title": "Fight Club",
     "description": "A dark and twisted tale of identity and rebellion.",
-    "videoResId": "fight_club",
+    "videoResId": "content://com.example.youtube/videos/fight_club",
     "author": "David Fincher",
     "likes": 890,
     "views": 23456,
@@ -146,7 +146,7 @@
   {
     "title": "Forrest Gump",
     "description": "The life story of an extraordinary man.",
-    "videoResId": "forrest_gump",
+    "videoResId": "content://com.example.youtube/videos/forrest_gump",
     "author": "Robert Zemeckis",
     "likes": 901,
     "views": 34567,
@@ -164,7 +164,7 @@
   {
     "title": "The Matrix",
     "description": "A hacker discovers the reality is an illusion.",
-    "videoResId": "the_matrix",
+    "videoResId": "content://com.example.youtube/videos/the_matrix",
     "author": "The Wachowskis",
     "likes": 1023,
     "views": 45678,
