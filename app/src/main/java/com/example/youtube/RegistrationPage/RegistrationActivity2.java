@@ -1,5 +1,7 @@
 package com.example.youtube.RegistrationPage;
 
+import android.Manifest;
+import android.content.pm.PackageManager;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -9,7 +11,10 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
@@ -19,6 +24,7 @@ import com.example.youtube.SignUpPage.SignUpActivity;
 import com.example.youtube.UserManager.UserManager;
 
 public class RegistrationActivity2 extends AppCompatActivity {
+    private static final int REQUEST_PERMISSION_CODE = 100;
     private EditText usernameEditText;
     private EditText passwordEditText;
     private EditText confirmPasswordEditText;
@@ -48,6 +54,9 @@ public class RegistrationActivity2 extends AppCompatActivity {
         passwordEditText = findViewById(R.id.TextPassword);
         confirmPasswordEditText = findViewById(R.id.TextVerificationPassword);
         nicknameEditText = findViewById(R.id.TextNikeName);
+
+        // Check and request permissions
+        checkPermissions();
 
         // Add button click listener for image upload
         Button uploadImageButton = findViewById(R.id.button_upload_image);
@@ -94,6 +103,26 @@ public class RegistrationActivity2 extends AppCompatActivity {
                 }
             }
         });
+    }
+
+    private void checkPermissions() {
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED ||
+                ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE}, REQUEST_PERMISSION_CODE);
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == REQUEST_PERMISSION_CODE) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                // הרשאה התקבלה
+            } else {
+                // הרשאה נדחתה
+                Toast.makeText(this, "Camera and storage permissions are required to use this feature", Toast.LENGTH_SHORT).show();
+            }
+        }
     }
 
     public void setProfileImageUri(Uri uri) {
