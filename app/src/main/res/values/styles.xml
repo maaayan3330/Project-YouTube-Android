@@ -1,0 +1,9 @@
+<resources>
+    <!-- קיימים קבצי סגנונות אחרים פה -->
+
+    <!-- הוספת סגנון לעיצוב התמונה כעיגול -->
+    <style name="ShapeAppearanceOverlay.App.CornerFamily.Circular" parent="">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">50%</item>
+    </style>
+</resources>

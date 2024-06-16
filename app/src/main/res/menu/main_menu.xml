@@ -1,18 +1,19 @@
-<?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <group android:checkableBehavior="single">
         <item
             android:title="Profile">
             <menu>
-                // user name
-                <item android:id="@+id/profile_username"
+                <!-- user name -->
+                <item
+                    android:id="@+id/profile_username"
                     android:icon="@drawable/ic_username"
-                    android:title="@string/username_menu" />
+                    android:title="Username" />
 
-                // nickname
-                <item android:id="@+id/Profile_nickname"
+                <!-- nickname -->
+                <item
+                    android:id="@+id/profile_nickname"
                     android:icon="@drawable/ic_nickname"
-                    android:title="@string/Nickname" />
+                    android:title="Nickname" />
             </menu>
         </item>
     </group>
@@ -21,41 +22,45 @@
         <item
             android:title="Actions">
             <menu>
-                // login
-                <item android:id="@+id/login_yes"
+                <!-- login -->
+                <item
+                    android:id="@+id/login_yes"
                     android:icon="@drawable/ic_login_new"
-                    android:title="@string/login" />
+                    android:title="Login" />
 
-                // log out
-                <item android:id="@+id/logout_yes"
+                <!-- log out -->
+                <item
+                    android:id="@+id/logout_yes"
                     android:icon="@drawable/ic_logout"
-                    android:title="@string/logout" />
+                    android:title="Logout" />
 
-                // uploud video
-                <item android:id="@+id/upload_data_yes"
+                <!-- upload video -->
+                <item
+                    android:id="@+id/upload_data_yes"
                     android:icon="@drawable/ic_file_uploud"
-                    android:title="@string/upload_video" />
+                    android:title="Upload video" />
 
-                // mode
-                <item android:id="@+id/dark_mode_yes"
+                <!-- mode -->
+                <item
+                    android:id="@+id/dark_mode_yes"
                     android:icon="@drawable/ic_dark_light_mode"
-                    android:title="@string/lighting_mode" />
+                    android:title="Change mode" />
             </menu>
         </item>
     </group>
 
-    <item android:title="communicate">
+    <item android:title="Communicate">
         <menu>
-            // help
-            <item android:id="@+id/Help"
+            <!-- help -->
+            <item
+                android:id="@+id/Help"
                 android:icon="@drawable/ic_help"
-                android:title="@string/Help" />
-            // Setting
-            <item android:id="@+id/Setting"
+                android:title="Help" />
+            <!-- Setting -->
+            <item
+                android:id="@+id/Setting"
                 android:icon="@drawable/ic_setting"
-                android:title="@string/Setting" />
+                android:title="Setting" />
         </menu>
     </item>
-
-
 </menu>

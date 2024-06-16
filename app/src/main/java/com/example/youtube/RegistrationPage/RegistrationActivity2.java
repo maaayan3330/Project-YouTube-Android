@@ -1,5 +1,6 @@
 package com.example.youtube.RegistrationPage;
 
+import android.net.Uri;
 import android.os.Bundle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
@@ -13,10 +14,10 @@ import android.widget.Toast;
 import android.view.LayoutInflater;
 import android.widget.TextView;
 
+import com.example.youtube.MainData.UploadImage;
 import com.example.youtube.R;
 import com.example.youtube.SignUpPage.SignUpActivity;
 import com.example.youtube.UserManager.UserManager;
-
 
 public class RegistrationActivity2 extends AppCompatActivity {
     private EditText usernameEditText;
@@ -26,6 +27,7 @@ public class RegistrationActivity2 extends AppCompatActivity {
     private PasswordValidator passwordValidator;
     private UploadImage uploadImage;
     private UserManager userManager;
+    private Uri profileImageUri; // שדה לאחסון URI של התמונה
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,7 +59,7 @@ public class RegistrationActivity2 extends AppCompatActivity {
             }
         });
 
-        // here i connect the button to the next page - if the user is allready register
+        // here i connect the button to the next page - if the user is already registered
         Button buttonForSignUp = findViewById(R.id.alredyReg);
         buttonForSignUp.setOnClickListener(v -> {
             Intent intent = new Intent(this, SignUpActivity.class);
@@ -83,16 +85,20 @@ public class RegistrationActivity2 extends AppCompatActivity {
 
                 // If the user is registered successfully, navigate to the login page
                 if (resultMessage.equals("User registered successfully")) {
-                    // and also add the user to the list of users
+                    // Add the user to the list of users with profile image URI
                     userManager.addUser(usernameEditText.getText().toString(), passwordEditText.getText().toString(),
-                            nicknameEditText.getText().toString());
+                            nicknameEditText.getText().toString(), profileImageUri);
 
-                    // move to the next page back after the user register good
+                    // Move to the next page back after the user registers successfully
                     Intent intent = new Intent(RegistrationActivity2.this, SignUpActivity.class);
                     startActivity(intent);
                 }
             }
         });
+    }
+
+    public void setProfileImageUri(Uri uri) {
+        this.profileImageUri = uri;
     }
 
     private void showCustomToast(String message) {

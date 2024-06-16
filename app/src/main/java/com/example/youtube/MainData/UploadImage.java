@@ -1,13 +1,13 @@
-package com.example.youtube.RegistrationPage;
+package com.example.youtube.MainData;
 
 import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.net.Uri;
-import android.os.Bundle;
 import android.provider.MediaStore;
 import androidx.appcompat.app.AlertDialog;
+
+import com.example.youtube.RegistrationPage.RegistrationActivity2;
 
 public class UploadImage {
     public static final int PICK_IMAGE = 1;
@@ -46,11 +46,10 @@ public class UploadImage {
         if (resultCode == Activity.RESULT_OK) {
             if (requestCode == PICK_IMAGE) {
                 Uri selectedImage = data.getData();
-                // Do something with the selected image URI
+                ((RegistrationActivity2) activity).setProfileImageUri(selectedImage);
             } else if (requestCode == TAKE_PHOTO) {
-                Bundle extras = data.getExtras();
-                Bitmap imageBitmap = (Bitmap) extras.get("data");
-                // Do something with the photo
+                Uri photoUri = data.getData();
+                ((RegistrationActivity2) activity).setProfileImageUri(photoUri);
             }
         }
     }
