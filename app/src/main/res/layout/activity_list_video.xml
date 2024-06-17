@@ -12,14 +12,14 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        android:background="@color/white">
+        android:background="?attr/android:colorBackground">
 
         <!-- Toolbar with custom layout -->
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/white"
+            android:background="?attr/android:colorBackground"
             android:minHeight="?attr/actionBarSize"
             android:theme="?attr/actionBarTheme">
 
@@ -27,7 +27,7 @@
                 android:id="@+id/llBar"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@color/soft_red"
+                android:background="?attr/android:colorBackground"
                 android:orientation="horizontal"
                 android:visibility="visible"
                 android:padding="8dp">
@@ -49,7 +49,9 @@
                     android:background="@drawable/edit_text_background"
                     android:queryHint="@string/search"
                     android:iconifiedByDefault="false"
-                    android:singleLine="true" />
+                    android:singleLine="true"
+                    android:textColor="?attr/colorOnBackground"
+                    android:textColorHint="?attr/colorOnBackground" />
             </LinearLayout>
 
         </androidx.appcompat.widget.Toolbar>
@@ -58,7 +60,8 @@
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rvListVideo"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="match_parent"
+            android:background="?attr/android:colorBackground" />
     </LinearLayout>
 
     <!-- Navigation drawer -->
@@ -67,6 +70,7 @@
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_gravity="start"
+        android:background="?attr/android:colorBackground"
         app:headerLayout="@layout/header"
         app:menu="@menu/main_menu" />
 

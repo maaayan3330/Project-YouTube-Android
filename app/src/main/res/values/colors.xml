@@ -3,5 +3,14 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
     <color name="red">#FF0000</color>
-    <color name="soft_red">#E8B6B3</color>
+
+    <color name="darker_gray">#221F1F</color>
+        <color name="dark_gray">#1A1A1A</color>
+        <color name="light_background">#FFFFFF</color>
+        <color name="dark_background">#1A1A1A</color>
+    <color name="dark_edit_text_background">#333333</color>
+    <color name="editTextBackground">#FFFFFF</color> <!-- צבע רקע אפור בהיר -->
+    <color name="editTextBorder">#B0B0B0</color>
+
+
 </resources>

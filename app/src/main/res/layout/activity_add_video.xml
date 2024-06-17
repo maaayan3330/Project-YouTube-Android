@@ -7,7 +7,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:paddingHorizontal="16dp"
-    android:background="@color/white"
     tools:context=".addVideo.AddVideoActivity">
 
     <ImageView
@@ -34,7 +33,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Title"
-            android:inputType="text" />
+            android:inputType="text"
+            android:textColor="?attr/colorOnBackground"
+            />
     </com.google.android.material.textfield.TextInputLayout>
 
     <!-- Description Input -->
@@ -54,7 +55,8 @@
             android:hint="Description"
             android:inputType="textMultiLine"
             android:minLines="3"
-            android:maxLines="5" />
+            android:maxLines="5"
+             />
     </com.google.android.material.textfield.TextInputLayout>
 
     <!-- Video Resource ID Input -->

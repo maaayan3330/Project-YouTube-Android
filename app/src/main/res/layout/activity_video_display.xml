@@ -5,7 +5,7 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white"
+    android:background="?attr/android:colorBackground"
     tools:context=".videoDisplay.VideoDisplayActivity">
 
     <!-- Video view for playing the video -->
@@ -26,6 +26,7 @@
         android:padding="8dp"
         android:text="Title video"
         android:textStyle="bold"
+        android:textColor="?attr/colorOnBackground"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/vvVideo" />
@@ -38,6 +39,7 @@
         android:layout_marginBottom="1dp"
         android:padding="8dp"
         android:text="Description video"
+        android:textColor="?attr/colorOnBackground"
         app:layout_constraintBottom_toTopOf="@+id/llButtons"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -77,6 +79,7 @@
             android:scaleType="centerInside"
             android:src="@drawable/ic_share" />
     </LinearLayout>
+
     <!-- RecyclerView for displaying comments -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rvComments"
@@ -104,10 +107,12 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:background="@drawable/edit_text_background"
+            android:background="?attr/editTextBackground"
             android:hint="@string/add_a_comment"
             android:minHeight="48dp"
-            android:singleLine="true" />
+            android:singleLine="true"
+            android:textColor="?attr/colorOnBackground"
+            android:textColorHint="?attr/colorOnBackground" />
 
         <!-- Button to post a new comment -->
         <ImageView

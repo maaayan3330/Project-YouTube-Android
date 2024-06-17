@@ -5,6 +5,7 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="?attr/android:colorBackground"
     tools:context=".RegistrationPage.RegistrationActivity2">
 
     <LinearLayout
@@ -43,7 +44,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:inputType="text"
-                android:minHeight="48dp" />
+                android:minHeight="48dp"
+                android:textColor="?attr/colorOnBackground" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <!-- the password -->
@@ -59,13 +61,15 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:inputType="textPassword"
-                android:minHeight="48dp" />
+                android:minHeight="48dp"
+                android:textColor="?attr/colorOnBackground" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/password_restrictions" />
+            android:text="@string/password_restrictions"
+            android:textColor="?attr/colorOnBackground" />
 
         <!-- again password -->
         <com.google.android.material.textfield.TextInputLayout
@@ -80,7 +84,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:inputType="textPassword"
-                android:minHeight="48dp" />
+                android:minHeight="48dp"
+                android:textColor="?attr/colorOnBackground" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <!-- nickname -->
@@ -95,7 +100,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:inputType="text"
-                android:minHeight="48dp" />
+                android:minHeight="48dp"
+                android:textColor="?attr/colorOnBackground" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <!-- sign up button -->
@@ -107,14 +113,16 @@
             android:layout_gravity="center"
             android:minHeight="48dp"
             android:layout_marginBottom="10dp"
-            android:backgroundTint="@color/red" />
+            android:backgroundTint="@color/red"
+            android:textColor="@color/white" />
 
         <Button
             android:id="@+id/alredyReg"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/SignUp_click"
-            android:backgroundTint="@color/red" />
+            android:backgroundTint="@color/red"
+            android:textColor="@color/white" />
 
         <Button
             android:id="@+id/button_upload_image"
@@ -122,8 +130,9 @@
             android:layout_height="wrap_content"
             android:text="Upload Image"
             android:layout_marginTop="16dp"
-            android:layout_gravity="center" />
+            android:layout_gravity="center"
+            android:backgroundTint="@color/red"
+            android:textColor="@color/white" />
 
     </LinearLayout>
-
 </androidx.constraintlayout.widget.ConstraintLayout>
