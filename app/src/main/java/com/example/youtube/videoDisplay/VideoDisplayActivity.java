@@ -25,6 +25,9 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.youtube.R;
+import com.example.youtube.UserManager.User;
+import com.example.youtube.UserManager.UserManager;
+import com.example.youtube.design.CustomToast;
 import com.example.youtube.videoManager.Video;
 
 import java.util.ArrayList;
@@ -59,7 +62,7 @@ public class VideoDisplayActivity extends AppCompatActivity {
         TextView titleView = findViewById(R.id.tvTitle);
         TextView tvDescription = findViewById(R.id.tvDescription);
         titleView.setText(video.getTitle());
-        tvDescription.setText("Description: " +video.getDescription());
+        tvDescription.setText("Description: " + video.getDescription());
         TextView tv_like = findViewById(R.id.tv_like);
         TextView tv_views = findViewById(R.id.tv_view);
         TextView tv_author = findViewById(R.id.tv_author);
@@ -77,21 +80,26 @@ public class VideoDisplayActivity extends AppCompatActivity {
         // Comment list
         RecyclerView rvCommentsRecyclerView = findViewById(R.id.rvComments);
         List<Comment> commentList = video.getComments() != null ? video.getComments() : new ArrayList<>();
-        CommentAdapter commentAdapter = new CommentAdapter(commentList,this);
+        CommentAdapter commentAdapter = new CommentAdapter(commentList, this);
         rvCommentsRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         rvCommentsRecyclerView.setAdapter(commentAdapter);
         // New comment function
         ImageView iv_post = findViewById(R.id.iv_post);
         EditText et_CommentInput = findViewById(R.id.et_CommentInput);
         iv_post.setOnClickListener(view -> {
-            String commentText = et_CommentInput.getText().toString().trim();
-            if (!commentText.isEmpty()) {
-                Comment newComment = new Comment("User", commentText);
-                // Replace "User" with actual user name if available
-                commentAdapter.addComment(newComment);
-                et_CommentInput.setText("");
+            if (UserManager.getInstance().getCurrentUser() != null) {
+                String commentText = et_CommentInput.getText().toString().trim();
+                if (!commentText.isEmpty()) {
+                    User current = UserManager.getInstance().getCurrentUser();
+                    Comment newComment = new Comment(current.getNickname(), commentText);
+                    // Replace "User" with actual user name if available
+                    commentAdapter.addComment(newComment);
+                    et_CommentInput.setText("");
+                } else {
+                    Toast.makeText(this, "Comment cannot be empty", Toast.LENGTH_SHORT).show();
+                }
             } else {
-                Toast.makeText(this, "Comment cannot be empty", Toast.LENGTH_SHORT).show();
+                CustomToast.showToast(this, "Option available just for register users");
             }
         });
 
@@ -172,26 +180,16 @@ public class VideoDisplayActivity extends AppCompatActivity {
 
         // Show control buttons when user touches the video
         vvVideo.setOnClickListener(v -> {
-                if (clControl.getVisibility() == View.GONE) {
-                    clControl.setVisibility(View.VISIBLE);
-                    clControl.postDelayed(() -> clControl.setVisibility(View.GONE), 3000); // Hide after 3 seconds
-                } else {
-                    clControl.setVisibility(View.GONE);
-                }
+            if (clControl.getVisibility() == View.GONE) {
+                clControl.setVisibility(View.VISIBLE);
+                clControl.postDelayed(() -> clControl.setVisibility(View.GONE), 3000); // Hide after 3 seconds
+            } else {
+                clControl.setVisibility(View.GONE);
+            }
         });
 
     }
 
-    /**
-     * Retrieves the resource ID of a raw resource by its name.
-     *
-     * @param resName The name of the raw resource.
-     * @return The resource ID of the raw resource.
-     */
-    public int getRawResIdByName(String resName) {
-        String packageName = getPackageName();
-        return getResources().getIdentifier(resName, "raw", packageName);
-    }
 
     @Override
     public void onConfigurationChanged(@NonNull Configuration newConfig) {

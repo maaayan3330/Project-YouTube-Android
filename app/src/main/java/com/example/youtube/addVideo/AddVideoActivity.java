@@ -20,6 +20,8 @@ import android.widget.VideoView;
 
 
 import com.example.youtube.R;
+import com.example.youtube.UserManager.User;
+import com.example.youtube.UserManager.UserManager;
 import com.example.youtube.design.CustomToast;
 import com.example.youtube.videoList.VideoListActivity;
 import com.example.youtube.videoManager.Video;
@@ -96,9 +98,9 @@ public class AddVideoActivity extends AppCompatActivity {
             CustomToast.showToast(this, "Please fill all fields and select a video");
             return;
         }
-
+        User current= UserManager.getInstance().getCurrentUser();
         // Create a new Video object
-        Video newVideo = new Video(title, description, videoPath, "Author Name", 0, 0, new ArrayList<>());
+        Video newVideo = new Video(title, description, videoPath, current.getNickname(), 0, 0, new ArrayList<>());
         videoManager = VideoManager.getInstance();
         videoManager.addVideo(newVideo);
         Intent intent = new Intent(AddVideoActivity.this, VideoListActivity.class);
