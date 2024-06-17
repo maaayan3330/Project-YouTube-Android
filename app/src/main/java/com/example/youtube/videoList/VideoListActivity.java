@@ -1,6 +1,5 @@
 package com.example.youtube.videoList;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.net.Uri;
@@ -23,10 +22,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.youtube.R;
 import com.example.youtube.addVideo.AddVideoActivity;
-import com.example.youtube.videoDisplay.Comment;
-
-import org.json.JSONArray;
-import org.json.JSONObject;
 
 import com.example.youtube.SignUpPage.SignUpActivity;
 import com.example.youtube.UserManager.User;
@@ -35,9 +30,6 @@ import com.example.youtube.videoManager.Video;
 import com.example.youtube.videoManager.VideoManager;
 import com.google.android.material.navigation.NavigationView;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -96,10 +88,13 @@ public class VideoListActivity extends AppCompatActivity {
                 finish(); // Close the current activity
                 return true;
             } else if (itemId == R.id.upload_data_yes) {
-                Intent intentForVideo = new Intent(VideoListActivity.this, AddVideoActivity.class);
-                CustomToast.showToast(VideoListActivity.this, "Upload video");
-                startActivityForResult(intentForVideo, REQUEST_CODE_VIDEO_PICK);
-                return true;
+                if (UserManager.getInstance().getCurrentUser() != null) {
+
+                    Intent intentForVideo = new Intent(VideoListActivity.this, AddVideoActivity.class);
+                    CustomToast.showToast(VideoListActivity.this, "Upload video");
+                    startActivity(intentForVideo);
+                }else { CustomToast.showToast(this, "Option available just for register users");
+                }return true;
             } else if (itemId == R.id.dark_mode_yes) {
                 // Toggle dark mode
                 int currentNightMode = getResources().getConfiguration().uiMode & Configuration.UI_MODE_NIGHT_MASK;

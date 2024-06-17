@@ -20,6 +20,7 @@ import android.widget.VideoView;
 
 
 import com.example.youtube.R;
+import com.example.youtube.design.CustomToast;
 import com.example.youtube.videoList.VideoListActivity;
 import com.example.youtube.videoManager.Video;
 import com.example.youtube.videoManager.VideoManager;
@@ -78,7 +79,7 @@ public class AddVideoActivity extends AppCompatActivity {
 
                 videoPath = selectedVideoUri.toString();
                 Log.d("alon12", videoPath);
-                Toast.makeText(this, "Video Selected: " + videoPath, Toast.LENGTH_SHORT).show();
+                CustomToast.showToast(this, "Video Selected: " + videoPath);
                 VideoView vvVideo = findViewById(R.id.vvTest);
                 vvVideo.setVideoURI(selectedVideoUri);
                 vvVideo.start();
@@ -92,7 +93,7 @@ public class AddVideoActivity extends AppCompatActivity {
         String description = etDescription.getText().toString();
 
         if (title.isEmpty() || description.isEmpty() || videoPath == null) {
-            Toast.makeText(this, "Please fill all fields and select a video", Toast.LENGTH_SHORT).show();
+            CustomToast.showToast(this, "Please fill all fields and select a video");
             return;
         }
 

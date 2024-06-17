@@ -17,6 +17,8 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.youtube.R;
+import com.example.youtube.UserManager.UserManager;
+import com.example.youtube.design.CustomToast;
 import com.example.youtube.videoDisplay.VideoDisplayActivity;
 import com.example.youtube.videoManager.Video;
 
@@ -124,6 +126,7 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.VideoViewHol
         });
             //edit function
         holder.tv_edit.setOnClickListener(v -> {
+            if (UserManager.getInstance().getCurrentUser()!= null){
             // Show dialog to edit comment
             AlertDialog.Builder builder = new AlertDialog.Builder(v.getContext());
             builder.setTitle("Edit Title and Description");
@@ -158,16 +161,16 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.VideoViewHol
             builder.setNegativeButton("Cancel", (dialog, which) -> dialog.cancel());
 
             builder.show();
+        }else {   CustomToast.showToast(context, "Option available just for register users");}
         });
         //delete function
         holder.tv_delete.setOnClickListener(v -> {
+            if (UserManager.getInstance().getCurrentUser()!= null) {
             // Remove comment from the list
             videoList.remove(position);
             notifyItemRemoved(position);
             notifyItemRangeChanged(position, videoList.size());
-        });
-
-
+        }else {CustomToast.showToast(context, "Option available just for register users");} });
     }
 
 

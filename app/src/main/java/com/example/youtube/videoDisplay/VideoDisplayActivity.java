@@ -77,7 +77,7 @@ public class VideoDisplayActivity extends AppCompatActivity {
         // Comment list
         RecyclerView rvCommentsRecyclerView = findViewById(R.id.rvComments);
         List<Comment> commentList = video.getComments() != null ? video.getComments() : new ArrayList<>();
-        CommentAdapter commentAdapter = new CommentAdapter(commentList);
+        CommentAdapter commentAdapter = new CommentAdapter(commentList,this);
         rvCommentsRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         rvCommentsRecyclerView.setAdapter(commentAdapter);
         // New comment function
