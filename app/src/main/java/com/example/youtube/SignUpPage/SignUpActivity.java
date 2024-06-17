@@ -10,11 +10,11 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
+import com.example.youtube.UserManager.User;
 import com.example.youtube.UserManager.UserManager;
 import com.example.youtube.R;
 import com.example.youtube.RegistrationPage.RegistrationActivity2;
 import com.example.youtube.videoList.VideoListActivity;
-
 
 public class SignUpActivity extends AppCompatActivity {
     private UserManager userManager;
@@ -56,20 +56,59 @@ public class SignUpActivity extends AppCompatActivity {
 
             // If the user exists, navigate to the home page
             if (result) {
-                Intent intent = new Intent(this, VideoListActivity.class);
-                // Start a new activity
-                startActivity(intent);
-                showCustomToast("Login successfully!");
+                // Find the user object
+                User user = null;
+                for (User u : userManager.getUserList()) {
+                    if (u.getUsername().equals(username)) {
+                        user = u;
+                        break;
+                    }
+                }
+
+                if (user != null) {
+                    // Save current user in UserManager
+                    userManager.setCurrentUser(user);
+
+                    // Navigate to the home page
+                    Intent intent = new Intent(this, VideoListActivity.class);
+                    startActivity(intent);
+                    showCustomToast("Login successfully!");
+                } else {
+                    showCustomToast("User not found");
+                }
             } else {
                 if (username.isEmpty() || password.isEmpty()) {
                     showCustomToast("Enter username/password");
-                } else if(!answerForUser) {
+                } else if (!answerForUser) {
                     showCustomToast("Username does not exist");
                 } else {
                     showCustomToast("Password and username do not match");
                 }
             }
         });
+
+        // Restore user data if available
+        if (savedInstanceState != null) {
+            String username = savedInstanceState.getString("username");
+            String password = savedInstanceState.getString("password");
+
+            usernameEditText.setText(username);
+            passwordEditText.setText(password);
+        }
+
+        // Set up the logo click listener
+        logoImage.setOnClickListener(v -> {
+            Intent intent = new Intent(SignUpActivity.this, VideoListActivity.class);
+            startActivity(intent);
+        });
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        // Save user data in Bundle
+        outState.putString("username", usernameEditText.getText().toString());
+        outState.putString("password", passwordEditText.getText().toString());
     }
 
     private void showCustomToast(String message) {

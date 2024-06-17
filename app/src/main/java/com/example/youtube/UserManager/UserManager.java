@@ -1,11 +1,13 @@
 package com.example.youtube.UserManager;
 
+import android.net.Uri;
 import java.util.ArrayList;
 import java.util.List;
 
 public class UserManager {
-    private List<User> userList;
+    private final List<User> userList;
     private static UserManager instance;
+    private User currentUser;
 
     private UserManager() {
         userList = new ArrayList<>();
@@ -18,8 +20,8 @@ public class UserManager {
         return instance;
     }
 
-    public void addUser(String username, String password, String nickname) {
-        User user = new User(username, password, nickname);
+    public void addUser(String username, String password, String nickname, Uri profileImageUri) {
+        User user = new User(username, password, nickname, profileImageUri);
         userList.add(user);
     }
 
@@ -43,5 +45,17 @@ public class UserManager {
             }
         }
         return false;
+    }
+
+    public User getCurrentUser() {
+        return currentUser;
+    }
+
+    public void setCurrentUser(User user) {
+        this.currentUser = user;
+    }
+
+    public void clearCurrentUser() {
+        this.currentUser = null;
     }
 }

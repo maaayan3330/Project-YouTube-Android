@@ -10,7 +10,7 @@ public class PasswordValidator {
     private UserManager userManager;
 
     public PasswordValidator() {
-        userManager = UserManager.getInstance(); // שימוש במופע יחיד של UserManager
+        userManager = UserManager.getInstance(); //  UserManager
     }
 
     // this func checks if the fields have been filled correctly
