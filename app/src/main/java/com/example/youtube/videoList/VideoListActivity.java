@@ -24,7 +24,6 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.youtube.R;
-import com.example.youtube.SignUpActivity;
 import com.example.youtube.addVideo.AddVideoActivity;
 import com.example.youtube.videoDisplay.Comment;
 
@@ -102,7 +101,7 @@ public class VideoListActivity extends AppCompatActivity {
             } else if (itemId == R.id.upload_data_yes) {
                 Intent intentForVideo = new Intent(VideoListActivity.this, AddVideoActivity.class);
                 CustomToast.showToast(VideoListActivity.this, "Upload video");
-                startActivity(intentForVideo);
+                startActivityForResult(intentForVideo,REQUEST_CODE_VIDEO_PICK);
                 return true;
             } else if (itemId == R.id.dark_mode_yes) {
                 // Toggle dark mode
