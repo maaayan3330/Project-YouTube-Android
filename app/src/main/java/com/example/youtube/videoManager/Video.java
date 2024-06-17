@@ -1,4 +1,4 @@
-package com.example.youtube.videoList;
+package com.example.youtube.videoManager;
 
 import com.example.youtube.videoDisplay.Comment;
 

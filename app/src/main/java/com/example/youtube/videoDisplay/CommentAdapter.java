@@ -35,8 +35,8 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.CommentV
             commentTextView = itemView.findViewById(R.id.commentTextView);
             ib_collapse = itemView.findViewById(R.id.ib_collapse);
             llCollapse = itemView.findViewById(R.id.ll_collapse);
-            textViewEdit = itemView.findViewById(R.id.textViewEdit);
-            textViewDelete = itemView.findViewById(R.id.textViewDelete);
+            textViewEdit = itemView.findViewById(R.id.tv_edit);
+            textViewDelete = itemView.findViewById(R.id.tv_delete);
         }
     }
 

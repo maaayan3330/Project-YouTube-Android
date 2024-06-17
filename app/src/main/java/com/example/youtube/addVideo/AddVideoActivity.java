@@ -20,7 +20,9 @@ import android.widget.VideoView;
 
 
 import com.example.youtube.R;
-import com.example.youtube.videoList.Video;
+import com.example.youtube.videoList.VideoListActivity;
+import com.example.youtube.videoManager.Video;
+import com.example.youtube.videoManager.VideoManager;
 
 import java.util.ArrayList;
 
@@ -29,6 +31,7 @@ public class AddVideoActivity extends AppCompatActivity {
 
     private EditText etTitle, etDescription;
     private String videoPath;
+    private VideoManager videoManager;
 
 
     @Override
@@ -76,7 +79,9 @@ public class AddVideoActivity extends AppCompatActivity {
                 videoPath = selectedVideoUri.toString();
                 Log.d("alon12", videoPath);
                 Toast.makeText(this, "Video Selected: " + videoPath, Toast.LENGTH_SHORT).show();
-                VideoView vvVideo=findViewById(R.id.vvTest); vvVideo.setVideoURI(selectedVideoUri);vvVideo.start();
+                VideoView vvVideo = findViewById(R.id.vvTest);
+                vvVideo.setVideoURI(selectedVideoUri);
+                vvVideo.start();
             }
         }
     }
@@ -93,11 +98,8 @@ public class AddVideoActivity extends AppCompatActivity {
 
         // Create a new Video object
         Video newVideo = new Video(title, description, videoPath, "Author Name", 0, 0, new ArrayList<>());
-///fix hear
-        // Create an intent to send the video back to the VideoListActivity
-        Intent resultIntent = new Intent();
-        resultIntent.putExtra("newVideo", newVideo);
-        setResult(Activity.RESULT_OK, resultIntent);
-        finish();
-    }
+        videoManager = VideoManager.getInstance();
+        videoManager.addVideo(newVideo);
+        Intent intent = new Intent(AddVideoActivity.this, VideoListActivity.class);
+        startActivity(intent);    }
 }

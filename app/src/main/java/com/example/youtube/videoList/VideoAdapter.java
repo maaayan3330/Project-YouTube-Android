@@ -6,16 +6,19 @@ import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.VideoView;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.youtube.R;
 import com.example.youtube.videoDisplay.VideoDisplayActivity;
+import com.example.youtube.videoManager.Video;
 
 import java.util.List;
 
@@ -46,7 +49,7 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.VideoViewHol
         public VideoView vvVideo; // VideoView for displaying the video
         public ImageButton ib_collapse;
         public LinearLayout llCollapse;
-        public TextView textViewEdit, textViewDelete;
+        public TextView tv_edit, tv_delete;
 
         /**
          * ViewHolder constructor to initialize the views.
@@ -64,8 +67,8 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.VideoViewHol
 
             ib_collapse = itemView.findViewById(R.id.ib_collapse);
             llCollapse = itemView.findViewById(R.id.ll_collapse);
-            textViewEdit = itemView.findViewById(R.id.textViewEdit);
-            textViewDelete = itemView.findViewById(R.id.textViewDelete);
+            tv_edit = itemView.findViewById(R.id.tv_edit);
+            tv_delete = itemView.findViewById(R.id.tv_delete);
         }
     }
 
@@ -111,7 +114,7 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.VideoViewHol
             context.startActivity(intent);
         });
 
-
+        //collapse function
         holder.ib_collapse.setOnClickListener(v -> {
             if (holder.llCollapse.getVisibility() == View.GONE) {
                 holder.llCollapse.setVisibility(View.VISIBLE);
@@ -119,6 +122,35 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.VideoViewHol
                 holder.llCollapse.setVisibility(View.GONE);
             }
         });
+
+        holder.tv_edit.setOnClickListener(v -> {
+            // Show dialog to edit comment
+            AlertDialog.Builder builder = new AlertDialog.Builder(v.getContext());
+            builder.setTitle("Edit Title and description");
+
+            final EditText inputTitle = new EditText(v.getContext());
+            inputTitle.setText(video.getTitle());
+            builder.setView(inputTitle);
+
+            builder.setPositiveButton("OK", (dialog, which) -> {
+                String newTitle = inputTitle.getText().toString();
+                video.setTitle(newTitle);
+                notifyItemChanged(position);
+                holder.llCollapse.setVisibility(View.GONE); // Collapse after editing
+            });
+
+            builder.setNegativeButton("Cancel", (dialog, which) -> dialog.cancel());
+
+            builder.show();
+        });
+
+        holder.tv_delete.setOnClickListener(v -> {
+            // Remove comment from the list
+            videoList.remove(position);
+            notifyItemRemoved(position);
+            notifyItemRangeChanged(position, videoList.size());
+        });
+
 
     }
 

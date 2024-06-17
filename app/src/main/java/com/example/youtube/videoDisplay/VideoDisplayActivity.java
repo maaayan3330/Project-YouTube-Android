@@ -25,7 +25,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.youtube.R;
-import com.example.youtube.videoList.Video;
+import com.example.youtube.videoManager.Video;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -59,12 +59,12 @@ public class VideoDisplayActivity extends AppCompatActivity {
         TextView titleView = findViewById(R.id.tvTitle);
         TextView tvDescription = findViewById(R.id.tvDescription);
         titleView.setText(video.getTitle());
-        tvDescription.setText(video.getDescription());
+        tvDescription.setText("Description: " +video.getDescription());
         TextView tv_like = findViewById(R.id.tv_like);
         TextView tv_views = findViewById(R.id.tv_view);
         TextView tv_author = findViewById(R.id.tv_author);
         tv_like.setText("Likes: " + video.getLikes());
-        tv_views.setText("Author: " + video.getAuthor());
+        tv_author.setText("Author: " + video.getAuthor());
 
         // Increment views count when the video starts playing
         video.setViews(video.getViews() + 1);
