@@ -15,11 +15,13 @@ import androidx.core.view.WindowInsetsCompat;
 import android.content.Intent;
 import android.util.Log;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Toast;
 import android.widget.VideoView;
 
 
 import com.example.youtube.R;
+import com.example.youtube.RegistrationPage.RegistrationActivity2;
 import com.example.youtube.UserManager.User;
 import com.example.youtube.UserManager.UserManager;
 import com.example.youtube.design.CustomToast;
@@ -57,6 +59,16 @@ public class AddVideoActivity extends AppCompatActivity {
         findViewById(R.id.btnAddVideo).setOnClickListener(v -> addVideo());
 
         findViewById(R.id.btnCancel).setOnClickListener(v -> finish());
+
+
+        // Find the logo ImageView
+        ImageView logoImage = findViewById(R.id.ivLogoImage);
+
+        // Set up the logo click listener
+        logoImage.setOnClickListener(v -> {
+            Intent intent = new Intent(AddVideoActivity.this, VideoListActivity.class);
+            startActivity(intent);
+        });
 
     }
 
