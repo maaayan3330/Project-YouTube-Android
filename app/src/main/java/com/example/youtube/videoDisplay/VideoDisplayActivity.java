@@ -37,6 +37,8 @@ public class VideoDisplayActivity extends AppCompatActivity {
     private VideoView vvVideo; // VideoView for playing the video
     private ConstraintLayout clControl; // Control buttons layout
     private boolean isFullScreen = false; // Fullscreen indicator
+    private boolean isCollapsed = true;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -177,6 +179,7 @@ public class VideoDisplayActivity extends AppCompatActivity {
                     clControl.setVisibility(View.GONE);
                 }
         });
+
     }
 
     /**
