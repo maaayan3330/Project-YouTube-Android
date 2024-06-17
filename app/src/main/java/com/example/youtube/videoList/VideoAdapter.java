@@ -122,19 +122,35 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.VideoViewHol
                 holder.llCollapse.setVisibility(View.GONE);
             }
         });
-
+            //edit function
         holder.tv_edit.setOnClickListener(v -> {
             // Show dialog to edit comment
             AlertDialog.Builder builder = new AlertDialog.Builder(v.getContext());
-            builder.setTitle("Edit Title and description");
+            builder.setTitle("Edit Title and Description");
 
+            // Create a LinearLayout to hold the EditTexts
+            LinearLayout layout = new LinearLayout(v.getContext());
+            layout.setOrientation(LinearLayout.VERTICAL);
+            layout.setPadding(50, 40, 50, 10); // Optional: Add padding for better UI
+
+            // Create EditTexts for title and description
             final EditText inputTitle = new EditText(v.getContext());
+            inputTitle.setHint("Title");
             inputTitle.setText(video.getTitle());
-            builder.setView(inputTitle);
+            layout.addView(inputTitle);
+
+            final EditText inputDescription = new EditText(v.getContext());
+            inputDescription.setHint("Description");
+            inputDescription.setText(video.getDescription());
+            layout.addView(inputDescription);
+
+            builder.setView(layout);
 
             builder.setPositiveButton("OK", (dialog, which) -> {
                 String newTitle = inputTitle.getText().toString();
+                String newDescription = inputDescription.getText().toString();
                 video.setTitle(newTitle);
+                video.setDescription(newDescription);
                 notifyItemChanged(position);
                 holder.llCollapse.setVisibility(View.GONE); // Collapse after editing
             });
@@ -143,7 +159,7 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.VideoViewHol
 
             builder.show();
         });
-
+        //delete function
         holder.tv_delete.setOnClickListener(v -> {
             // Remove comment from the list
             videoList.remove(position);
