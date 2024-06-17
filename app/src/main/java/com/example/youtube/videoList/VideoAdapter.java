@@ -6,6 +6,8 @@ import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.VideoView;
 
@@ -24,6 +26,7 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.VideoViewHol
     private List<Video> videoList; // List of videos to display
     private Context context; // Context in which the adapter is used
 
+
     /**
      * Constructor for the VideoAdapter.
      *
@@ -41,6 +44,9 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.VideoViewHol
     public static class VideoViewHolder extends RecyclerView.ViewHolder {
         public TextView tvTitle, tvDescription,tvViews,tvLikes,tvAuthor; // TextViews for title, description, views, likes
         public VideoView vvVideo; // VideoView for displaying the video
+        public ImageButton ib_collapse;
+        public LinearLayout llCollapse;
+        public TextView textViewEdit, textViewDelete;
 
         /**
          * ViewHolder constructor to initialize the views.
@@ -56,6 +62,10 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.VideoViewHol
             tvLikes = itemView.findViewById(R.id.tv_like);
             tvAuthor = itemView.findViewById(R.id.tv_author);
 
+            ib_collapse = itemView.findViewById(R.id.ib_collapse);
+            llCollapse = itemView.findViewById(R.id.ll_collapse);
+            textViewEdit = itemView.findViewById(R.id.textViewEdit);
+            textViewDelete = itemView.findViewById(R.id.textViewDelete);
         }
     }
 
@@ -85,7 +95,7 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.VideoViewHol
     public void onBindViewHolder(VideoViewHolder holder, int position) {
         Video video = videoList.get(position);
         holder.tvTitle.setText(video.getTitle());
-        holder.tvDescription.setText(video.getDescription());
+        holder.tvDescription.setText("Description: "+ video.getDescription());
         holder.tvViews.setText("Views: " + video.getViews());
         holder.tvLikes.setText("Likes: " + video.getLikes());
         holder.tvAuthor.setText("Author: " + video.getAuthor());
@@ -100,6 +110,16 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.VideoViewHol
             intent.putExtra("extra_video", video);
             context.startActivity(intent);
         });
+
+
+        holder.ib_collapse.setOnClickListener(v -> {
+            if (holder.llCollapse.getVisibility() == View.GONE) {
+                holder.llCollapse.setVisibility(View.VISIBLE);
+            } else {
+                holder.llCollapse.setVisibility(View.GONE);
+            }
+        });
+
     }
 
 

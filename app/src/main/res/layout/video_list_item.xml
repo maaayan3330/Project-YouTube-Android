@@ -4,9 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/lyConstraint"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:padding="0dp">
-
+    android:layout_height="wrap_content">
 
     <VideoView
         android:id="@+id/vvVideo"
