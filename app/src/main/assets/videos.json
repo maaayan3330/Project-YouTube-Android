@@ -2,14 +2,17 @@
   {
     "title": "Inception",
     "description": "A mind-bending thriller by Christopher Nolan.",
-    "videoResId": "inception",
+    "videoUri": "android.resource://com.example.youtube/raw/inception",
+    "author": "Christopher Nolan",
+    "likes": 123,
+    "views": 4567,
     "comments": [
       {
-        "author": "User1",
+        "author": "Alice Johnson",
         "comment": "Great movie!"
       },
       {
-        "author": "User2",
+        "author": "Bob Smith",
         "comment": "Loved the ending!"
       }
     ]
@@ -17,14 +20,17 @@
   {
     "title": "The Shawshank Redemption",
     "description": "An inspiring story of hope and friendship.",
-    "videoResId": "the_shawshank_redemption",
+    "videoUri": "android.resource://com.example.youtube/raw/the_shawshank_redemption",
+    "author": "Frank Darabont",
+    "likes": 234,
+    "views": 5678,
     "comments": [
       {
-        "author": "User3",
+        "author": "Charlie Brown",
         "comment": "A must-watch!"
       },
       {
-        "author": "User4",
+        "author": "Dana White",
         "comment": "Timeless classic."
       }
     ]
@@ -32,14 +38,17 @@
   {
     "title": "The Godfather",
     "description": "A classic mafia drama.",
-    "videoResId": "the_godfather",
+    "videoUri": "android.resource://com.example.youtube/raw/the_godfather",
+    "author": "Francis Ford Coppola",
+    "likes": 345,
+    "views": 6789,
     "comments": [
       {
-        "author": "User5",
+        "author": "Eve Adams",
         "comment": "Best mafia movie ever!"
       },
       {
-        "author": "User6",
+        "author": "Frank Wright",
         "comment": "Al Pacino was amazing."
       }
     ]
@@ -47,14 +56,17 @@
   {
     "title": "The Dark Knight",
     "description": "Batman faces off against the Joker.",
-    "videoResId": "the_dark_knight",
+    "videoUri": "android.resource://com.example.youtube/raw/the_dark_knight",
+    "author": "Christopher Nolan",
+    "likes": 456,
+    "views": 7890,
     "comments": [
       {
-        "author": "User7",
+        "author": "Grace Lee",
         "comment": "Heath Ledger was phenomenal."
       },
       {
-        "author": "User8",
+        "author": "Hank Green",
         "comment": "Best Batman movie!"
       }
     ]
@@ -62,14 +74,17 @@
   {
     "title": "Pulp Fiction",
     "description": "A series of interconnected stories by Quentin Tarantino.",
-    "videoResId": "pulp_fiction",
+    "videoUri": "android.resource://com.example.youtube/raw/pulp_fiction",
+    "author": "Quentin Tarantino",
+    "likes": 567,
+    "views": 8901,
     "comments": [
       {
-        "author": "User9",
+        "author": "Ivy Clark",
         "comment": "A masterpiece of storytelling."
       },
       {
-        "author": "User10",
+        "author": "Jack Miller",
         "comment": "Tarantino's best work."
       }
     ]
@@ -77,14 +92,17 @@
   {
     "title": "Schindler's List",
     "description": "A true story of a man who saved thousands during the Holocaust.",
-    "videoResId": "schindlers_list",
+    "videoUri": "android.resource://com.example.youtube/raw/schindlers_list",
+    "author": "Steven Spielberg",
+    "likes": 678,
+    "views": 9012,
     "comments": [
       {
-        "author": "User11",
+        "author": "Kimberly Thompson",
         "comment": "A very touching and important movie."
       },
       {
-        "author": "User12",
+        "author": "Larry Wilson",
         "comment": "Liam Neeson was incredible."
       }
     ]
@@ -92,14 +110,17 @@
   {
     "title": "The Lord of the Rings: The Return of the King",
     "description": "The epic conclusion to the Lord of the Rings trilogy.",
-    "videoResId": "the_lord_of_the_rings",
+    "videoUri": "android.resource://com.example.youtube/raw/the_lord_of_the_rings",
+    "author": "Peter Jackson",
+    "likes": 789,
+    "views": 12345,
     "comments": [
       {
-        "author": "User13",
+        "author": "Monica Taylor",
         "comment": "An epic finale to an amazing trilogy."
       },
       {
-        "author": "User14",
+        "author": "Ned Stark",
         "comment": "Peter Jackson did a fantastic job."
       }
     ]
@@ -107,14 +128,17 @@
   {
     "title": "Fight Club",
     "description": "A dark and twisted tale of identity and rebellion.",
-    "videoResId": "fight_club",
+    "videoUri": "android.resource://com.example.youtube/raw/fight_club",
+    "author": "David Fincher",
+    "likes": 890,
+    "views": 23456,
     "comments": [
       {
-        "author": "User15",
+        "author": "Oscar Reed",
         "comment": "Mind-blowing movie."
       },
       {
-        "author": "User16",
+        "author": "Paul Walker",
         "comment": "One of the best plot twists ever."
       }
     ]
@@ -122,14 +146,17 @@
   {
     "title": "Forrest Gump",
     "description": "The life story of an extraordinary man.",
-    "videoResId": "forrest_gump",
+    "videoUri": "android.resource://com.example.youtube/raw/forrest_gump",
+    "author": "Robert Zemeckis",
+    "likes": 901,
+    "views": 34567,
     "comments": [
       {
-        "author": "User17",
+        "author": "Quincy Allen",
         "comment": "Inspiring and heartwarming."
       },
       {
-        "author": "User18",
+        "author": "Rachel Adams",
         "comment": "Tom Hanks' best performance."
       }
     ]
@@ -137,14 +164,17 @@
   {
     "title": "The Matrix",
     "description": "A hacker discovers the reality is an illusion.",
-    "videoResId": "the_matrix",
+    "videoUri": "android.resource://com.example.youtube/raw/the_matrix",
+    "author": "The Wachowskis",
+    "likes": 1023,
+    "views": 45678,
     "comments": [
       {
-        "author": "User19",
+        "author": "Sam Harris",
         "comment": "A groundbreaking sci-fi movie."
       },
       {
-        "author": "User20",
+        "author": "Tina Turner",
         "comment": "Changed the way we see action movies."
       }
     ]

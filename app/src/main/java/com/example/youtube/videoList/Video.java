@@ -1,91 +1,99 @@
 package com.example.youtube.videoList;
 
-
 import com.example.youtube.videoDisplay.Comment;
 
 import java.io.Serializable;
 import java.util.List;
 
+
 /**
- * Represents a video with a title, description, and resource ID.
+ * Represents a video with a title, description, resource ID, author, number of likes, and number of views.
  */
 public class Video implements Serializable {
     private String title;       // Title of the video
     private String description; // Description of the video
-    private String videoResId;  // Resource ID of the video
-    private List<Comment> comments;
-
+    private String videoUri;       // URI of the video
+    private String author;      // Author of the video
+    private int likes;          // Number of likes
+    private int views;          // Number of views
+    private List<Comment> comments; // Comments on the video
 
     /**
-     * Constructs a new Video with the specified title, description, and resource ID.
+     * Constructs a new Video with the specified title, description, URI, author, number of likes, number of views, and comments.
      *
      * @param title       The title of the video.
      * @param description The description of the video.
-     * @param videoResId  The resource ID of the video.
-     * @param comments  The comments of the video.
+     * @param videoUri    The URI of the video.
+     * @param author      The author of the video.
+     * @param likes       The number of likes for the video.
+     * @param views       The number of views for the video.
+     * @param comments    The comments on the video.
      */
-    public Video(String title, String description, String videoResId, List<Comment> comments) {
+    public Video(String title, String description, String videoUri, String author, int likes, int views, List<Comment> comments) {
         this.title = title;
         this.description = description;
-        this.videoResId = videoResId;
+        this.videoUri = videoUri; // Convert String to Uri
+        this.author = author;
+        this.likes = likes;
+        this.views = views;
         this.comments = comments;
     }
 
-    /**
-     * Returns the title of the video.
-     *
-     * @return The title of the video.
-     */
+    // Getters and setters
+
     public String getTitle() {
         return title;
     }
 
-    /**
-     * Sets the title of the video.
-     *
-     * @param title The title to set.
-     */
     public void setTitle(String title) {
         this.title = title;
     }
 
-    /**
-     * Returns the description of the video.
-     *
-     * @return The description of the video.
-     */
     public String getDescription() {
         return description;
     }
 
-    /**
-     * Sets the description of the video.
-     *
-     * @param description The description to set.
-     */
     public void setDescription(String description) {
         this.description = description;
     }
 
-    /**
-     * Returns the resource ID of the video.
-     *
-     * @return The resource ID of the video.
-     */
-    public String getVideoResId() {
-        return videoResId;
+    public String getVideoUri() {
+        return videoUri;
     }
 
-    /**
-     * Sets the resource ID of the video.
-     *
-     * @param videoResId The resource ID to set.
-     */
-    public void setVideoResId(String videoResId) {
-        this.videoResId = videoResId;
+    public void setVideoUri(String videoUri) {
+        this.videoUri = videoUri;
+    }
+
+    public String getAuthor() {
+        return author;
+    }
+
+    public void setAuthor(String author) {
+        this.author = author;
+    }
+
+    public int getLikes() {
+        return likes;
+    }
+
+    public void setLikes(int likes) {
+        this.likes = likes;
+    }
+
+    public int getViews() {
+        return views;
+    }
+
+    public void setViews(int views) {
+        this.views = views;
     }
 
     public List<Comment> getComments() {
         return comments;
+    }
+
+    public void setComments(List<Comment> comments) {
+        this.comments = comments;
     }
 }
