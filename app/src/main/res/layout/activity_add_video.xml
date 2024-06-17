@@ -13,6 +13,7 @@
         android:id="@+id/ivLogoImage"
         android:layout_width="150dp"
         android:layout_height="75dp"
+        android:contentDescription="@string/youtube_logo"
         android:src="@drawable/icon_for_youtube"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -32,10 +33,9 @@
             android:singleLine="true"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Title"
-            android:inputType="text"
             android:textColor="?attr/colorOnBackground"
-            />
+            android:hint="@string/title"
+            android:inputType="text" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <!-- Description Input -->
@@ -52,31 +52,23 @@
             android:id="@+id/etDescription"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Description"
+            android:hint="@string/description"
             android:inputType="textMultiLine"
             android:minLines="3"
-            android:maxLines="5"
-             />
+            android:maxLines="5" />
     </com.google.android.material.textfield.TextInputLayout>
 
-    <!-- Video Resource ID Input -->
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/tilVideoResId"
+    <!-- Select Video Button -->
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnSelectVideo"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="24dp"
+        android:text="@string/select_video"
+        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tilDescription">
-
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/etVideoResId"
-            android:singleLine="true"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Video Resource ID"
-            android:inputType="text" />
-    </com.google.android.material.textfield.TextInputLayout>
+        app:layout_constraintTop_toBottomOf="@+id/tilDescription" />
 
     <!-- Add Video Button -->
     <com.google.android.material.button.MaterialButton
@@ -84,11 +76,11 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="24dp"
-        android:text="Add Video"
+        android:text="@string/add_video"
         style="@style/Widget.MaterialComponents.Button.OutlinedButton"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tilVideoResId" />
+        app:layout_constraintTop_toBottomOf="@+id/btnSelectVideo" />
 
     <!-- Cancel Button -->
     <com.google.android.material.button.MaterialButton
@@ -96,10 +88,19 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
-        android:text="Cancel"
+        android:text="@string/cancel"
         style="@style/Widget.MaterialComponents.Button.OutlinedButton"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/btnAddVideo" />
+
+    <VideoView
+        android:id="@+id/vvTest"
+        android:layout_width="206dp"
+        android:layout_height="127dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btnCancel" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,4 +1,6 @@
 package com.example.youtube.videoList;
+
+import android.app.Activity;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.net.Uri;
@@ -7,6 +9,9 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
+
+import androidx.activity.EdgeToEdge;
+import androidx.annotation.Nullable;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
@@ -19,6 +24,12 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.youtube.R;
+import com.example.youtube.SignUpActivity;
+import com.example.youtube.addVideo.AddVideoActivity;
+import com.example.youtube.videoDisplay.Comment;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
 import com.example.youtube.SignUpPage.SignUpActivity;
 import com.example.youtube.UserManager.User;
 import com.example.youtube.addVideo.AddVideoActivity;
@@ -29,6 +40,7 @@ import com.google.gson.reflect.TypeToken;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 import java.lang.reflect.Type;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
@@ -37,7 +49,9 @@ import com.example.youtube.UserManager.UserManager;
 
 import com.google.android.material.imageview.ShapeableImageView;
 
-
+/**
+ * MainActivity class for displaying a list of videos.
+ */
 public class VideoListActivity extends AppCompatActivity {
     List<Video> videoList;
     VideoAdapter videoAdapter;
@@ -47,6 +61,8 @@ public class VideoListActivity extends AppCompatActivity {
     private Toolbar toolbar;
     private ShapeableImageView profileImageView;
     private Uri profileImageUri; // Variable to store the profile image URI
+    private static final int REQUEST_CODE_VIDEO_PICK = 1;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -111,13 +127,16 @@ public class VideoListActivity extends AppCompatActivity {
         });
 
         // Initialize RecyclerView
+        // RecyclerView for displaying the video list
         RecyclerView rvListVideo = findViewById(R.id.rvListVideo);
         rvListVideo.setLayoutManager(new LinearLayoutManager(this)); // Set layout manager
 
         // Load videos from JSON
+        // List to hold video data
         videoList = loadVideosFromJson();
 
         // Set adapter to the RecyclerView
+        // Adapter for the RecyclerView
         videoAdapter = new VideoAdapter(videoList, this);
         rvListVideo.setAdapter(videoAdapter);
 
@@ -205,6 +224,11 @@ public class VideoListActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Loads video data from the videos.json file in the assets folder.
+     *
+     * @return A list of Video objects.
+     */
     private List<Video> loadVideosFromJson() {
         String json;
 
@@ -227,25 +251,42 @@ public class VideoListActivity extends AppCompatActivity {
             // Convert the buffer to a String
             json = new String(buffer, StandardCharsets.UTF_8);
         } catch (IOException ex) {
-            ex.printStackTrace();
-            return null;
+            ex.printStackTrace(); // Print the stack trace for debugging
+            return null; // Return null if an exception occurs
         }
 
-        // Parse JSON using Gson
-        Gson gson = new Gson();
-        Type videoListType = new TypeToken<List<Video>>() {
-        }.getType();
+        // Parse JSON manually
+        List<Video> videos = new ArrayList<>();
+        try {
+            JSONArray jsonArray = new JSONArray(json);
+            for (int i = 0; i < jsonArray.length(); i++) {
+                JSONObject jsonObject = jsonArray.getJSONObject(i);
 
-        // Return the list of videos parsed from JSON
-        return gson.fromJson(json, videoListType);
-    }
+                String title = jsonObject.getString("title");
+                String description = jsonObject.getString("description");
+                String videoUri = jsonObject.getString("videoUri");
+                String author = jsonObject.getString("author");
+                int likes = jsonObject.getInt("likes");
+                int views = jsonObject.getInt("views");
 
-    public int getRawResIdByName(String resName) {
-        // Get the package name of the application
-        String packageName = getPackageName();
+                List<Comment> comments = new ArrayList<>();
+                if (jsonObject.has("comments")) {
+                    JSONArray commentsArray = jsonObject.getJSONArray("comments");
+                    for (int j = 0; j < commentsArray.length(); j++) {
+                        JSONObject commentObject = commentsArray.getJSONObject(j);
+                        String commentAuthor = commentObject.getString("author");
+                        String commentText = commentObject.getString("comment");
+                        comments.add(new Comment(commentAuthor, commentText));
+                    }
+                }
 
-        // Get the resource ID
-        return getResources().getIdentifier(resName, "raw", packageName);
+                videos.add(new Video(title, description, videoUri, author, likes, views, comments));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return videos;
     }
 
     private void filterVideoList(String text) {
@@ -260,6 +301,20 @@ public class VideoListActivity extends AppCompatActivity {
             Toast.makeText(this, "No video found", Toast.LENGTH_SHORT).show();
         } else {
             videoAdapter.setFilterList(filteredList);
+        }
+    }
+
+
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == REQUEST_CODE_VIDEO_PICK && resultCode == Activity.RESULT_OK && data != null) {
+            Video newVideo = (Video) data.getSerializableExtra("newVideo");
+            if (newVideo != null) {
+                videoList.add(newVideo);
+                videoAdapter.notifyItemInserted(videoList.size() - 1);
+            }
         }
     }
 }
