@@ -1,6 +1,5 @@
 package com.example.youtube.videoList;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.net.Uri;
@@ -10,8 +9,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
-import androidx.activity.EdgeToEdge;
-import androidx.annotation.Nullable;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
@@ -25,25 +22,17 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.youtube.R;
 import com.example.youtube.addVideo.AddVideoActivity;
-import com.example.youtube.videoDisplay.Comment;
 
-import org.json.JSONArray;
-import org.json.JSONObject;
 import com.example.youtube.SignUpPage.SignUpActivity;
 import com.example.youtube.UserManager.User;
-import com.example.youtube.addVideo.AddVideoActivity;
 import com.example.youtube.design.CustomToast;
+import com.example.youtube.videoManager.Video;
+import com.example.youtube.videoManager.VideoManager;
 import com.google.android.material.navigation.NavigationView;
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.nio.charset.StandardCharsets;
-import java.lang.reflect.Type;
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
+
 import com.example.youtube.UserManager.UserManager;
 
 import com.google.android.material.imageview.ShapeableImageView;
@@ -52,7 +41,7 @@ import com.google.android.material.imageview.ShapeableImageView;
  * MainActivity class for displaying a list of videos.
  */
 public class VideoListActivity extends AppCompatActivity {
-    List<Video> videoList;
+    VideoManager videoManager;
     VideoAdapter videoAdapter;
     private DrawerLayout drawerLayout;
     private NavigationView navigationView;
@@ -99,10 +88,13 @@ public class VideoListActivity extends AppCompatActivity {
                 finish(); // Close the current activity
                 return true;
             } else if (itemId == R.id.upload_data_yes) {
-                Intent intentForVideo = new Intent(VideoListActivity.this, AddVideoActivity.class);
-                CustomToast.showToast(VideoListActivity.this, "Upload video");
-                startActivityForResult(intentForVideo,REQUEST_CODE_VIDEO_PICK);
-                return true;
+                if (UserManager.getInstance().getCurrentUser() != null) {
+
+                    Intent intentForVideo = new Intent(VideoListActivity.this, AddVideoActivity.class);
+                    CustomToast.showToast(VideoListActivity.this, "Upload video");
+                    startActivity(intentForVideo);
+                }else { CustomToast.showToast(this, "Option available just for register users");
+                }return true;
             } else if (itemId == R.id.dark_mode_yes) {
                 // Toggle dark mode
                 int currentNightMode = getResources().getConfiguration().uiMode & Configuration.UI_MODE_NIGHT_MASK;
@@ -129,14 +121,14 @@ public class VideoListActivity extends AppCompatActivity {
         // RecyclerView for displaying the video list
         RecyclerView rvListVideo = findViewById(R.id.rvListVideo);
         rvListVideo.setLayoutManager(new LinearLayoutManager(this)); // Set layout manager
-
+        videoManager = VideoManager.getInstance();
         // Load videos from JSON
-        // List to hold video data
-        videoList = loadVideosFromJson();
+        videoManager.loadVideosFromJson(this);
+
 
         // Set adapter to the RecyclerView
         // Adapter for the RecyclerView
-        videoAdapter = new VideoAdapter(videoList, this);
+        videoAdapter = new VideoAdapter(videoManager.getVideoList(), this);
         rvListVideo.setAdapter(videoAdapter);
 
         // Initialize user info views from header
@@ -223,74 +215,9 @@ public class VideoListActivity extends AppCompatActivity {
         }
     }
 
-    /**
-     * Loads video data from the videos.json file in the assets folder.
-     *
-     * @return A list of Video objects.
-     */
-    private List<Video> loadVideosFromJson() {
-        String json;
-
-        try {
-            // Open the JSON file
-            InputStream is = getAssets().open("videos.json");
-
-            // Get the size of the file
-            int size = is.available();
-
-            // Create a buffer to hold the file contents
-            byte[] buffer = new byte[size];
-
-            // Read the file into the buffer
-            is.read(buffer);
-
-            // Close the input stream
-            is.close();
-
-            // Convert the buffer to a String
-            json = new String(buffer, StandardCharsets.UTF_8);
-        } catch (IOException ex) {
-            ex.printStackTrace(); // Print the stack trace for debugging
-            return null; // Return null if an exception occurs
-        }
-
-        // Parse JSON manually
-        List<Video> videos = new ArrayList<>();
-        try {
-            JSONArray jsonArray = new JSONArray(json);
-            for (int i = 0; i < jsonArray.length(); i++) {
-                JSONObject jsonObject = jsonArray.getJSONObject(i);
-
-                String title = jsonObject.getString("title");
-                String description = jsonObject.getString("description");
-                String videoUri = jsonObject.getString("videoUri");
-                String author = jsonObject.getString("author");
-                int likes = jsonObject.getInt("likes");
-                int views = jsonObject.getInt("views");
-
-                List<Comment> comments = new ArrayList<>();
-                if (jsonObject.has("comments")) {
-                    JSONArray commentsArray = jsonObject.getJSONArray("comments");
-                    for (int j = 0; j < commentsArray.length(); j++) {
-                        JSONObject commentObject = commentsArray.getJSONObject(j);
-                        String commentAuthor = commentObject.getString("author");
-                        String commentText = commentObject.getString("comment");
-                        comments.add(new Comment(commentAuthor, commentText));
-                    }
-                }
-
-                videos.add(new Video(title, description, videoUri, author, likes, views, comments));
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        return videos;
-    }
-
     private void filterVideoList(String text) {
         List<Video> filteredList = new ArrayList<>();
-        for (Video video : videoList) {
+        for (Video video : videoManager.getVideoList()) {
             if (video.getTitle().toLowerCase().contains(text.toLowerCase())) {
                 filteredList.add(video);
             }
@@ -303,17 +230,4 @@ public class VideoListActivity extends AppCompatActivity {
         }
     }
 
-
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == REQUEST_CODE_VIDEO_PICK && resultCode == Activity.RESULT_OK && data != null) {
-            Video newVideo = (Video) data.getSerializableExtra("newVideo");
-            if (newVideo != null) {
-                videoList.add(newVideo);
-                videoAdapter.notifyItemInserted(videoList.size() - 1);
-            }
-        }
-    }
 }

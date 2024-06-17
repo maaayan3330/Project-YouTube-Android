@@ -15,12 +15,19 @@ import androidx.core.view.WindowInsetsCompat;
 import android.content.Intent;
 import android.util.Log;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Toast;
 import android.widget.VideoView;
 
 
 import com.example.youtube.R;
-import com.example.youtube.videoList.Video;
+import com.example.youtube.RegistrationPage.RegistrationActivity2;
+import com.example.youtube.UserManager.User;
+import com.example.youtube.UserManager.UserManager;
+import com.example.youtube.design.CustomToast;
+import com.example.youtube.videoList.VideoListActivity;
+import com.example.youtube.videoManager.Video;
+import com.example.youtube.videoManager.VideoManager;
 
 import java.util.ArrayList;
 
@@ -29,6 +36,7 @@ public class AddVideoActivity extends AppCompatActivity {
 
     private EditText etTitle, etDescription;
     private String videoPath;
+    private VideoManager videoManager;
 
 
     @Override
@@ -51,6 +59,16 @@ public class AddVideoActivity extends AppCompatActivity {
         findViewById(R.id.btnAddVideo).setOnClickListener(v -> addVideo());
 
         findViewById(R.id.btnCancel).setOnClickListener(v -> finish());
+
+
+        // Find the logo ImageView
+        ImageView logoImage = findViewById(R.id.ivLogoImage);
+
+        // Set up the logo click listener
+        logoImage.setOnClickListener(v -> {
+            Intent intent = new Intent(AddVideoActivity.this, VideoListActivity.class);
+            startActivity(intent);
+        });
 
     }
 
@@ -75,8 +93,10 @@ public class AddVideoActivity extends AppCompatActivity {
 
                 videoPath = selectedVideoUri.toString();
                 Log.d("alon12", videoPath);
-                Toast.makeText(this, "Video Selected: " + videoPath, Toast.LENGTH_SHORT).show();
-                VideoView vvVideo=findViewById(R.id.vvTest); vvVideo.setVideoURI(selectedVideoUri);vvVideo.start();
+                CustomToast.showToast(this, "Video Selected: " + videoPath);
+                VideoView vvVideo = findViewById(R.id.vvTest);
+                vvVideo.setVideoURI(selectedVideoUri);
+                vvVideo.start();
             }
         }
     }
@@ -87,17 +107,14 @@ public class AddVideoActivity extends AppCompatActivity {
         String description = etDescription.getText().toString();
 
         if (title.isEmpty() || description.isEmpty() || videoPath == null) {
-            Toast.makeText(this, "Please fill all fields and select a video", Toast.LENGTH_SHORT).show();
+            CustomToast.showToast(this, "Please fill all fields and select a video");
             return;
         }
-
+        User current= UserManager.getInstance().getCurrentUser();
         // Create a new Video object
-        Video newVideo = new Video(title, description, videoPath, "Author Name", 0, 0, new ArrayList<>());
-///fix hear
-        // Create an intent to send the video back to the VideoListActivity
-        Intent resultIntent = new Intent();
-        resultIntent.putExtra("newVideo", newVideo);
-        setResult(Activity.RESULT_OK, resultIntent);
-        finish();
-    }
+        Video newVideo = new Video(title, description, videoPath, current.getNickname(), 0, 0, new ArrayList<>());
+        videoManager = VideoManager.getInstance();
+        videoManager.addVideo(newVideo);
+        Intent intent = new Intent(AddVideoActivity.this, VideoListActivity.class);
+        startActivity(intent);    }
 }

@@ -1,5 +1,6 @@
 package com.example.youtube.videoDisplay;
 
+import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,14 +14,18 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.youtube.R;
+import com.example.youtube.UserManager.UserManager;
+import com.example.youtube.design.CustomToast;
 
 import java.util.List;
 
 public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.CommentViewHolder> {
     private List<Comment> commentList;
+    private Context context;
 
-    public CommentAdapter(List<Comment> commentList) {
+    public CommentAdapter(List<Comment> commentList, Context context) {
         this.commentList = commentList;
+        this.context = context;
     }
 
     public static class CommentViewHolder extends RecyclerView.ViewHolder {
@@ -35,8 +40,8 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.CommentV
             commentTextView = itemView.findViewById(R.id.commentTextView);
             ib_collapse = itemView.findViewById(R.id.ib_collapse);
             llCollapse = itemView.findViewById(R.id.ll_collapse);
-            textViewEdit = itemView.findViewById(R.id.textViewEdit);
-            textViewDelete = itemView.findViewById(R.id.textViewDelete);
+            textViewEdit = itemView.findViewById(R.id.tv_edit);
+            textViewDelete = itemView.findViewById(R.id.tv_delete);
         }
     }
 
@@ -63,31 +68,41 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.CommentV
         });
 
         holder.textViewEdit.setOnClickListener(v -> {
-            // Show dialog to edit comment
-            AlertDialog.Builder builder = new AlertDialog.Builder(v.getContext());
-            builder.setTitle("Edit Comment");
+            if (UserManager.getInstance().getCurrentUser() != null) {
+                // Show dialog to edit comment
+                AlertDialog.Builder builder = new AlertDialog.Builder(v.getContext());
+                builder.setTitle("Edit Comment");
 
-            final EditText input = new EditText(v.getContext());
-            input.setText(comment.getCommentText());
-            builder.setView(input);
+                final EditText input = new EditText(v.getContext());
+                input.setText(comment.getCommentText());
+                builder.setView(input);
 
-            builder.setPositiveButton("OK", (dialog, which) -> {
-                String newCommentText = input.getText().toString();
-                comment.setCommentText(newCommentText);
-                notifyItemChanged(position);
-                holder.llCollapse.setVisibility(View.GONE); // Collapse after editing
-            });
+                builder.setPositiveButton("OK", (dialog, which) -> {
+                    String newCommentText = input.getText().toString();
+                    comment.setCommentText(newCommentText);
+                    notifyItemChanged(position);
+                    holder.llCollapse.setVisibility(View.GONE); // Collapse after editing
+                });
 
-            builder.setNegativeButton("Cancel", (dialog, which) -> dialog.cancel());
+                builder.setNegativeButton("Cancel", (dialog, which) -> dialog.cancel());
 
-            builder.show();
+                builder.show();
+            } else {
+                CustomToast.showToast(context, "Option available just for register users");
+            }
         });
 
+
         holder.textViewDelete.setOnClickListener(v -> {
-            // Remove comment from the list
-            commentList.remove(position);
-            notifyItemRemoved(position);
-            notifyItemRangeChanged(position, commentList.size());
+            if (UserManager.getInstance().getCurrentUser() != null) {
+
+                // Remove comment from the list
+                commentList.remove(position);
+                notifyItemRemoved(position);
+                notifyItemRangeChanged(position, commentList.size());
+            } else {
+                CustomToast.showToast(context, "Option available just for register users");
+            }
         });
     }
 
