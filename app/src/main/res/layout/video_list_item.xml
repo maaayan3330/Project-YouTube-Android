@@ -25,7 +25,7 @@
         android:layout_marginStart="5dp"
         android:layout_marginTop="5dp"
         android:padding="5dp"
-        android:text="Title"
+        android:text="@string/title"
         android:textStyle="bold"
         app:layout_constraintEnd_toStartOf="@+id/tv_like"
         app:layout_constraintHorizontal_bias="0.0"
@@ -39,7 +39,7 @@
         android:layout_marginStart="5dp"
         android:layout_marginTop="5dp"
         android:padding="5dp"
-        android:text="Description"
+        android:text="@string/description"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tvTitle" />
@@ -50,7 +50,7 @@
         android:layout_height="wrap_content"
         android:layout_marginEnd="20dp"
         android:padding="5dp"
-        android:text="likes: "
+        android:text="@string/likes"
         app:layout_constraintEnd_toStartOf="@+id/tv_view"
         app:layout_constraintTop_toTopOf="@+id/tvTitle" />
 
@@ -59,7 +59,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="1dp"
-        android:text="author: "
+        android:text="@string/author"
         app:layout_constraintStart_toStartOf="@+id/tv_like"
         app:layout_constraintTop_toBottomOf="@+id/tv_like" />
 
@@ -69,7 +69,7 @@
         android:layout_height="wrap_content"
         android:layout_marginEnd="52dp"
         android:padding="5dp"
-        android:text="views: "
+        android:text="@string/views"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@+id/tvTitle" />
 

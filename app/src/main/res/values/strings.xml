@@ -21,5 +21,17 @@
     <string name="sign_in">sign in</string>
     <string name="rewind">rewind</string>
     <string name="pause_play">pause/play</string>
+    <string name="description">Description</string>
+    <string name="title">Title</string>
+    <string name="author">author:</string>
+    <string name="likes">likes:</string>
+    <string name="views">views:</string>
+    <string name="forward">forward</string>
+    <string name="fullscreen">fullscreen</string>
+    <string name="title_video">Title video</string>
+    <string name="description_video">Description video</string>
+    <string name="add_video">Add Video</string>
+    <string name="select_video">Select Video</string>
+    <string name="cancel">Cancel</string>
 
 </resources>

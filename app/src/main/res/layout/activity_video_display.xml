@@ -65,7 +65,7 @@
             android:layout_height="48dp"
             android:layout_marginEnd="32dp"
             android:background="?attr/selectableItemBackgroundBorderless"
-            android:contentDescription="forward"
+            android:contentDescription="@string/forward"
             android:scaleType="centerInside"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -77,7 +77,7 @@
             android:layout_width="48dp"
             android:layout_height="48dp"
             android:background="?attr/selectableItemBackgroundBorderless"
-            android:contentDescription="fullscreen"
+            android:contentDescription="@string/fullscreen"
             android:scaleType="centerInside"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -90,7 +90,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:padding="8dp"
-        android:text="Title video"
+        android:text="@string/title_video"
         android:textStyle="bold"
         app:layout_constraintEnd_toStartOf="@+id/tv_like"
         app:layout_constraintStart_toStartOf="parent"
@@ -104,7 +104,7 @@
         android:layout_marginTop="5dp"
         android:layout_marginBottom="1dp"
         android:padding="8dp"
-        android:text="Description video"
+        android:text="@string/description_video"
         app:layout_constraintBottom_toTopOf="@+id/llButtons"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -115,7 +115,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginEnd="15dp"
-        android:text="likes: "
+        android:text="@string/likes"
         app:layout_constraintBottom_toBottomOf="@+id/tvTitle"
         app:layout_constraintEnd_toStartOf="@+id/tv_view"
         app:layout_constraintTop_toTopOf="@+id/tvTitle" />
@@ -125,7 +125,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
-        android:text="author: "
+        android:text="@string/author"
         app:layout_constraintStart_toStartOf="@+id/tv_like"
         app:layout_constraintTop_toBottomOf="@+id/tv_like" />
 
@@ -134,7 +134,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginEnd="30dp"
-        android:text="views: "
+        android:text="@string/views"
         app:layout_constraintBottom_toBottomOf="@+id/tvTitle"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@+id/tvTitle" />
@@ -203,7 +203,8 @@
             android:background="@drawable/edit_text_background"
             android:hint="@string/add_a_comment"
             android:minHeight="48dp"
-            android:singleLine="true" />
+            android:singleLine="true"
+            android:textColorHint="#757575" />
 
         <!-- Button to post a new comment -->
         <ImageView

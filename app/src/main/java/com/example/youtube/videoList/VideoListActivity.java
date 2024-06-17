@@ -3,7 +3,6 @@ package com.example.youtube.videoList;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.widget.ImageView;
 import android.widget.Toast;
 
@@ -21,18 +20,15 @@ import com.example.youtube.R;
 import com.example.youtube.SignUpActivity;
 import com.example.youtube.addVideo.AddVideoActivity;
 import com.example.youtube.videoDisplay.Comment;
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.lang.reflect.Type;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
-import java.nio.charset.StandardCharsets;
 
 /**
  * MainActivity class for displaying a list of videos.

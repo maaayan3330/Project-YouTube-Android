@@ -4,7 +4,7 @@ import com.example.youtube.videoDisplay.Comment;
 
 import java.io.Serializable;
 import java.util.List;
-import android.net.Uri;
+
 
 /**
  * Represents a video with a title, description, resource ID, author, number of likes, and number of views.
