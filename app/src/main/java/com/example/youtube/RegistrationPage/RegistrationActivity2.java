@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 import androidx.annotation.NonNull;
@@ -22,6 +23,7 @@ import com.example.youtube.MainData.UploadImage;
 import com.example.youtube.R;
 import com.example.youtube.SignUpPage.SignUpActivity;
 import com.example.youtube.UserManager.UserManager;
+import com.example.youtube.videoList.VideoListActivity;
 
 public class RegistrationActivity2 extends AppCompatActivity {
     private static final int REQUEST_PERMISSION_CODE = 100;
@@ -32,7 +34,8 @@ public class RegistrationActivity2 extends AppCompatActivity {
     private PasswordValidator passwordValidator;
     private UploadImage uploadImage;
     private UserManager userManager;
-    private Uri profileImageUri; // שדה לאחסון URI של התמונה
+    // field to keep the photo
+    private Uri profileImageUri;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,26 +51,30 @@ public class RegistrationActivity2 extends AppCompatActivity {
 
         passwordValidator = new PasswordValidator();
         uploadImage = new UploadImage(this);
-        userManager = UserManager.getInstance(); // קבלת instance של UserManager
+        userManager = UserManager.getInstance(); //  UserManager
 
         usernameEditText = findViewById(R.id.TextUserName);
         passwordEditText = findViewById(R.id.TextPassword);
         confirmPasswordEditText = findViewById(R.id.TextVerificationPassword);
         nicknameEditText = findViewById(R.id.TextNikeName);
 
+        // Find the logo ImageView
+        ImageView logoImage = findViewById(R.id.logoImage);
+
+        // Set up the logo click listener
+        logoImage.setOnClickListener(v -> {
+            Intent intent = new Intent(RegistrationActivity2.this, VideoListActivity.class);
+            startActivity(intent);
+        });
+
         // Check and request permissions
         checkPermissions();
 
         // Add button click listener for image upload
         Button uploadImageButton = findViewById(R.id.button_upload_image);
-        uploadImageButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                uploadImage.showImagePickerDialog();
-            }
-        });
+        uploadImageButton.setOnClickListener(v -> uploadImage.showImagePickerDialog());
 
-        // כאן אני מחבר את הכפתור לדף הבא - אם המשתמש כבר רשום
+        // conect with a buttom if the user is on
         Button buttonForSignUp = findViewById(R.id.alredyReg);
         buttonForSignUp.setOnClickListener(v -> {
             Intent intent = new Intent(this, SignUpActivity.class);
@@ -77,32 +84,30 @@ public class RegistrationActivity2 extends AppCompatActivity {
 
         // Add button click listener for registration
         Button registerButton = findViewById(R.id.registerButton);
-        registerButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String resultMessage = passwordValidator.registerUser(
-                        RegistrationActivity2.this,
-                        usernameEditText.getText().toString(),
-                        passwordEditText.getText().toString(),
-                        confirmPasswordEditText.getText().toString(),
-                        nicknameEditText.getText().toString()
-                );
+        registerButton.setOnClickListener(v -> {
+            String resultMessage = passwordValidator.registerUser(
+                    RegistrationActivity2.this,
+                    usernameEditText.getText().toString(),
+                    passwordEditText.getText().toString(),
+                    confirmPasswordEditText.getText().toString(),
+                    nicknameEditText.getText().toString()
+            );
 
-                // Display a custom toast message
-                showCustomToast(resultMessage);
+            // Display a custom toast message
+            showCustomToast(resultMessage);
 
-                // If the user is registered successfully, navigate to the login page
-                if (resultMessage.equals("User registered successfully")) {
-                    // Add the user to the list of users with profile image URI
-                    userManager.addUser(usernameEditText.getText().toString(), passwordEditText.getText().toString(),
-                            nicknameEditText.getText().toString(), profileImageUri);
+            // If the user is registered successfully, navigate to the login page
+            if (resultMessage.equals("User registered successfully")) {
+                // Add the user to the list of users with profile image URI
+                userManager.addUser(usernameEditText.getText().toString(), passwordEditText.getText().toString(),
+                        nicknameEditText.getText().toString(), profileImageUri);
 
-                    // Move to the next page back after the user registers successfully
-                    Intent intent = new Intent(RegistrationActivity2.this, SignUpActivity.class);
-                    startActivity(intent);
-                }
+                // Move to the next page back after the user registers successfully
+                Intent intent = new Intent(RegistrationActivity2.this, SignUpActivity.class);
+                startActivity(intent);
             }
         });
+
     }
 
     private void checkPermissions() {
@@ -117,9 +122,9 @@ public class RegistrationActivity2 extends AppCompatActivity {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if (requestCode == REQUEST_PERMISSION_CODE) {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                // הרשאה התקבלה
+                // prommiton got
             } else {
-                // הרשאה נדחתה
+                // prommision denided
                 Toast.makeText(this, "Camera and storage permissions are required to use this feature", Toast.LENGTH_SHORT).show();
             }
         }

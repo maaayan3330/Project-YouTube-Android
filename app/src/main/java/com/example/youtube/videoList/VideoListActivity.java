@@ -1,16 +1,11 @@
 package com.example.youtube.videoList;
-
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ImageView;
-import android.widget.TextView;
 import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
@@ -71,50 +66,47 @@ public class VideoListActivity extends AppCompatActivity {
         drawerLayout.addDrawerListener(drawerToggle);
         drawerToggle.syncState();
 
-        navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
-            @Override
-            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                int itemId = item.getItemId();
-                if (itemId == R.id.login_yes) {
-                    Intent intentForLogIn = new Intent(VideoListActivity.this, SignUpActivity.class);
-                    CustomToast.showToast(VideoListActivity.this, "Login");
-                    startActivity(intentForLogIn);
-                    return true;
-                } else if (itemId == R.id.logout_yes) {
-                    // Clear user session data
-                    UserManager.getInstance().clearCurrentUser();
+        navigationView.setNavigationItemSelectedListener(item -> {
+            int itemId = item.getItemId();
+            if (itemId == R.id.login_yes) {
+                Intent intentForLogIn = new Intent(VideoListActivity.this, SignUpActivity.class);
+                CustomToast.showToast(VideoListActivity.this, "Login");
+                startActivity(intentForLogIn);
+                return true;
+            } else if (itemId == R.id.logout_yes) {
+                // Clear user session data
+                UserManager.getInstance().clearCurrentUser();
 
-                    // Navigate to login page
-                    Intent intentForLogIn = new Intent(VideoListActivity.this, SignUpActivity.class);
-                    CustomToast.showToast(VideoListActivity.this, "Logout");
-                    startActivity(intentForLogIn);
-                    finish(); // Close the current activity
-                    return true;
-                } else if (itemId == R.id.upload_data_yes) {
-                    Intent intentForVideo = new Intent(VideoListActivity.this, AddVideoActivity.class);
-                    CustomToast.showToast(VideoListActivity.this, "Upload video");
-                    startActivity(intentForVideo);
-                    return true;
-                } else if (itemId == R.id.dark_mode_yes) {
-                    // Toggle dark mode
-                    int currentNightMode = getResources().getConfiguration().uiMode & Configuration.UI_MODE_NIGHT_MASK;
-                    if (currentNightMode == Configuration.UI_MODE_NIGHT_NO) {
-                        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
-                        CustomToast.showToast(VideoListActivity.this, "Switched to Dark Mode");
-                    } else {
-                        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
-                        CustomToast.showToast(VideoListActivity.this, "Switched to Light Mode");
-                    }
-                    return true;
-                } else if (itemId == R.id.Help) {
-                    CustomToast.showToast(VideoListActivity.this, "Help");
-                    return true;
-                } else if (itemId == R.id.Setting) {
-                    CustomToast.showToast(VideoListActivity.this, "Setting");
-                    return true;
+                // Navigate to login page
+                Intent intentForLogIn = new Intent(VideoListActivity.this, SignUpActivity.class);
+                CustomToast.showToast(VideoListActivity.this, "Logout");
+                startActivity(intentForLogIn);
+                finish(); // Close the current activity
+                return true;
+            } else if (itemId == R.id.upload_data_yes) {
+                Intent intentForVideo = new Intent(VideoListActivity.this, AddVideoActivity.class);
+                CustomToast.showToast(VideoListActivity.this, "Upload video");
+                startActivity(intentForVideo);
+                return true;
+            } else if (itemId == R.id.dark_mode_yes) {
+                // Toggle dark mode
+                int currentNightMode = getResources().getConfiguration().uiMode & Configuration.UI_MODE_NIGHT_MASK;
+                if (currentNightMode == Configuration.UI_MODE_NIGHT_NO) {
+                    AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+                    CustomToast.showToast(VideoListActivity.this, "Switched to Dark Mode");
                 } else {
-                    return false;
+                    AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+                    CustomToast.showToast(VideoListActivity.this, "Switched to Light Mode");
                 }
+                return true;
+            } else if (itemId == R.id.Help) {
+                CustomToast.showToast(VideoListActivity.this, "Help");
+                return true;
+            } else if (itemId == R.id.Setting) {
+                CustomToast.showToast(VideoListActivity.this, "Setting");
+                return true;
+            } else {
+                return false;
             }
         });
 
@@ -168,7 +160,7 @@ public class VideoListActivity extends AppCompatActivity {
                 profileImageUri = Uri.parse(profileImageUriString);
                 profileImageView.setImageURI(profileImageUri);
             } else {
-                profileImageView.setImageResource(R.drawable.profile_pic); // תמונת ברירת מחדל
+                profileImageView.setImageResource(R.drawable.profile_pic);
             }
 
             // Update Navigation Drawer menu items

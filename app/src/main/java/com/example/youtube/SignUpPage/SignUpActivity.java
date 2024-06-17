@@ -42,12 +42,6 @@ public class SignUpActivity extends AppCompatActivity {
             // Start a new activity
             startActivity(intent);
         });
-        Button buttonFor = findViewById(R.id.buttonForcCHECK);
-        buttonFor.setOnClickListener(v -> {
-            Intent intent = new Intent(this, VideoListActivity.class);
-            // Start a new activity
-            startActivity(intent);
-        });
 
         // Set up the button for login
         Button buttonForHomePage = findViewById(R.id.loginButton);
@@ -101,6 +95,12 @@ public class SignUpActivity extends AppCompatActivity {
             usernameEditText.setText(username);
             passwordEditText.setText(password);
         }
+
+        // Set up the logo click listener
+        logoImage.setOnClickListener(v -> {
+            Intent intent = new Intent(SignUpActivity.this, VideoListActivity.class);
+            startActivity(intent);
+        });
     }
 
     @Override

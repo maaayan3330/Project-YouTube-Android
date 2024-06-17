@@ -5,9 +5,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class UserManager {
-    private List<User> userList;
+    private final List<User> userList;
     private static UserManager instance;
-    private User currentUser; // המשתמש המחובר הנוכחי
+    private User currentUser;
 
     private UserManager() {
         userList = new ArrayList<>();
