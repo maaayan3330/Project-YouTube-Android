@@ -16,6 +16,7 @@ import android.view.ViewGroup;
 
 import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.graphics.Insets;
@@ -23,24 +24,31 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.room.Room;
 
 import com.example.youtube.R;
 import com.example.youtube.UserManager.User;
 import com.example.youtube.UserManager.UserManager;
 import com.example.youtube.design.CustomToast;
+import com.example.youtube.videoManager.AppDB;
 import com.example.youtube.videoManager.Video;
+import com.example.youtube.videoManager.VideoDao;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Activity to display and play a selected video.
  */
-public class VideoDisplayActivity extends AppCompatActivity {
+public class VideoDisplayActivity extends AppCompatActivity implements CommentAdapter.CommentAdapterListener {
     private VideoView vvVideo; // VideoView for playing the video
     private ConstraintLayout clControl; // Control buttons layout
     private boolean isFullScreen = false; // Fullscreen indicator
-    private boolean isCollapsed = true;
+    List<Comment> commentList;
+
+    private AppDB db;
+    private VideoDao videoDao;
+    private Video video;
+    private CommentAdapter commentAdapter;
 
 
     @Override
@@ -54,8 +62,13 @@ public class VideoDisplayActivity extends AppCompatActivity {
             return insets;
         });
 
+        db = Room.databaseBuilder(getApplicationContext(), AppDB.class, "VideosDB")
+                .allowMainThreadQueries().build();
+        videoDao = db.videoDao();
+
+
         // Get data from intent
-        Video video = (Video) getIntent().getSerializableExtra("extra_video");
+         video = (Video) getIntent().getSerializableExtra("extra_video");
 
         // Initialize views and set data to views
         vvVideo = findViewById(R.id.vvVideo);
@@ -71,6 +84,7 @@ public class VideoDisplayActivity extends AppCompatActivity {
 
         // Increment views count when the video starts playing
         video.setViews(video.getViews() + 1);
+        videoDao.update(video);
         tv_views.setText("Views: " + video.getViews());
 
         // Set the video URI and start playing
@@ -78,11 +92,12 @@ public class VideoDisplayActivity extends AppCompatActivity {
         vvVideo.start();
 
         // Comment list
+        commentList =video.getComments();
         RecyclerView rvCommentsRecyclerView = findViewById(R.id.rvComments);
-        List<Comment> commentList = video.getComments() != null ? video.getComments() : new ArrayList<>();
-        CommentAdapter commentAdapter = new CommentAdapter(commentList, this);
+        commentAdapter = new CommentAdapter(commentList, this,this);
         rvCommentsRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         rvCommentsRecyclerView.setAdapter(commentAdapter);
+
         // New comment function
         ImageView iv_post = findViewById(R.id.iv_post);
         EditText et_CommentInput = findViewById(R.id.et_CommentInput);
@@ -92,8 +107,10 @@ public class VideoDisplayActivity extends AppCompatActivity {
                 if (!commentText.isEmpty()) {
                     User current = UserManager.getInstance().getCurrentUser();
                     Comment newComment = new Comment(current.getNickname(), commentText);
+                    commentList.add(newComment);
+                    videoDao.update(video);
                     // Replace "User" with actual user name if available
-                    commentAdapter.addComment(newComment);
+                    commentAdapter.notifyItemInserted(commentList.size() - 1);
                     et_CommentInput.setText("");
                 } else {
                     Toast.makeText(this, "Comment cannot be empty", Toast.LENGTH_SHORT).show();
@@ -119,6 +136,7 @@ public class VideoDisplayActivity extends AppCompatActivity {
                 tv_like.setText("Likes: " + video.getLikes());
                 Toast.makeText(getApplicationContext(), "Unliked!", Toast.LENGTH_SHORT).show();
             }
+            videoDao.update(video);
         });
 
         // Share function:
@@ -205,5 +223,35 @@ public class VideoDisplayActivity extends AppCompatActivity {
             params.height = (int) getResources().getDimension(R.dimen.video_height);
         }
         vvVideo.setLayoutParams(params);
+    }
+
+    @Override
+    public void onEditComment(Comment comment, int position) {
+        // Show dialog to edit comment
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Edit Comment");
+
+        final EditText input = new EditText(this);
+        input.setText(comment.getCommentText());
+        builder.setView(input);
+
+        builder.setPositiveButton("OK", (dialog, which) -> {
+            String newCommentText = input.getText().toString();
+            comment.setCommentText(newCommentText);
+            videoDao.update(video);
+            commentAdapter.notifyItemChanged(position);
+        });
+
+        builder.setNegativeButton("Cancel", (dialog, which) -> dialog.cancel());
+
+        builder.show();
+    }
+
+    @Override
+    public void onDeleteComment(int position) {
+        commentList.remove(position);
+        videoDao.update(video);
+        commentAdapter.notifyItemRemoved(position);
+        commentAdapter.notifyItemRangeChanged(position, commentList.size());
     }
 }

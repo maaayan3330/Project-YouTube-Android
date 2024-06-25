@@ -1,5 +1,6 @@
 package com.example.youtube.videoList;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
@@ -30,6 +31,7 @@ import java.util.List;
 public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.VideoViewHolder> {
     private List<Video> videoList; // List of videos to display
     private Context context; // Context in which the adapter is used
+    private VideoAdapterListener listener;
 
 
     /**
@@ -38,9 +40,15 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.VideoViewHol
      * @param videoList The list of videos to display.
      * @param context   The context in which the adapter is being used.
      */
-    public VideoAdapter(List<Video> videoList, Context context) {
+    public VideoAdapter(List<Video> videoList, Context context, VideoAdapterListener listener) {
         this.videoList = videoList;
         this.context = context;
+        this.listener=listener;
+    }
+
+    public interface VideoAdapterListener {
+        void onEditVideo(Video video, int position);
+        void onDeleteVideo(int position);
     }
 
     /**
@@ -74,6 +82,7 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.VideoViewHol
         }
     }
 
+
     /**
      * Method to create new ViewHolder instances.
      *
@@ -98,6 +107,7 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.VideoViewHol
      */
     @Override
     public void onBindViewHolder(VideoViewHolder holder, int position) {
+
         Video video = videoList.get(position);
         holder.tvTitle.setText(video.getTitle());
         holder.tvDescription.setText("Description: "+ video.getDescription());
@@ -127,49 +137,14 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.VideoViewHol
             //edit function
         holder.tv_edit.setOnClickListener(v -> {
             if (UserManager.getInstance().getCurrentUser()!= null){
-            // Show dialog to edit comment
-            AlertDialog.Builder builder = new AlertDialog.Builder(v.getContext());
-            builder.setTitle("Edit Title and Description");
-
-            // Create a LinearLayout to hold the EditTexts
-            LinearLayout layout = new LinearLayout(v.getContext());
-            layout.setOrientation(LinearLayout.VERTICAL);
-            layout.setPadding(50, 40, 50, 10); // Optional: Add padding for better UI
-
-            // Create EditTexts for title and description
-            final EditText inputTitle = new EditText(v.getContext());
-            inputTitle.setHint("Title");
-            inputTitle.setText(video.getTitle());
-            layout.addView(inputTitle);
-
-            final EditText inputDescription = new EditText(v.getContext());
-            inputDescription.setHint("Description");
-            inputDescription.setText(video.getDescription());
-            layout.addView(inputDescription);
-
-            builder.setView(layout);
-
-            builder.setPositiveButton("OK", (dialog, which) -> {
-                String newTitle = inputTitle.getText().toString();
-                String newDescription = inputDescription.getText().toString();
-                video.setTitle(newTitle);
-                video.setDescription(newDescription);
-                notifyItemChanged(position);
-                holder.llCollapse.setVisibility(View.GONE); // Collapse after editing
-            });
-
-            builder.setNegativeButton("Cancel", (dialog, which) -> dialog.cancel());
-
-            builder.show();
-        }else {   CustomToast.showToast(context, "Option available just for register users");}
+                listener.onEditVideo(video, position);
+                 holder.llCollapse.setVisibility(View.GONE); // Collapse after editing
+            }else {   CustomToast.showToast(context, "Option available just for register users");}
         });
         //delete function
         holder.tv_delete.setOnClickListener(v -> {
             if (UserManager.getInstance().getCurrentUser()!= null) {
-            // Remove comment from the list
-            videoList.remove(position);
-            notifyItemRemoved(position);
-            notifyItemRangeChanged(position, videoList.size());
+                listener.onDeleteVideo(position);
         }else {CustomToast.showToast(context, "Option available just for register users");} });
     }
 
@@ -185,6 +160,7 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.VideoViewHol
         return videoList.size();
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     public void setFilterList(List<Video> filterList){
         this.videoList=filterList;
         notifyDataSetChanged();

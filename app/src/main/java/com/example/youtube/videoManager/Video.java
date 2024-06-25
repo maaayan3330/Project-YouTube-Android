@@ -1,5 +1,8 @@
 package com.example.youtube.videoManager;
 
+import androidx.room.Entity;
+import androidx.room.PrimaryKey;
+
 import com.example.youtube.videoDisplay.Comment;
 
 import java.io.Serializable;
@@ -9,7 +12,12 @@ import java.util.List;
 /**
  * Represents a video with a title, description, resource ID, author, number of likes, and number of views.
  */
+@Entity
 public class Video implements Serializable {
+
+
+    @PrimaryKey(autoGenerate=true)
+    private int id;
     private String title;       // Title of the video
     private String description; // Description of the video
     private String videoUri;       // URI of the video
@@ -95,5 +103,12 @@ public class Video implements Serializable {
 
     public void setComments(List<Comment> comments) {
         this.comments = comments;
+    }
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 }

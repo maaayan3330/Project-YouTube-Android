@@ -7,10 +7,13 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.appcompat.widget.SearchView;
@@ -19,6 +22,7 @@ import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.room.Room;
 
 import com.example.youtube.R;
 import com.example.youtube.addVideo.AddVideoActivity;
@@ -26,7 +30,9 @@ import com.example.youtube.addVideo.AddVideoActivity;
 import com.example.youtube.SignUpPage.SignUpActivity;
 import com.example.youtube.UserManager.User;
 import com.example.youtube.design.CustomToast;
+import com.example.youtube.videoManager.AppDB;
 import com.example.youtube.videoManager.Video;
+import com.example.youtube.videoManager.VideoDao;
 import com.example.youtube.videoManager.VideoManager;
 import com.google.android.material.navigation.NavigationView;
 
@@ -40,7 +46,7 @@ import com.google.android.material.imageview.ShapeableImageView;
 /**
  * MainActivity class for displaying a list of videos.
  */
-public class VideoListActivity extends AppCompatActivity {
+public class VideoListActivity extends AppCompatActivity implements VideoAdapter.VideoAdapterListener {
     VideoManager videoManager;
     VideoAdapter videoAdapter;
     private DrawerLayout drawerLayout;
@@ -50,12 +56,42 @@ public class VideoListActivity extends AppCompatActivity {
     private ShapeableImageView profileImageView;
     private Uri profileImageUri; // Variable to store the profile image URI
     private static final int REQUEST_CODE_VIDEO_PICK = 1;
+    private AppDB db;
+    private VideoDao videoDao;
+    private List<Video> videoList;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_list_video);
+
+        //התחלה חלק 2 עם רום
+        db = Room.databaseBuilder(getApplicationContext(), AppDB.class, "VideosDB")
+                .allowMainThreadQueries().build();
+        videoDao = db.videoDao();
+        videoList = videoDao.index();
+        // Initialize RecyclerView
+        // RecyclerView for displaying the video list
+        RecyclerView rvListVideo = findViewById(R.id.rvListVideo);
+        rvListVideo.setLayoutManager(new LinearLayoutManager(this)); // Set layout manager
+//        videoManager = VideoManager.getInstance();
+//        // Load videos from JSON
+//        videoManager.loadVideosFromJson(this);
+
+        // Set adapter to the RecyclerView
+        // Adapter for the RecyclerView
+        videoAdapter = new VideoAdapter(videoList, this,this);
+        rvListVideo.setAdapter(videoAdapter);
+
+
+
+
+
+
+
+
+
 
         // Initialize Toolbar
         toolbar = findViewById(R.id.toolbar);
@@ -117,19 +153,7 @@ public class VideoListActivity extends AppCompatActivity {
             }
         });
 
-        // Initialize RecyclerView
-        // RecyclerView for displaying the video list
-        RecyclerView rvListVideo = findViewById(R.id.rvListVideo);
-        rvListVideo.setLayoutManager(new LinearLayoutManager(this)); // Set layout manager
-        videoManager = VideoManager.getInstance();
-        // Load videos from JSON
-        videoManager.loadVideosFromJson(this);
 
-
-        // Set adapter to the RecyclerView
-        // Adapter for the RecyclerView
-        videoAdapter = new VideoAdapter(videoManager.getVideoList(), this);
-        rvListVideo.setAdapter(videoAdapter);
 
         // Initialize user info views from header
         View headerView = navigationView.getHeaderView(0);
@@ -230,4 +254,58 @@ public class VideoListActivity extends AppCompatActivity {
         }
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        videoList.clear();
+        videoList.addAll(videoDao.index());
+        videoAdapter.notifyDataSetChanged();
+    }
+
+
+    @Override
+    public void onEditVideo(Video video, int position) {
+// Show dialog to edit comment
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Edit Title and Description");
+
+        // Create a LinearLayout to hold the EditTexts
+        LinearLayout layout = new LinearLayout(this);
+        layout.setOrientation(LinearLayout.VERTICAL);
+        layout.setPadding(50, 40, 50, 10); // Optional: Add padding for better UI
+
+        // Create EditTexts for title and description
+        final EditText inputTitle = new EditText(this);
+        inputTitle.setHint("Title");
+        inputTitle.setText(video.getTitle());
+        layout.addView(inputTitle);
+
+        final EditText inputDescription = new EditText(this);
+        inputDescription.setHint("Description");
+        inputDescription.setText(video.getDescription());
+        layout.addView(inputDescription);
+
+        builder.setView(layout);
+
+        builder.setPositiveButton("OK", (dialog, which) -> {
+            String newTitle = inputTitle.getText().toString();
+            String newDescription = inputDescription.getText().toString();
+            video.setTitle(newTitle);
+            video.setDescription(newDescription);
+            videoDao.update(video);
+            videoAdapter.notifyItemChanged(position);
+
+        });
+        builder.setNegativeButton("Cancel", (dialog, which) -> dialog.cancel());
+        builder.show();
+    }
+
+    @Override
+    public void onDeleteVideo(int position) {
+        Video video = videoList.get(position);
+        videoDao.delete(video);
+        videoList.remove(position);
+        videoAdapter.notifyItemRemoved(position);
+        videoAdapter.notifyItemRangeChanged(position, videoList.size());
+    }
 }

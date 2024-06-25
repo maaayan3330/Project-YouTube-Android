@@ -11,6 +11,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
+import androidx.room.Room;
 
 import android.content.Intent;
 import android.util.Log;
@@ -26,7 +27,9 @@ import com.example.youtube.UserManager.User;
 import com.example.youtube.UserManager.UserManager;
 import com.example.youtube.design.CustomToast;
 import com.example.youtube.videoList.VideoListActivity;
+import com.example.youtube.videoManager.AppDB;
 import com.example.youtube.videoManager.Video;
+import com.example.youtube.videoManager.VideoDao;
 import com.example.youtube.videoManager.VideoManager;
 
 import java.util.ArrayList;
@@ -37,6 +40,8 @@ public class AddVideoActivity extends AppCompatActivity {
     private EditText etTitle, etDescription;
     private String videoPath;
     private VideoManager videoManager;
+    private VideoDao videoDao;
+    private AppDB db;
 
 
     @Override
@@ -49,6 +54,12 @@ public class AddVideoActivity extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+
+        db = Room.databaseBuilder(getApplicationContext(), AppDB.class, "VideosDB")
+                .allowMainThreadQueries().build();
+        videoDao = db.videoDao();
+
+
 
 
         etTitle = findViewById(R.id.etTitle);
@@ -103,6 +114,7 @@ public class AddVideoActivity extends AppCompatActivity {
 
 
     private void addVideo() {
+        //שינוי עם רום
         String title = etTitle.getText().toString();
         String description = etDescription.getText().toString();
 
@@ -113,8 +125,12 @@ public class AddVideoActivity extends AppCompatActivity {
         User current= UserManager.getInstance().getCurrentUser();
         // Create a new Video object
         Video newVideo = new Video(title, description, videoPath, current.getNickname(), 0, 0, new ArrayList<>());
-        videoManager = VideoManager.getInstance();
-        videoManager.addVideo(newVideo);
-        Intent intent = new Intent(AddVideoActivity.this, VideoListActivity.class);
-        startActivity(intent);    }
+        videoDao.insert(newVideo);
+        finish();
+
+//        videoManager = VideoManager.getInstance();
+//        videoManager.addVideo(newVideo);
+//        Intent intent = new Intent(AddVideoActivity.this, VideoListActivity.class);
+//        startActivity(intent);
+    }
 }

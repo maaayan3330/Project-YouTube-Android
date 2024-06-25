@@ -16,16 +16,24 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.youtube.R;
 import com.example.youtube.UserManager.UserManager;
 import com.example.youtube.design.CustomToast;
+import com.example.youtube.videoManager.Video;
 
 import java.util.List;
 
 public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.CommentViewHolder> {
     private List<Comment> commentList;
     private Context context;
+    CommentAdapterListener listener;
 
-    public CommentAdapter(List<Comment> commentList, Context context) {
+    public CommentAdapter(List<Comment> commentList, Context context,CommentAdapterListener listener) {
         this.commentList = commentList;
         this.context = context;
+        this.listener=listener;
+    }
+
+    public interface CommentAdapterListener {
+        void onEditComment(Comment comment, int position);
+        void onDeleteComment(int position);
     }
 
     public static class CommentViewHolder extends RecyclerView.ViewHolder {
@@ -69,24 +77,8 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.CommentV
 
         holder.textViewEdit.setOnClickListener(v -> {
             if (UserManager.getInstance().getCurrentUser() != null) {
-                // Show dialog to edit comment
-                AlertDialog.Builder builder = new AlertDialog.Builder(v.getContext());
-                builder.setTitle("Edit Comment");
-
-                final EditText input = new EditText(v.getContext());
-                input.setText(comment.getCommentText());
-                builder.setView(input);
-
-                builder.setPositiveButton("OK", (dialog, which) -> {
-                    String newCommentText = input.getText().toString();
-                    comment.setCommentText(newCommentText);
-                    notifyItemChanged(position);
-                    holder.llCollapse.setVisibility(View.GONE); // Collapse after editing
-                });
-
-                builder.setNegativeButton("Cancel", (dialog, which) -> dialog.cancel());
-
-                builder.show();
+                listener.onEditComment(comment,position);
+                holder.llCollapse.setVisibility(View.GONE); // Collapse after editing
             } else {
                 CustomToast.showToast(context, "Option available just for register users");
             }
@@ -95,11 +87,7 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.CommentV
 
         holder.textViewDelete.setOnClickListener(v -> {
             if (UserManager.getInstance().getCurrentUser() != null) {
-
-                // Remove comment from the list
-                commentList.remove(position);
-                notifyItemRemoved(position);
-                notifyItemRangeChanged(position, commentList.size());
+                listener.onDeleteComment(position);
             } else {
                 CustomToast.showToast(context, "Option available just for register users");
             }
@@ -111,11 +99,6 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.CommentV
         return commentList.size();
     }
 
-
-    public void addComment(Comment comment) {
-        commentList.add(comment);
-        notifyItemInserted(commentList.size() - 1);
-    }
 
 }
 
