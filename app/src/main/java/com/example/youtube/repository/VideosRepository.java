@@ -17,8 +17,10 @@ public class VideosRepository {
     private VideoListData videoListData;
 
     public VideosRepository() {
-        AppDB db = Room.databaseBuilder(MyApplication.context, AppDB.class, "VideosDB").fallbackToDestructiveMigration()
-                .allowMainThreadQueries().build();
+        AppDB db = Room.databaseBuilder(MyApplication.context, AppDB.class, "VideosDB")
+                .fallbackToDestructiveMigration()
+                .allowMainThreadQueries()
+                .build();
         videoDao = db.videoDao();
         videoListData = new VideoListData();
     }
@@ -33,7 +35,7 @@ public class VideosRepository {
         protected void onActive() {
             super.onActive();
             new Thread(() -> {
-                VideoListData.postValue(videoDao.index());
+                postValue(videoDao.index());
             }).start();
         }
     }
@@ -43,11 +45,15 @@ public class VideosRepository {
     }
 
     public void add(Video video) {
-        videoDao.insert(video);
+        new Thread(() -> {
+            videoDao.insert(video);
+        }).start();
     }
 
     public void delete(Video video) {
-        videoDao.delete(video);
+        new Thread(() -> {
+            videoDao.delete(video);
+        }).start();
     }
 
     public void reload() {

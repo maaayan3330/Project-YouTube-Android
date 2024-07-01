@@ -43,6 +43,9 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.VideoViewHol
         this.context = context;
         this.listener=listener;
     }
+    public void setVideos(List<Video> videos){
+        this.videoList=videos;
+    }
 
     public interface VideoAdapterListener {
         void onEditVideo(Video video, int position);
