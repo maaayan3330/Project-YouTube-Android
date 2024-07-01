@@ -1,4 +1,4 @@
-package com.example.youtube.addVideo;
+package com.example.youtube.view.ui;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -17,20 +17,16 @@ import android.content.Intent;
 import android.util.Log;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.Toast;
 import android.widget.VideoView;
 
 
 import com.example.youtube.R;
-import com.example.youtube.RegistrationPage.RegistrationActivity2;
-import com.example.youtube.UserManager.User;
+import com.example.youtube.model.User;
 import com.example.youtube.UserManager.UserManager;
-import com.example.youtube.design.CustomToast;
-import com.example.youtube.videoList.VideoListActivity;
-import com.example.youtube.videoManager.AppDB;
-import com.example.youtube.videoManager.Video;
-import com.example.youtube.videoManager.VideoDao;
-import com.example.youtube.videoManager.VideoManager;
+import com.example.youtube.utils.CustomToast;
+import com.example.youtube.model.AppDB;
+import com.example.youtube.model.Video;
+import com.example.youtube.model.VideoDao;
 
 import java.util.ArrayList;
 
@@ -39,7 +35,7 @@ public class AddVideoActivity extends AppCompatActivity {
 
     private EditText etTitle, etDescription;
     private String videoPath;
-    private VideoManager videoManager;
+
     private VideoDao videoDao;
     private AppDB db;
 

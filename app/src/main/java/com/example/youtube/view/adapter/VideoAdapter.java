@@ -1,4 +1,4 @@
-package com.example.youtube.videoList;
+package com.example.youtube.view.adapter;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -7,21 +7,19 @@ import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.VideoView;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AlertDialog;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.youtube.R;
 import com.example.youtube.UserManager.UserManager;
-import com.example.youtube.design.CustomToast;
-import com.example.youtube.videoDisplay.VideoDisplayActivity;
-import com.example.youtube.videoManager.Video;
+import com.example.youtube.utils.CustomToast;
+import com.example.youtube.view.ui.VideoDisplayActivity;
+import com.example.youtube.model.Video;
 
 import java.util.List;
 

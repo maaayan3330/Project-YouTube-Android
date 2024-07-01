@@ -21,20 +21,20 @@
         android:theme="@style/Theme.YouTube"
         tools:targetApi="31">
         <activity
-            android:name=".SignUpPage.SignUpActivity"
+            android:name=".view.ui.SignUpActivity"
             android:exported="false" />
         <activity
-            android:name=".addVideo.AddVideoActivity"
+            android:name=".view.ui.AddVideoActivity"
             android:exported="false" />
         <activity
-            android:name=".videoDisplay.VideoDisplayActivity"
+            android:name=".view.ui.VideoDisplayActivity"
             android:configChanges="orientation|screenSize"
             android:exported="false" />
         <activity
-            android:name=".RegistrationPage.RegistrationActivity2"
+            android:name=".view.ui.RegistrationActivity2"
             android:exported="false" />
         <activity
-            android:name=".videoList.VideoListActivity"
+            android:name=".view.ui.VideoListActivity"
             android:windowSoftInputMode="adjustResize"
             android:exported="true">
             <intent-filter>

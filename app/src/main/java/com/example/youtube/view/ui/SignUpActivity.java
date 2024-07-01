@@ -1,4 +1,4 @@
-package com.example.youtube.SignUpPage;
+package com.example.youtube.view.ui;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -10,11 +10,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
-import com.example.youtube.UserManager.User;
+import com.example.youtube.model.User;
 import com.example.youtube.UserManager.UserManager;
 import com.example.youtube.R;
-import com.example.youtube.RegistrationPage.RegistrationActivity2;
-import com.example.youtube.videoList.VideoListActivity;
 
 public class SignUpActivity extends AppCompatActivity {
     private UserManager userManager;

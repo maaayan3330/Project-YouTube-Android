@@ -1,4 +1,4 @@
-package com.example.youtube.MainData;
+package com.example.youtube.utils;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -6,7 +6,7 @@ import android.net.Uri;
 import android.provider.MediaStore;
 import androidx.appcompat.app.AlertDialog;
 
-import com.example.youtube.RegistrationPage.RegistrationActivity2;
+import com.example.youtube.view.ui.RegistrationActivity2;
 import android.content.ContentValues;
 
 public class UploadImage {

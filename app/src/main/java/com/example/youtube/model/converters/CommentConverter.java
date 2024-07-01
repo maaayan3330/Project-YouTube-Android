@@ -1,8 +1,8 @@
-package com.example.youtube.videoManager;
+package com.example.youtube.model.converters;
 
 import androidx.room.TypeConverter;
 
-import com.example.youtube.videoDisplay.Comment;
+import com.example.youtube.model.Comment;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 

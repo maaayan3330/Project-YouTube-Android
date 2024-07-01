@@ -1,8 +1,16 @@
-package com.example.youtube.UserManager;
+package com.example.youtube.model;
 
 import android.net.Uri;
 
+import androidx.room.Entity;
+import androidx.room.PrimaryKey;
+
+@Entity
 public class User {
+
+
+    @PrimaryKey(autoGenerate = true)
+    private int id;
     private final String username;
     private final String password;
     private final String nickname;
@@ -29,5 +37,13 @@ public class User {
 
     public Uri getProfileImageUri() {
         return profileImageUri;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 }

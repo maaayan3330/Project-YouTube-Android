@@ -1,9 +1,7 @@
-package com.example.youtube.videoManager;
+package com.example.youtube.model;
 
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
-
-import com.example.youtube.videoDisplay.Comment;
 
 import java.io.Serializable;
 import java.util.List;

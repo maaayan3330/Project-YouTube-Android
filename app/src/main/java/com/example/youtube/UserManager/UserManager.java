@@ -1,6 +1,9 @@
 package com.example.youtube.UserManager;
 
 import android.net.Uri;
+
+import com.example.youtube.model.User;
+
 import java.util.ArrayList;
 import java.util.List;
 

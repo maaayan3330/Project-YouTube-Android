@@ -1,4 +1,4 @@
-package com.example.youtube.videoList;
+package com.example.youtube.view.ui;
 
 import android.content.Intent;
 import android.content.res.Configuration;
@@ -25,15 +25,13 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.room.Room;
 
 import com.example.youtube.R;
-import com.example.youtube.addVideo.AddVideoActivity;
 
-import com.example.youtube.SignUpPage.SignUpActivity;
-import com.example.youtube.UserManager.User;
-import com.example.youtube.design.CustomToast;
-import com.example.youtube.videoManager.AppDB;
-import com.example.youtube.videoManager.Video;
-import com.example.youtube.videoManager.VideoDao;
-import com.example.youtube.videoManager.VideoManager;
+import com.example.youtube.model.User;
+import com.example.youtube.utils.CustomToast;
+import com.example.youtube.model.AppDB;
+import com.example.youtube.model.Video;
+import com.example.youtube.view.adapter.VideoAdapter;
+import com.example.youtube.model.VideoDao;
 import com.google.android.material.navigation.NavigationView;
 
 import java.util.ArrayList;
@@ -47,7 +45,7 @@ import com.google.android.material.imageview.ShapeableImageView;
  * MainActivity class for displaying a list of videos.
  */
 public class VideoListActivity extends AppCompatActivity implements VideoAdapter.VideoAdapterListener {
-    VideoManager videoManager;
+
     VideoAdapter videoAdapter;
     private DrawerLayout drawerLayout;
     private NavigationView navigationView;
@@ -67,7 +65,7 @@ public class VideoListActivity extends AppCompatActivity implements VideoAdapter
         setContentView(R.layout.activity_list_video);
 
         //התחלה חלק 2 עם רום
-        db = Room.databaseBuilder(getApplicationContext(), AppDB.class, "VideosDB")
+        db = Room.databaseBuilder(getApplicationContext(), AppDB.class, "VideosDB").fallbackToDestructiveMigration()
                 .allowMainThreadQueries().build();
         videoDao = db.videoDao();
         videoList = videoDao.index();
@@ -240,8 +238,9 @@ public class VideoListActivity extends AppCompatActivity implements VideoAdapter
     }
 
     private void filterVideoList(String text) {
+
         List<Video> filteredList = new ArrayList<>();
-        for (Video video : videoManager.getVideoList()) {
+        for (Video video : videoList) {
             if (video.getTitle().toLowerCase().contains(text.toLowerCase())) {
                 filteredList.add(video);
             }

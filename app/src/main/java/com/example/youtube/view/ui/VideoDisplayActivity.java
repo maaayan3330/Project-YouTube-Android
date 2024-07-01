@@ -1,4 +1,4 @@
-package com.example.youtube.videoDisplay;
+package com.example.youtube.view.ui;
 
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
@@ -27,12 +27,14 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.room.Room;
 
 import com.example.youtube.R;
-import com.example.youtube.UserManager.User;
+import com.example.youtube.model.User;
 import com.example.youtube.UserManager.UserManager;
-import com.example.youtube.design.CustomToast;
-import com.example.youtube.videoManager.AppDB;
-import com.example.youtube.videoManager.Video;
-import com.example.youtube.videoManager.VideoDao;
+import com.example.youtube.utils.CustomToast;
+import com.example.youtube.model.AppDB;
+import com.example.youtube.model.Comment;
+import com.example.youtube.model.Video;
+import com.example.youtube.model.VideoDao;
+import com.example.youtube.view.adapter.CommentAdapter;
 
 import java.util.List;
 

@@ -1,4 +1,4 @@
-package com.example.youtube.RegistrationPage;
+package com.example.youtube.view.ui;
 
 import android.Manifest;
 import android.content.pm.PackageManager;
@@ -19,11 +19,11 @@ import androidx.core.content.ContextCompat;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
-import com.example.youtube.MainData.UploadImage;
+
+import com.example.youtube.RegistrationPage.PasswordValidator;
+import com.example.youtube.utils.UploadImage;
 import com.example.youtube.R;
-import com.example.youtube.SignUpPage.SignUpActivity;
 import com.example.youtube.UserManager.UserManager;
-import com.example.youtube.videoList.VideoListActivity;
 
 public class RegistrationActivity2 extends AppCompatActivity {
     private static final int REQUEST_PERMISSION_CODE = 100;

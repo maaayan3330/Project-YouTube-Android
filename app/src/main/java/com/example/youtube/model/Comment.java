@@ -1,4 +1,4 @@
-package com.example.youtube.videoDisplay;
+package com.example.youtube.model;
 
 import java.io.Serializable;
 

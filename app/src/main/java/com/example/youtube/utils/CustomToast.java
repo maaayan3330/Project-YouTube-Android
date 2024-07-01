@@ -1,4 +1,4 @@
-package com.example.youtube.design;
+package com.example.youtube.utils;
 
 import android.content.Context;
 import android.view.LayoutInflater;
