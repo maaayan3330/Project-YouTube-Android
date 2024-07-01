@@ -1,7 +1,7 @@
-package com.example.youtube.RegistrationPage;
+package com.example.youtube.utils;
 
 import android.content.Context;
-import com.example.youtube.UserManager.UserManager;
+import com.example.youtube.model.UserManager;
 import com.example.youtube.R;
 
 // This class makes sure that all the fields are filled and filled correctly

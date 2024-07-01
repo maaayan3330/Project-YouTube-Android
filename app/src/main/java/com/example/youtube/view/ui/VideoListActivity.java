@@ -37,7 +37,7 @@ import com.google.android.material.navigation.NavigationView;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.example.youtube.UserManager.UserManager;
+import com.example.youtube.model.UserManager;
 
 import com.google.android.material.imageview.ShapeableImageView;
 

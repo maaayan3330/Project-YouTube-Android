@@ -11,7 +11,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import com.example.youtube.model.User;
-import com.example.youtube.UserManager.UserManager;
+import com.example.youtube.model.UserManager;
 import com.example.youtube.R;
 
 public class SignUpActivity extends AppCompatActivity {
@@ -49,7 +49,7 @@ public class SignUpActivity extends AppCompatActivity {
             String password = passwordEditText.getText().toString();
 
             // Check if the user exists in the list of users
-            boolean answerForUser = userManager.getUserName(username);
+            boolean answerForUser = userManager.isExist(username);
             boolean result = userManager.matchAccount(username, password);
 
             // If the user exists, navigate to the home page

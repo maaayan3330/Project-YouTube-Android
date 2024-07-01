@@ -28,7 +28,7 @@ import androidx.room.Room;
 
 import com.example.youtube.R;
 import com.example.youtube.model.User;
-import com.example.youtube.UserManager.UserManager;
+import com.example.youtube.model.UserManager;
 import com.example.youtube.utils.CustomToast;
 import com.example.youtube.model.AppDB;
 import com.example.youtube.model.Comment;

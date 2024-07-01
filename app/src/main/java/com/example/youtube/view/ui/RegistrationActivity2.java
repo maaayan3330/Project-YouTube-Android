@@ -20,10 +20,11 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
-import com.example.youtube.RegistrationPage.PasswordValidator;
+import com.example.youtube.utils.PasswordValidator;
+import com.example.youtube.model.User;
 import com.example.youtube.utils.UploadImage;
 import com.example.youtube.R;
-import com.example.youtube.UserManager.UserManager;
+import com.example.youtube.model.UserManager;
 
 public class RegistrationActivity2 extends AppCompatActivity {
     private static final int REQUEST_PERMISSION_CODE = 100;
@@ -99,8 +100,9 @@ public class RegistrationActivity2 extends AppCompatActivity {
             // If the user is registered successfully, navigate to the login page
             if (resultMessage.equals("User registered successfully")) {
                 // Add the user to the list of users with profile image URI
-                userManager.addUser(usernameEditText.getText().toString(), passwordEditText.getText().toString(),
+                User newUser= new User(usernameEditText.getText().toString(), passwordEditText.getText().toString(),
                         nicknameEditText.getText().toString(), profileImageUri);
+                userManager.addUser(newUser);
 
                 // Move to the next page back after the user registers successfully
                 Intent intent = new Intent(RegistrationActivity2.this, SignUpActivity.class);

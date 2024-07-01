@@ -16,7 +16,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.youtube.R;
-import com.example.youtube.UserManager.UserManager;
+import com.example.youtube.model.UserManager;
 import com.example.youtube.utils.CustomToast;
 import com.example.youtube.view.ui.VideoDisplayActivity;
 import com.example.youtube.model.Video;
