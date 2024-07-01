@@ -54,6 +54,7 @@ public class VideoListActivity extends AppCompatActivity implements VideoAdapter
     private ShapeableImageView profileImageView;
     private Uri profileImageUri; // Variable to store the profile image URI
     private static final int REQUEST_CODE_VIDEO_PICK = 1;
+
     private AppDB db;
     private VideoDao videoDao;
     private List<Video> videoList;
@@ -73,22 +74,11 @@ public class VideoListActivity extends AppCompatActivity implements VideoAdapter
         // RecyclerView for displaying the video list
         RecyclerView rvListVideo = findViewById(R.id.rvListVideo);
         rvListVideo.setLayoutManager(new LinearLayoutManager(this)); // Set layout manager
-//        videoManager = VideoManager.getInstance();
-//        // Load videos from JSON
-//        videoManager.loadVideosFromJson(this);
 
         // Set adapter to the RecyclerView
         // Adapter for the RecyclerView
         videoAdapter = new VideoAdapter(videoList, this,this);
         rvListVideo.setAdapter(videoAdapter);
-
-
-
-
-
-
-
-
 
 
         // Initialize Toolbar
