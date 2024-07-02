@@ -59,16 +59,11 @@ public class VideoListAdapter extends RecyclerView.Adapter<VideoListAdapter.Vide
 
     private final LayoutInflater inflater;
     private List<Video> videoList; // List of videos to display
-    private Context context; // Context in which the adapter is used
+    private  Context context;
     private VideoAdapterListener listener;
 
 
-    /**
-     * Constructor for the VideoAdapter.
-     *
-     *
-     * @param context   The context in which the adapter is being used.
-     */
+
     public VideoListAdapter(Context context, VideoAdapterListener listener) {
         inflater =LayoutInflater.from(context);
         this.videoList = new ArrayList<>();
@@ -137,7 +132,7 @@ public class VideoListAdapter extends RecyclerView.Adapter<VideoListAdapter.Vide
         //delete function
         holder.tv_delete.setOnClickListener(v -> {
             if (UserManager.getInstance().getCurrentUser()!= null) {
-                listener.onDeleteVideo(position);
+                listener.onDeleteVideo(video,position);
             }else {CustomToast.showToast(context, "Option available just for register users");} });
     }
 
@@ -145,7 +140,7 @@ public class VideoListAdapter extends RecyclerView.Adapter<VideoListAdapter.Vide
 
     public interface VideoAdapterListener {
         void onEditVideo(Video video, int position);
-        void onDeleteVideo(int position);
+        void onDeleteVideo(Video video, int position);
     }
 
 

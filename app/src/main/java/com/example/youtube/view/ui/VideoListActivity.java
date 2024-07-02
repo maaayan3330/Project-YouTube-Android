@@ -12,6 +12,7 @@ import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
@@ -20,6 +21,7 @@ import androidx.appcompat.widget.SearchView;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -57,8 +59,7 @@ public class VideoListActivity extends AppCompatActivity implements VideoListAda
     private Uri profileImageUri; // Variable to store the profile image URI
 
     private VideoViewModel videoViewModel;
-    private AppDB db;
-    private VideoDao videoDao;
+
     private List<Video> videoList;
 
 
@@ -74,7 +75,7 @@ public class VideoListActivity extends AppCompatActivity implements VideoListAda
         rvListVideo.setLayoutManager(new LinearLayoutManager(this));
         videoListAdapter = new VideoListAdapter(this, this);
         rvListVideo.setAdapter(videoListAdapter);
-        videoViewModel.get().observe(this,videos -> {
+        videoViewModel.get().observe(this, videos -> {
             videoListAdapter.setVideos(videos);
             videoList=videos;
         });
@@ -274,8 +275,8 @@ public class VideoListActivity extends AppCompatActivity implements VideoListAda
             String newDescription = inputDescription.getText().toString();
             video.setTitle(newTitle);
             video.setDescription(newDescription);
-            videoDao.update(video);
-            videoListAdapter.notifyItemChanged(position);
+            videoViewModel.update(video);
+//            videoListAdapter.notifyItemChanged(position);
 
         });
         builder.setNegativeButton("Cancel", (dialog, which) -> dialog.cancel());
@@ -283,11 +284,10 @@ public class VideoListActivity extends AppCompatActivity implements VideoListAda
     }
 
     @Override
-    public void onDeleteVideo(int position) {
-        Video video = videoList.get(position);
-        videoDao.delete(video);
-        videoList.remove(position);
-        videoListAdapter.notifyItemRemoved(position);
-        videoListAdapter.notifyItemRangeChanged(position, videoList.size());
+    public void onDeleteVideo(Video video, int position) {
+        videoViewModel.delete(video);
+//        videoList.remove(position);
+//        videoListAdapter.notifyItemRemoved(position);
+//        videoListAdapter.notifyItemRangeChanged(position, videoList.size());
     }
 }

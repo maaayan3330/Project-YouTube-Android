@@ -11,17 +11,31 @@ import java.util.List;
 public class VideoViewModel extends ViewModel {
     private VideosRepository repository;
 
-         private LiveData<List<Video>> videos;
-             public VideoViewModel () {
-         repository = new VideosRepository();
-         videos = repository.getAll();
-         }
+    private LiveData<List<Video>> videos;
 
-         public LiveData<List<Video>> get() { return videos; }
+    public VideoViewModel() {
+        repository = new VideosRepository();
+        videos = repository.getAll();
+    }
 
-         public void add(Video video) { repository.add(video); }
+    public LiveData<List<Video>> get() {
+        return videos;
+    }
 
-         public void delete(Video video) { repository.delete(video); }
-             public void reload() { repository.reload(); }
+    public void add(Video video) {
+        repository.add(video);
+    }
+
+    public void delete(Video video) {
+        repository.delete(video);
+    }
+
+    public void update(Video video) {
+        repository.update(video);
+    }
+
+    public void reload() {
+        repository.reload();
+    }
 
 }

@@ -124,9 +124,5 @@ public class AddVideoActivity extends AppCompatActivity {
         videoDao.insert(newVideo);
         finish();
 
-//        videoManager = VideoManager.getInstance();
-//        videoManager.addVideo(newVideo);
-//        Intent intent = new Intent(AddVideoActivity.this, VideoListActivity.class);
-//        startActivity(intent);
     }
 }

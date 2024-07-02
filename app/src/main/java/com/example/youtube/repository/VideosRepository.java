@@ -47,18 +47,32 @@ public class VideosRepository {
     public void add(Video video) {
         new Thread(() -> {
             videoDao.insert(video);
+            reload();
         }).start();
     }
 
     public void delete(Video video) {
         new Thread(() -> {
             videoDao.delete(video);
+            reload();
         }).start();
     }
 
-    public void reload() {
+    public void update(Video video) {
+        new Thread(() -> {
+            videoDao.update(video);
+            reload();
+        }).start();
+    }
 
+
+    public void reload() {
+        new Thread(() -> {
+            List<Video> videos = videoDao.index();
+            videoListData.postValue(videos);
+        }).start();
     }
 }
+
 
 
