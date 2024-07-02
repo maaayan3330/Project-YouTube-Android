@@ -55,7 +55,7 @@ public class VideoListActivity extends AppCompatActivity implements VideoListAda
     private Toolbar toolbar;
     private ShapeableImageView profileImageView;
     private Uri profileImageUri; // Variable to store the profile image URI
-    private static final int REQUEST_CODE_VIDEO_PICK = 1;
+
     private VideoViewModel videoViewModel;
     private AppDB db;
     private VideoDao videoDao;
@@ -76,6 +76,7 @@ public class VideoListActivity extends AppCompatActivity implements VideoListAda
         rvListVideo.setAdapter(videoListAdapter);
         videoViewModel.get().observe(this,videos -> {
             videoListAdapter.setVideos(videos);
+            videoList=videos;
         });
 
 

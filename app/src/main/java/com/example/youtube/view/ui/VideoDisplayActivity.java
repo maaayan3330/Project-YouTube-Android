@@ -94,11 +94,12 @@ public class VideoDisplayActivity extends AppCompatActivity implements CommentAd
         vvVideo.start();
 
         // Comment list
-        commentList =video.getComments();
         RecyclerView rvCommentsRecyclerView = findViewById(R.id.rvComments);
-        commentAdapter = new CommentAdapter(commentList, this,this);
+        commentAdapter = new CommentAdapter( this,this);
         rvCommentsRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         rvCommentsRecyclerView.setAdapter(commentAdapter);
+        commentAdapter.setComments(video.getComments());
+
 
         // New comment function
         ImageView iv_post = findViewById(R.id.iv_post);

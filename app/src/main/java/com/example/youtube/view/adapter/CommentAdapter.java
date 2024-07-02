@@ -1,5 +1,6 @@
 package com.example.youtube.view.adapter;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,24 +17,10 @@ import com.example.youtube.model.UserManager;
 import com.example.youtube.utils.CustomToast;
 import com.example.youtube.model.Comment;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.CommentViewHolder> {
-    private List<Comment> commentList;
-    private Context context;
-    CommentAdapterListener listener;
-
-    public CommentAdapter(List<Comment> commentList, Context context,CommentAdapterListener listener) {
-        this.commentList = commentList;
-        this.context = context;
-        this.listener=listener;
-    }
-
-    public interface CommentAdapterListener {
-        void onEditComment(Comment comment, int position);
-        void onDeleteComment(int position);
-    }
-
     public static class CommentViewHolder extends RecyclerView.ViewHolder {
         public TextView authorTextView, commentTextView;
         public ImageButton ib_collapse;
@@ -51,11 +38,22 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.CommentV
         }
     }
 
+    private final LayoutInflater inflater;
+    private List<Comment> commentList;
+    private Context context;
+    CommentAdapterListener listener;
+
+    public CommentAdapter( Context context,CommentAdapterListener listener) {
+        inflater =LayoutInflater.from(context);
+        this.commentList = new ArrayList<>();
+        this.context = context;
+        this.listener=listener;
+    }
+
     @NonNull
     @Override
     public CommentViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View itemView = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.comment_list_item, parent, false);
+        View itemView = inflater.inflate(R.layout.comment_list_item, parent, false);
         return new CommentViewHolder(itemView);
     }
 
@@ -90,6 +88,17 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.CommentV
                 CustomToast.showToast(context, "Option available just for register users");
             }
         });
+    }
+
+    public interface CommentAdapterListener {
+        void onEditComment(Comment comment, int position);
+        void onDeleteComment(int position);
+    }
+
+    @SuppressLint("NotifyDataSetChanged")
+    public void setComments(List<Comment> comments){
+        this.commentList=comments;
+        notifyDataSetChanged();
     }
 
     @Override
