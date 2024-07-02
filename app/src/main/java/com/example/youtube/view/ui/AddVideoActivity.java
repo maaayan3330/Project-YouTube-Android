@@ -11,6 +11,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.room.Room;
 
 import android.content.Intent;
@@ -27,17 +28,17 @@ import com.example.youtube.utils.CustomToast;
 import com.example.youtube.model.AppDB;
 import com.example.youtube.model.Video;
 import com.example.youtube.model.VideoDao;
+import com.example.youtube.viewModel.VideoViewModel;
 
 import java.util.ArrayList;
 
 public class AddVideoActivity extends AppCompatActivity {
     private static final int SELECT_VIDEO = 1;
-
     private EditText etTitle, etDescription;
     private String videoPath;
+    private VideoViewModel videoViewModel;
 
-    private VideoDao videoDao;
-    private AppDB db;
+
 
 
     @Override
@@ -51,12 +52,7 @@ public class AddVideoActivity extends AppCompatActivity {
             return insets;
         });
 
-        db = Room.databaseBuilder(getApplicationContext(), AppDB.class, "VideosDB")
-                .allowMainThreadQueries().build();
-        videoDao = db.videoDao();
-
-
-
+        videoViewModel= new ViewModelProvider(this).get(VideoViewModel.class);
 
         etTitle = findViewById(R.id.etTitle);
         etDescription = findViewById(R.id.etDescription);
@@ -110,7 +106,6 @@ public class AddVideoActivity extends AppCompatActivity {
 
 
     private void addVideo() {
-        //שינוי עם רום
         String title = etTitle.getText().toString();
         String description = etDescription.getText().toString();
 
@@ -121,8 +116,8 @@ public class AddVideoActivity extends AppCompatActivity {
         User current= UserManager.getInstance().getCurrentUser();
         // Create a new Video object
         Video newVideo = new Video(title, description, videoPath, current.getNickname(), 0, 0, new ArrayList<>());
-        videoDao.insert(newVideo);
-        finish();
-
+        videoViewModel.add(newVideo);
+        Intent intent = new Intent(AddVideoActivity.this, VideoListActivity.class);
+        startActivity(intent);
     }
 }

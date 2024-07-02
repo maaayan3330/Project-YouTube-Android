@@ -12,7 +12,6 @@ import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
@@ -21,20 +20,16 @@ import androidx.appcompat.widget.SearchView;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import androidx.room.Room;
 
 import com.example.youtube.R;
 
 import com.example.youtube.model.User;
 import com.example.youtube.utils.CustomToast;
-import com.example.youtube.model.AppDB;
 import com.example.youtube.model.Video;
 import com.example.youtube.view.adapter.VideoListAdapter;
-import com.example.youtube.model.VideoDao;
 import com.example.youtube.viewModel.VideoViewModel;
 import com.google.android.material.navigation.NavigationView;
 
@@ -60,7 +55,7 @@ public class VideoListActivity extends AppCompatActivity implements VideoListAda
 
     private VideoViewModel videoViewModel;
 
-    private List<Video> videoList;
+    private List<Video> currentVideos;
 
 
     @Override
@@ -77,7 +72,7 @@ public class VideoListActivity extends AppCompatActivity implements VideoListAda
         rvListVideo.setAdapter(videoListAdapter);
         videoViewModel.get().observe(this, videos -> {
             videoListAdapter.setVideos(videos);
-            videoList=videos;
+            currentVideos =videos;
         });
 
 
@@ -169,6 +164,12 @@ public class VideoListActivity extends AppCompatActivity implements VideoListAda
         });
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        Log.d("VideoListActivity", "onDestroy called");
+    }
+
     private void loadUserInfoFromManager() {
         UserManager userManager = UserManager.getInstance();
         User currentUser = userManager.getCurrentUser();
@@ -207,12 +208,6 @@ public class VideoListActivity extends AppCompatActivity implements VideoListAda
     }
 
     @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        Log.d("VideoListActivity", "onDestroy called");
-    }
-
-    @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         if (drawerToggle.onOptionsItemSelected(item)) {
             return true;
@@ -232,7 +227,7 @@ public class VideoListActivity extends AppCompatActivity implements VideoListAda
     private void filterVideoList(String text) {
 
         List<Video> filteredList = new ArrayList<>();
-        for (Video video : videoList) {
+        for (Video video : currentVideos) {
             if (video.getTitle().toLowerCase().contains(text.toLowerCase())) {
                 filteredList.add(video);
             }
