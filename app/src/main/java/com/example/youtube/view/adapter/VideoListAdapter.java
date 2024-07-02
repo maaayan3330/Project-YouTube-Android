@@ -21,40 +21,14 @@ import com.example.youtube.utils.CustomToast;
 import com.example.youtube.view.ui.VideoDisplayActivity;
 import com.example.youtube.model.Video;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Adapter class for managing the list of videos in a RecyclerView.
  */
-public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.VideoViewHolder> {
-    private List<Video> videoList; // List of videos to display
-    private Context context; // Context in which the adapter is used
-    private VideoAdapterListener listener;
+public class VideoListAdapter extends RecyclerView.Adapter<VideoListAdapter.VideoViewHolder> {
 
-
-    /**
-     * Constructor for the VideoAdapter.
-     *
-     * @param videoList The list of videos to display.
-     * @param context   The context in which the adapter is being used.
-     */
-    public VideoAdapter(List<Video> videoList, Context context, VideoAdapterListener listener) {
-        this.videoList = videoList;
-        this.context = context;
-        this.listener=listener;
-    }
-    public void setVideos(List<Video> videos){
-        this.videoList=videos;
-    }
-
-    public interface VideoAdapterListener {
-        void onEditVideo(Video video, int position);
-        void onDeleteVideo(int position);
-    }
-
-    /**
-     * ViewHolder class to hold the views for each video item.
-     */
     public static class VideoViewHolder extends RecyclerView.ViewHolder {
         public TextView tvTitle, tvDescription,tvViews,tvLikes,tvAuthor; // TextViews for title, description, views, likes
         public VideoView vvVideo; // VideoView for displaying the video
@@ -83,6 +57,25 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.VideoViewHol
         }
     }
 
+    private final LayoutInflater inflater;
+    private List<Video> videoList; // List of videos to display
+    private Context context; // Context in which the adapter is used
+    private VideoAdapterListener listener;
+
+
+    /**
+     * Constructor for the VideoAdapter.
+     *
+     *
+     * @param context   The context in which the adapter is being used.
+     */
+    public VideoListAdapter(Context context, VideoAdapterListener listener) {
+        inflater =LayoutInflater.from(context);
+        this.videoList = new ArrayList<>();
+        this.listener=listener;
+        this.context=context;
+    }
+
 
     /**
      * Method to create new ViewHolder instances.
@@ -94,11 +87,10 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.VideoViewHol
     @NonNull
     @Override
     public VideoViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        context = parent.getContext();
-        View itemView = LayoutInflater.from(context)
-                .inflate(R.layout.video_list_item, parent, false);
+        View itemView = inflater.inflate(R.layout.video_list_item, parent, false);
         return new VideoViewHolder(itemView);
     }
+
 
     /**
      * Method to bind data to the views in each ViewHolder.
@@ -109,7 +101,7 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.VideoViewHol
     @Override
     public void onBindViewHolder(VideoViewHolder holder, int position) {
 
-        Video video = videoList.get(position);
+        final Video video = videoList.get(position);
         holder.tvTitle.setText(video.getTitle());
         holder.tvDescription.setText("Description: "+ video.getDescription());
         holder.tvViews.setText("Views: " + video.getViews());
@@ -135,21 +127,33 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.VideoViewHol
                 holder.llCollapse.setVisibility(View.GONE);
             }
         });
-            //edit function
+        //edit function
         holder.tv_edit.setOnClickListener(v -> {
             if (UserManager.getInstance().getCurrentUser()!= null){
                 listener.onEditVideo(video, position);
-                 holder.llCollapse.setVisibility(View.GONE); // Collapse after editing
+                holder.llCollapse.setVisibility(View.GONE); // Collapse after editing
             }else {   CustomToast.showToast(context, "Option available just for register users");}
         });
         //delete function
         holder.tv_delete.setOnClickListener(v -> {
             if (UserManager.getInstance().getCurrentUser()!= null) {
                 listener.onDeleteVideo(position);
-        }else {CustomToast.showToast(context, "Option available just for register users");} });
+            }else {CustomToast.showToast(context, "Option available just for register users");} });
     }
 
 
+
+    public interface VideoAdapterListener {
+        void onEditVideo(Video video, int position);
+        void onDeleteVideo(int position);
+    }
+
+
+    @SuppressLint("NotifyDataSetChanged")
+    public void setVideos(List<Video> videos){
+        this.videoList=videos;
+        notifyDataSetChanged();
+    }
 
     /**
      * Method to return the total number of items.

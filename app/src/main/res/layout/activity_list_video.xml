@@ -62,11 +62,16 @@
         </androidx.appcompat.widget.Toolbar>
 
         <!-- RecyclerView for displaying the list of videos -->
+        <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/refreshLayout">
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rvListVideo"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="?attr/android:colorBackground" />
+        </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
     </LinearLayout>
 
     <!-- Navigation drawer -->
@@ -77,6 +82,7 @@
         android:layout_gravity="start"
         android:background="?attr/android:colorBackground"
         app:headerLayout="@layout/header"
-        app:menu="@menu/main_menu" />
+        app:menu="@menu/main_menu"
+        tools:ignore="VisualLintBounds" />
 
 </androidx.drawerlayout.widget.DrawerLayout>

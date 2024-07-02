@@ -20,6 +20,7 @@ import androidx.appcompat.widget.SearchView;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.room.Room;
@@ -30,8 +31,9 @@ import com.example.youtube.model.User;
 import com.example.youtube.utils.CustomToast;
 import com.example.youtube.model.AppDB;
 import com.example.youtube.model.Video;
-import com.example.youtube.view.adapter.VideoAdapter;
+import com.example.youtube.view.adapter.VideoListAdapter;
 import com.example.youtube.model.VideoDao;
+import com.example.youtube.viewModel.VideoViewModel;
 import com.google.android.material.navigation.NavigationView;
 
 import java.util.ArrayList;
@@ -44,9 +46,9 @@ import com.google.android.material.imageview.ShapeableImageView;
 /**
  * MainActivity class for displaying a list of videos.
  */
-public class VideoListActivity extends AppCompatActivity implements VideoAdapter.VideoAdapterListener {
+public class VideoListActivity extends AppCompatActivity implements VideoListAdapter.VideoAdapterListener {
 
-    VideoAdapter videoAdapter;
+    VideoListAdapter videoListAdapter;
     private DrawerLayout drawerLayout;
     private NavigationView navigationView;
     private ActionBarDrawerToggle drawerToggle;
@@ -54,7 +56,7 @@ public class VideoListActivity extends AppCompatActivity implements VideoAdapter
     private ShapeableImageView profileImageView;
     private Uri profileImageUri; // Variable to store the profile image URI
     private static final int REQUEST_CODE_VIDEO_PICK = 1;
-
+    private VideoViewModel videoViewModel;
     private AppDB db;
     private VideoDao videoDao;
     private List<Video> videoList;
@@ -65,20 +67,17 @@ public class VideoListActivity extends AppCompatActivity implements VideoAdapter
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_list_video);
 
-        //התחלה חלק 2 עם רום
-        db = Room.databaseBuilder(getApplicationContext(), AppDB.class, "VideosDB").fallbackToDestructiveMigration()
-                .allowMainThreadQueries().build();
-        videoDao = db.videoDao();
-        videoList = videoDao.index();
-        // Initialize RecyclerView
+        videoViewModel= new ViewModelProvider(this).get(VideoViewModel.class);
+
         // RecyclerView for displaying the video list
         RecyclerView rvListVideo = findViewById(R.id.rvListVideo);
-        rvListVideo.setLayoutManager(new LinearLayoutManager(this)); // Set layout manager
+        rvListVideo.setLayoutManager(new LinearLayoutManager(this));
+        videoListAdapter = new VideoListAdapter(this, this);
+        rvListVideo.setAdapter(videoListAdapter);
+        videoViewModel.get().observe(this,videos -> {
+            videoListAdapter.setVideos(videos);
+        });
 
-        // Set adapter to the RecyclerView
-        // Adapter for the RecyclerView
-        videoAdapter = new VideoAdapter(videoList, this,this);
-        rvListVideo.setAdapter(videoAdapter);
 
 
         // Initialize Toolbar
@@ -117,8 +116,10 @@ public class VideoListActivity extends AppCompatActivity implements VideoAdapter
                     Intent intentForVideo = new Intent(VideoListActivity.this, AddVideoActivity.class);
                     CustomToast.showToast(VideoListActivity.this, "Upload video");
                     startActivity(intentForVideo);
-                }else { CustomToast.showToast(this, "Option available just for register users");
-                }return true;
+                } else {
+                    CustomToast.showToast(this, "Option available just for register users");
+                }
+                return true;
             } else if (itemId == R.id.dark_mode_yes) {
                 // Toggle dark mode
                 int currentNightMode = getResources().getConfiguration().uiMode & Configuration.UI_MODE_NIGHT_MASK;
@@ -140,7 +141,6 @@ public class VideoListActivity extends AppCompatActivity implements VideoAdapter
                 return false;
             }
         });
-
 
 
         // Initialize user info views from header
@@ -239,16 +239,8 @@ public class VideoListActivity extends AppCompatActivity implements VideoAdapter
         if (filteredList.isEmpty()) {
             Toast.makeText(this, "No video found", Toast.LENGTH_SHORT).show();
         } else {
-            videoAdapter.setFilterList(filteredList);
+            videoListAdapter.setFilterList(filteredList);
         }
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        videoList.clear();
-        videoList.addAll(videoDao.index());
-        videoAdapter.notifyDataSetChanged();
     }
 
 
@@ -282,7 +274,7 @@ public class VideoListActivity extends AppCompatActivity implements VideoAdapter
             video.setTitle(newTitle);
             video.setDescription(newDescription);
             videoDao.update(video);
-            videoAdapter.notifyItemChanged(position);
+            videoListAdapter.notifyItemChanged(position);
 
         });
         builder.setNegativeButton("Cancel", (dialog, which) -> dialog.cancel());
@@ -294,7 +286,7 @@ public class VideoListActivity extends AppCompatActivity implements VideoAdapter
         Video video = videoList.get(position);
         videoDao.delete(video);
         videoList.remove(position);
-        videoAdapter.notifyItemRemoved(position);
-        videoAdapter.notifyItemRangeChanged(position, videoList.size());
+        videoListAdapter.notifyItemRemoved(position);
+        videoListAdapter.notifyItemRangeChanged(position, videoList.size());
     }
 }

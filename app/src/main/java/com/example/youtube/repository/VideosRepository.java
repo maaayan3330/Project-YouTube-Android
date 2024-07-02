@@ -34,9 +34,9 @@ public class VideosRepository {
         @Override
         protected void onActive() {
             super.onActive();
-            new Thread(() -> {
-                postValue(videoDao.index());
-            }).start();
+//            new Thread(() -> {
+                videoListData.postValue(videoDao.index());
+//            }).start();
         }
     }
 
