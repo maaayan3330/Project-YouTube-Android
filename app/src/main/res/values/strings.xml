@@ -23,11 +23,11 @@
     <string name="sign_in">sign in</string>
     <string name="rewind">rewind</string>
     <string name="pause_play">pause/play</string>
-    <string name="description">Description:</string>
-    <string name="title">Title</string>
-    <string name="author">author:</string>
-    <string name="likes">likes:</string>
-    <string name="views">views:</string>
+    <string name="description">Description: </string>
+    <string name="title">Title: </string>
+    <string name="author">author: </string>
+    <string name="likes">likes: </string>
+    <string name="views">views: </string>
     <string name="forward">forward</string>
     <string name="fullscreen">fullscreen</string>
     <string name="title_video">Title video</string>

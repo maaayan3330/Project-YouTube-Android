@@ -6,13 +6,13 @@ import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.VideoView;
-import android.view.ViewGroup;
 
 import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
@@ -22,19 +22,18 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import androidx.room.Room;
 
 import com.example.youtube.R;
+import com.example.youtube.model.Comment;
 import com.example.youtube.model.User;
 import com.example.youtube.model.UserManager;
-import com.example.youtube.utils.CustomToast;
-import com.example.youtube.model.AppDB;
-import com.example.youtube.model.Comment;
 import com.example.youtube.model.Video;
-import com.example.youtube.model.VideoDao;
+import com.example.youtube.utils.CustomToast;
 import com.example.youtube.view.adapter.CommentAdapter;
+import com.example.youtube.viewModel.VideoViewModel;
 
 import java.util.List;
 
@@ -47,10 +46,10 @@ public class VideoDisplayActivity extends AppCompatActivity implements CommentAd
     private boolean isFullScreen = false; // Fullscreen indicator
     List<Comment> commentList;
 
-    private AppDB db;
-    private VideoDao videoDao;
     private Video video;
     private CommentAdapter commentAdapter;
+    private VideoViewModel videoViewModel;
+    private User currentUser;
 
 
     @Override
@@ -64,13 +63,11 @@ public class VideoDisplayActivity extends AppCompatActivity implements CommentAd
             return insets;
         });
 
-        db = Room.databaseBuilder(getApplicationContext(), AppDB.class, "VideosDB")
-                .allowMainThreadQueries().build();
-        videoDao = db.videoDao();
-
+        videoViewModel = new ViewModelProvider(this).get(VideoViewModel.class);
+        currentUser =UserManager.getInstance().getCurrentUser();
 
         // Get data from intent
-         video = (Video) getIntent().getSerializableExtra("extra_video");
+        video = (Video) getIntent().getSerializableExtra("extra_video");
 
         // Initialize views and set data to views
         vvVideo = findViewById(R.id.vvVideo);
@@ -86,7 +83,7 @@ public class VideoDisplayActivity extends AppCompatActivity implements CommentAd
 
         // Increment views count when the video starts playing
         video.setViews(video.getViews() + 1);
-        videoDao.update(video);
+        videoViewModel.update(video);
         tv_views.setText("Views: " + video.getViews());
 
         // Set the video URI and start playing
@@ -95,26 +92,25 @@ public class VideoDisplayActivity extends AppCompatActivity implements CommentAd
 
         // Comment list
         RecyclerView rvCommentsRecyclerView = findViewById(R.id.rvComments);
-        commentAdapter = new CommentAdapter( this,this);
         rvCommentsRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        commentAdapter = new CommentAdapter(this, this);
         rvCommentsRecyclerView.setAdapter(commentAdapter);
-        commentAdapter.setComments(video.getComments());
+        commentList=video.getComments();
+        commentAdapter.setComments(commentList);
 
 
         // New comment function
         ImageView iv_post = findViewById(R.id.iv_post);
         EditText et_CommentInput = findViewById(R.id.et_CommentInput);
         iv_post.setOnClickListener(view -> {
-            if (UserManager.getInstance().getCurrentUser() != null) {
+            if (currentUser != null) {
                 String commentText = et_CommentInput.getText().toString().trim();
                 if (!commentText.isEmpty()) {
-                    User current = UserManager.getInstance().getCurrentUser();
-                    Comment newComment = new Comment(current.getNickname(), commentText);
+                    Comment newComment = new Comment(currentUser.getNickname(), commentText);
                     commentList.add(newComment);
-                    videoDao.update(video);
-                    // Replace "User" with actual user name if available
                     commentAdapter.notifyItemInserted(commentList.size() - 1);
                     et_CommentInput.setText("");
+                    videoViewModel.update(video);
                 } else {
                     Toast.makeText(this, "Comment cannot be empty", Toast.LENGTH_SHORT).show();
                 }
@@ -139,7 +135,7 @@ public class VideoDisplayActivity extends AppCompatActivity implements CommentAd
                 tv_like.setText("Likes: " + video.getLikes());
                 Toast.makeText(getApplicationContext(), "Unliked!", Toast.LENGTH_SHORT).show();
             }
-            videoDao.update(video);
+            videoViewModel.update(video);
         });
 
         // Share function:
@@ -241,7 +237,7 @@ public class VideoDisplayActivity extends AppCompatActivity implements CommentAd
         builder.setPositiveButton("OK", (dialog, which) -> {
             String newCommentText = input.getText().toString();
             comment.setCommentText(newCommentText);
-            videoDao.update(video);
+            videoViewModel.update(video);
             commentAdapter.notifyItemChanged(position);
         });
 
@@ -251,9 +247,9 @@ public class VideoDisplayActivity extends AppCompatActivity implements CommentAd
     }
 
     @Override
-    public void onDeleteComment(int position) {
+    public void onDeleteComment(Comment comment, int position) {
+        videoViewModel.update(video);
         commentList.remove(position);
-        videoDao.update(video);
         commentAdapter.notifyItemRemoved(position);
         commentAdapter.notifyItemRangeChanged(position, commentList.size());
     }

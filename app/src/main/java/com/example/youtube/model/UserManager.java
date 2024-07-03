@@ -2,6 +2,7 @@ package com.example.youtube.model;
 
 import androidx.room.Room;
 
+import com.example.youtube.model.daos.UserDao;
 import com.example.youtube.utils.MyApplication;
 
 import java.util.List;

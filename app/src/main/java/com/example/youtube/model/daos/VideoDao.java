@@ -1,4 +1,4 @@
-package com.example.youtube.model;
+package com.example.youtube.model.daos;
 
 import androidx.room.Dao;
 import androidx.room.Delete;

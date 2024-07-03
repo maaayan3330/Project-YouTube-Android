@@ -4,7 +4,7 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.example.youtube.model.Video;
-import com.example.youtube.repository.VideosRepository;
+import com.example.youtube.model.repository.VideosRepository;
 
 import java.util.List;
 

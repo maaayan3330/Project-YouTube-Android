@@ -13,6 +13,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.youtube.R;
+import com.example.youtube.model.User;
 import com.example.youtube.model.UserManager;
 import com.example.youtube.utils.CustomToast;
 import com.example.youtube.model.Comment;
@@ -83,7 +84,7 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.CommentV
 
         holder.textViewDelete.setOnClickListener(v -> {
             if (UserManager.getInstance().getCurrentUser() != null) {
-                listener.onDeleteComment(position);
+                listener.onDeleteComment(comment,position);
             } else {
                 CustomToast.showToast(context, "Option available just for register users");
             }
@@ -92,7 +93,7 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.CommentV
 
     public interface CommentAdapterListener {
         void onEditComment(Comment comment, int position);
-        void onDeleteComment(int position);
+        void onDeleteComment(Comment comment, int position);
     }
 
     @SuppressLint("NotifyDataSetChanged")

@@ -1,4 +1,4 @@
-package com.example.youtube.repository;
+package com.example.youtube.model.repository;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
@@ -6,7 +6,7 @@ import androidx.room.Room;
 
 import com.example.youtube.model.AppDB;
 import com.example.youtube.model.Video;
-import com.example.youtube.model.VideoDao;
+import com.example.youtube.model.daos.VideoDao;
 import com.example.youtube.utils.MyApplication;
 
 import java.util.LinkedList;
@@ -47,30 +47,24 @@ public class VideosRepository {
     public void add(Video video) {
         new Thread(() -> {
             videoDao.insert(video);
-            reload();
         }).start();
     }
 
     public void delete(Video video) {
         new Thread(() -> {
             videoDao.delete(video);
-            reload();
         }).start();
     }
 
     public void update(Video video) {
         new Thread(() -> {
             videoDao.update(video);
-            reload();
         }).start();
     }
 
 
     public void reload() {
-        new Thread(() -> {
-            List<Video> videos = videoDao.index();
-            videoListData.postValue(videos);
-        }).start();
+
     }
 }
 

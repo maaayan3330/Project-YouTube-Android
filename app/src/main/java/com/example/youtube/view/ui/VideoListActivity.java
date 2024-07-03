@@ -63,7 +63,7 @@ public class VideoListActivity extends AppCompatActivity implements VideoListAda
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_list_video);
 
-        videoViewModel= new ViewModelProvider(this).get(VideoViewModel.class);
+        videoViewModel = new ViewModelProvider(this).get(VideoViewModel.class);
 
         // RecyclerView for displaying the video list
         RecyclerView rvListVideo = findViewById(R.id.rvListVideo);
@@ -72,9 +72,8 @@ public class VideoListActivity extends AppCompatActivity implements VideoListAda
         rvListVideo.setAdapter(videoListAdapter);
         videoViewModel.get().observe(this, videos -> {
             videoListAdapter.setVideos(videos);
-            currentVideos =videos;
+            currentVideos = videos;
         });
-
 
 
         // Initialize Toolbar
@@ -163,6 +162,7 @@ public class VideoListActivity extends AppCompatActivity implements VideoListAda
             }
         });
     }
+
 
     @Override
     protected void onDestroy() {
@@ -271,7 +271,7 @@ public class VideoListActivity extends AppCompatActivity implements VideoListAda
             video.setTitle(newTitle);
             video.setDescription(newDescription);
             videoViewModel.update(video);
-//            videoListAdapter.notifyItemChanged(position);
+            videoListAdapter.notifyItemChanged(position);
 
         });
         builder.setNegativeButton("Cancel", (dialog, which) -> dialog.cancel());
@@ -281,8 +281,8 @@ public class VideoListActivity extends AppCompatActivity implements VideoListAda
     @Override
     public void onDeleteVideo(Video video, int position) {
         videoViewModel.delete(video);
-//        videoList.remove(position);
-//        videoListAdapter.notifyItemRemoved(position);
-//        videoListAdapter.notifyItemRangeChanged(position, videoList.size());
+        currentVideos.remove(position);
+        videoListAdapter.notifyItemRemoved(position);
+        videoListAdapter.notifyItemRangeChanged(position, currentVideos.size());
     }
 }

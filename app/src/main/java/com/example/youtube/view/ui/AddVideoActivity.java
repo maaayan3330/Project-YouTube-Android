@@ -12,7 +12,6 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.room.Room;
 
 import android.content.Intent;
 import android.util.Log;
@@ -25,9 +24,7 @@ import com.example.youtube.R;
 import com.example.youtube.model.User;
 import com.example.youtube.model.UserManager;
 import com.example.youtube.utils.CustomToast;
-import com.example.youtube.model.AppDB;
 import com.example.youtube.model.Video;
-import com.example.youtube.model.VideoDao;
 import com.example.youtube.viewModel.VideoViewModel;
 
 import java.util.ArrayList;
