@@ -67,9 +67,10 @@ public class VideosRepository {
 
 
     public void reload() {
+        new Thread(() -> {
+            videoAPI.get();
+        }).start();
     }
-
-
 }
 
 

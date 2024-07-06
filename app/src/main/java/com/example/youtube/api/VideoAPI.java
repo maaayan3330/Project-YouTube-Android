@@ -80,4 +80,7 @@ public class VideoAPI {
     public void delete(Video video){
 
     }
+    public void update(Video video){
+
+    }
 }

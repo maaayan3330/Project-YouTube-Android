@@ -9,6 +9,7 @@ import retrofit2.http.Body;
 import retrofit2.http.DELETE;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
+import retrofit2.http.PUT;
 import retrofit2.http.Path;
 
 /**
@@ -41,4 +42,14 @@ public interface UserWebServiceAPI {
      */
     @DELETE("users/{id}")
     Call<Void> deleteUser(@Path("id") int id);
+
+    /**
+     * Updates an existing user entry by its ID.
+     *
+     * @param id The ID of the user to be updated.
+     * @param user The updated user object.
+     * @return A Call object to make the network request.
+     */
+    @PUT("users/{id}")
+    Call<Void> updateVideo(@Path("id") int id, @Body User user);
 }
