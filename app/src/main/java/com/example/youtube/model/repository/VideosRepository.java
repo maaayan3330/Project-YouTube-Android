@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.room.Room;
 
+import com.example.youtube.api.VideoAPI;
 import com.example.youtube.model.AppDB;
 import com.example.youtube.model.Video;
 import com.example.youtube.model.daos.VideoDao;
@@ -15,6 +16,7 @@ import java.util.List;
 public class VideosRepository {
     private VideoDao videoDao;
     private VideoListData videoListData;
+    private VideoAPI videoAPI;
 
     public VideosRepository() {
         AppDB db = Room.databaseBuilder(MyApplication.context, AppDB.class, "VideosDB")
@@ -23,6 +25,7 @@ public class VideosRepository {
                 .build();
         videoDao = db.videoDao();
         videoListData = new VideoListData();
+        videoAPI=new VideoAPI(videoListData,videoDao);
     }
 
     class VideoListData extends MutableLiveData<List<Video>> {
@@ -64,8 +67,9 @@ public class VideosRepository {
 
 
     public void reload() {
-
     }
+
+
 }
 
 

@@ -11,8 +11,8 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:background="?attr/android:colorBackground">
+        android:background="?attr/android:colorBackground"
+        android:orientation="vertical">
 
         <!-- Toolbar with custom layout -->
         <androidx.appcompat.widget.Toolbar
@@ -29,8 +29,8 @@
                 android:layout_height="wrap_content"
                 android:background="?attr/android:colorBackground"
                 android:orientation="horizontal"
-                android:visibility="visible"
-                android:padding="8dp">
+                android:padding="8dp"
+                android:visibility="visible">
 
                 <!-- YouTube Logo -->
 
@@ -38,10 +38,10 @@
                     android:id="@+id/ivLogo"
                     android:layout_width="48dp"
                     android:layout_height="48dp"
+                    android:layout_marginEnd="16dp"
                     android:background="?attr/selectableItemBackgroundBorderless"
                     android:scaleType="centerInside"
                     android:src="@drawable/ic_youtube_logo"
-                    android:layout_marginEnd="16dp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
@@ -52,8 +52,8 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:background="@drawable/edit_text_background"
-                    android:queryHint="@string/search"
                     android:iconifiedByDefault="false"
+                    android:queryHint="@string/search"
                     android:singleLine="true"
                     android:textColor="?attr/colorOnBackground"
                     android:textColorHint="?attr/colorOnBackground" />
@@ -63,14 +63,14 @@
 
         <!-- RecyclerView for displaying the list of videos -->
         <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+            android:id="@+id/srl_refresh"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:id="@+id/refreshLayout">
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rvListVideo"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="?attr/android:colorBackground" />
+            android:layout_height="match_parent">
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rvListVideo"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="?attr/android:colorBackground" />
         </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
     </LinearLayout>
 

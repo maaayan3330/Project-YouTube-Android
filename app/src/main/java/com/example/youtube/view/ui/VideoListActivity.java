@@ -23,6 +23,7 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.example.youtube.R;
 
@@ -52,11 +53,8 @@ public class VideoListActivity extends AppCompatActivity implements VideoListAda
     private Toolbar toolbar;
     private ShapeableImageView profileImageView;
     private Uri profileImageUri; // Variable to store the profile image URI
-
     private VideoViewModel videoViewModel;
-
     private List<Video> currentVideos;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,7 +73,6 @@ public class VideoListActivity extends AppCompatActivity implements VideoListAda
             currentVideos = videos;
         });
 
-
         // Initialize Toolbar
         toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -89,7 +86,48 @@ public class VideoListActivity extends AppCompatActivity implements VideoListAda
         drawerLayout.addDrawerListener(drawerToggle);
         drawerToggle.syncState();
 
-        navigationView.setNavigationItemSelectedListener(item -> {
+        navigationView.setNavigationItemSelectedListener(this::NavigationItemSelected);
+
+        // Initialize user info views from header
+        View headerView = navigationView.getHeaderView(0);
+        profileImageView = headerView.findViewById(R.id.profileImageView);
+
+        // Load user data from UserManager
+        loadUserInfoFromManager();
+
+        // Search function
+        SearchView sv_search = findViewById(R.id.svSearch);
+        sv_search.clearFocus();
+        sv_search.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                filterVideoList(newText);
+                return true;
+            }
+        });
+
+        //refresh function
+        SwipeRefreshLayout srl_refresh= findViewById(R.id.srl_refresh);
+        srl_refresh.setOnRefreshListener(()->{
+            videoViewModel.reload();
+            //שורה הזו צריכה לעבור לאובזרב של הליסט וידאו
+            srl_refresh.setRefreshing(false);
+        });
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        Log.d("VideoListActivity", "onDestroy called");
+    }
+
+    private boolean NavigationItemSelected(MenuItem item) {
+        {
             int itemId = item.getItemId();
             if (itemId == R.id.login_yes) {
                 Intent intentForLogIn = new Intent(VideoListActivity.this, SignUpActivity.class);
@@ -136,38 +174,7 @@ public class VideoListActivity extends AppCompatActivity implements VideoListAda
             } else {
                 return false;
             }
-        });
-
-
-        // Initialize user info views from header
-        View headerView = navigationView.getHeaderView(0);
-        profileImageView = headerView.findViewById(R.id.profileImageView);
-
-        // Load user data from UserManager
-        loadUserInfoFromManager();
-
-        // Search function
-        SearchView sv_search = findViewById(R.id.svSearch);
-        sv_search.clearFocus();
-        sv_search.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-            @Override
-            public boolean onQueryTextSubmit(String query) {
-                return false;
-            }
-
-            @Override
-            public boolean onQueryTextChange(String newText) {
-                filterVideoList(newText);
-                return true;
-            }
-        });
-    }
-
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        Log.d("VideoListActivity", "onDestroy called");
+        }
     }
 
     private void loadUserInfoFromManager() {
@@ -239,7 +246,6 @@ public class VideoListActivity extends AppCompatActivity implements VideoListAda
             videoListAdapter.setFilterList(filteredList);
         }
     }
-
 
     @Override
     public void onEditVideo(Video video, int position) {
