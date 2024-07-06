@@ -23,7 +23,7 @@ public class VideoAPI {
     private MutableLiveData<List<Video>> videoListData;
     private VideoDao videoDao;
     private Retrofit retrofit;
-    private WebServiceAPI webServiceAPI;
+    private VideoWebServiceAPI videoWebServiceAPI;
 
     /**
      * Constructor for VideoAPI.
@@ -42,7 +42,7 @@ public class VideoAPI {
                 .build();
 
         // Create an instance of the web service API
-        webServiceAPI = retrofit.create(WebServiceAPI.class);
+        videoWebServiceAPI = retrofit.create(VideoWebServiceAPI.class);
     }
 
     /**
@@ -52,7 +52,7 @@ public class VideoAPI {
      */
     public void get() {
         // Make a network call to fetch videos
-        Call<List<Video>> call = webServiceAPI.getVideos();
+        Call<List<Video>> call = videoWebServiceAPI.getVideos();
         call.enqueue(new Callback<List<Video>>() {
             @Override
             public void onResponse(Call<List<Video>> call, Response<List<Video>> response) {

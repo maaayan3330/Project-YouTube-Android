@@ -12,16 +12,32 @@ import java.util.List;
 
 @Dao
 public interface UserDao {
+
+    // Query to get all users from the table
     @Query("SELECT * FROM user")
     List<User> index();
+
+    // Query to get a user by their ID
     @Query("SELECT * FROM user WHERE id = :id")
     User get(int id);
 
+    // Insert one or more users
     @Insert
-    void insert(User... Users);
+    void insert(User... users);
 
+    // Update one or more users
     @Update
     void update(User... users);
+
+    // Delete one or more users
     @Delete
     void delete(User... users);
+
+    // Delete all entries from the user table
+    @Query("DELETE FROM user")
+    void clear();
+
+    // Insert a list of users
+    @Insert
+    void insertList(List<User> userList);
 }
