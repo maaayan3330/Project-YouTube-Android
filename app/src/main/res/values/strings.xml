@@ -51,5 +51,6 @@
     <string name="username_menu">Username</string>
     <string name="profile">prooooooooooooooo</string>
     <string name="check">check</string>
+    <string name="BaseUrl">http://10.0.2.2:80/api/</string>
 
 </resources>

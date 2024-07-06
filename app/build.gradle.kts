@@ -20,8 +20,8 @@ android {
         release {
             isMinifyEnabled = false
             proguardFiles(
-                getDefaultProguardFile("proguard-android-optimize.txt"),
-                "proguard-rules.pro"
+                    getDefaultProguardFile("proguard-android-optimize.txt"),
+                    "proguard-rules.pro"
             )
         }
     }
@@ -39,12 +39,17 @@ dependencies {
     implementation(libs.support.annotations)
     implementation(libs.room.common)
     implementation(libs.room.runtime)
+    annotationProcessor(libs.room.compiler)
     implementation(libs.swiperefreshlayout)
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)
     implementation(libs.gson)
+    implementation("com.squareup.retrofit2:retrofit:2.9.0")
+    implementation("com.squareup.retrofit2:converter-gson:2.9.0")
+
+
     // for profile
-    implementation ("com.google.android.material:material:1.3.0")
-    annotationProcessor(libs.room.compiler)
+    implementation("com.google.android.material:material:1.3.0")
+
 }
