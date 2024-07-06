@@ -4,6 +4,7 @@ import androidx.lifecycle.MutableLiveData;
 
 import com.example.youtube.R;
 import com.example.youtube.model.User;
+import com.example.youtube.model.Video;
 import com.example.youtube.model.daos.UserDao;
 import com.example.youtube.utils.MyApplication;
 
@@ -72,5 +73,11 @@ public class UserAPI {
                 // Handle the failure (e.g., log the error, notify the user)
             }
         });
+    }
+    public void add(User user){
+
+    }
+    public void delete(User user){
+
     }
 }

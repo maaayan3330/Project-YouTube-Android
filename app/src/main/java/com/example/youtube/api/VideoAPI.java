@@ -73,4 +73,11 @@ public class VideoAPI {
             }
         });
     }
+
+    public void add(Video video){
+
+    }
+    public void delete(Video video){
+
+    }
 }
