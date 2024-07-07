@@ -1,5 +1,7 @@
 package com.example.youtube.api;
 
+import android.util.Log;
+
 import androidx.lifecycle.MutableLiveData;
 
 import com.example.youtube.R;
@@ -70,6 +72,7 @@ public class VideoAPI {
             @Override
             public void onFailure(Call<List<Video>> call, Throwable t) {
                 // Handle the failure (e.g., log the error, notify the user)
+                Log.e("api",t.getMessage());
             }
         });
     }
