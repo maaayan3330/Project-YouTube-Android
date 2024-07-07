@@ -12,6 +12,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
@@ -75,7 +76,7 @@ public class RegistrationActivity2 extends AppCompatActivity {
         Button uploadImageButton = findViewById(R.id.button_upload_image);
         uploadImageButton.setOnClickListener(v -> uploadImage.showImagePickerDialog());
 
-        // conect with a buttom if the user is on
+        // connect with a button if the user is on
         Button buttonForSignUp = findViewById(R.id.alredyReg);
         buttonForSignUp.setOnClickListener(v -> {
             Intent intent = new Intent(this, SignUpActivity.class);
@@ -99,11 +100,12 @@ public class RegistrationActivity2 extends AppCompatActivity {
 
             // If the user is registered successfully, navigate to the login page
             if (resultMessage.equals("User registered successfully")) {
+                // Convert the profile image URI to a string
+                String avatarUriString = profileImageUri != null ? profileImageUri.toString() : null;
                 // Add the user to the list of users with profile image URI
-                User newUser= new User(usernameEditText.getText().toString(), passwordEditText.getText().toString(),
-                        nicknameEditText.getText().toString(), profileImageUri.toString());
+                User newUser = new User(usernameEditText.getText().toString(), passwordEditText.getText().toString(),
+                        nicknameEditText.getText().toString(), avatarUriString);
                 userManager.addUser(newUser);
-
                 // Move to the next page back after the user registers successfully
                 Intent intent = new Intent(RegistrationActivity2.this, SignUpActivity.class);
                 startActivity(intent);
@@ -124,9 +126,9 @@ public class RegistrationActivity2 extends AppCompatActivity {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if (requestCode == REQUEST_PERMISSION_CODE) {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                // prommiton got
+                // Permission granted
             } else {
-                // prommision denided
+                // Permission denied
                 Toast.makeText(this, "Camera and storage permissions are required to use this feature", Toast.LENGTH_SHORT).show();
             }
         }
