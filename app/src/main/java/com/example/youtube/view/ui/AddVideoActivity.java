@@ -28,14 +28,13 @@ import com.example.youtube.model.Video;
 import com.example.youtube.viewModel.VideoViewModel;
 
 import java.util.ArrayList;
+import java.util.Date;
 
 public class AddVideoActivity extends AppCompatActivity {
     private static final int SELECT_VIDEO = 1;
     private EditText etTitle, etDescription;
     private String videoPath;
     private VideoViewModel videoViewModel;
-
-
 
 
     @Override
@@ -49,7 +48,7 @@ public class AddVideoActivity extends AppCompatActivity {
             return insets;
         });
 
-        videoViewModel= new ViewModelProvider(this).get(VideoViewModel.class);
+        videoViewModel = new ViewModelProvider(this).get(VideoViewModel.class);
 
         etTitle = findViewById(R.id.etTitle);
         etDescription = findViewById(R.id.etDescription);
@@ -110,10 +109,16 @@ public class AddVideoActivity extends AppCompatActivity {
             CustomToast.showToast(this, "Please fill all fields and select a video");
             return;
         }
-        User current= UserManager.getInstance().getCurrentUser();
+
+        User currentUser = UserManager.getInstance().getCurrentUser();
+        String artist = currentUser.getNickname();
+        String avatar = currentUser.getAvatar();
+        Date currentTime = new Date();
+
         // Create a new Video object
-        Video newVideo = new Video(title, description, videoPath, current.getNickname(), 0, 0, new ArrayList<>());
+        Video newVideo = new Video(title, description, videoPath, artist, 0, 0, 0, avatar, currentTime, new ArrayList<>());
         videoViewModel.add(newVideo);
+
         Intent intent = new Intent(AddVideoActivity.this, VideoListActivity.class);
         startActivity(intent);
     }

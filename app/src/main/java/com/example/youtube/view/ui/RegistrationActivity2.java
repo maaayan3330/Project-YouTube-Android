@@ -101,7 +101,7 @@ public class RegistrationActivity2 extends AppCompatActivity {
             if (resultMessage.equals("User registered successfully")) {
                 // Add the user to the list of users with profile image URI
                 User newUser= new User(usernameEditText.getText().toString(), passwordEditText.getText().toString(),
-                        nicknameEditText.getText().toString(), profileImageUri);
+                        nicknameEditText.getText().toString(), profileImageUri.toString());
                 userManager.addUser(newUser);
 
                 // Move to the next page back after the user registers successfully

@@ -63,7 +63,7 @@ public class VideoDisplayActivity extends AppCompatActivity implements CommentAd
 
 
         videoViewModel = new ViewModelProvider(this).get(VideoViewModel.class);
-        currentUser =UserManager.getInstance().getCurrentUser();
+        currentUser = UserManager.getInstance().getCurrentUser();
 
         // Get data from intent
         video = (Video) getIntent().getSerializableExtra("extra_video");
@@ -78,8 +78,7 @@ public class VideoDisplayActivity extends AppCompatActivity implements CommentAd
         TextView tv_views = findViewById(R.id.tv_view);
         TextView tv_author = findViewById(R.id.tv_author);
         tv_like.setText("Likes: " + video.getLikes());
-        tv_author.setText("Author: " + video.getArtist());
-
+        tv_author.setText("Artist: " + video.getArtist());
         // Increment views count when the video starts playing
         video.setViews(video.getViews() + 1);
         videoViewModel.update(video);
@@ -94,59 +93,22 @@ public class VideoDisplayActivity extends AppCompatActivity implements CommentAd
         rvCommentsRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         commentAdapter = new CommentAdapter(this, this);
         rvCommentsRecyclerView.setAdapter(commentAdapter);
-        commentList=video.getComments();
+        commentList = video.getComments();
         commentAdapter.setComments(commentList);
 
 
         // New comment function
         ImageView iv_post = findViewById(R.id.iv_post);
         EditText et_CommentInput = findViewById(R.id.et_CommentInput);
-        iv_post.setOnClickListener(view -> {
-            if (currentUser != null) {
-                String commentText = et_CommentInput.getText().toString().trim();
-                if (!commentText.isEmpty()) {
-                    Comment newComment = new Comment(currentUser.getNickname(), commentText);
-                    commentList.add(newComment);
-                    commentAdapter.notifyItemInserted(commentList.size() - 1);
-                    et_CommentInput.setText("");
-                    videoViewModel.update(video);
-                } else {
-                    Toast.makeText(this, "Comment cannot be empty", Toast.LENGTH_SHORT).show();
-                }
-            } else {
-                CustomToast.showToast(this, "Option available just for register users");
-            }
-        });
+        iv_post.setOnClickListener(view -> addComment(et_CommentInput));
 
         // Like function:
         ImageView iv_like = findViewById(R.id.iv_like);
-        iv_like.setOnClickListener(view -> {
-            view.setSelected(!view.isSelected());
-            if (view.isSelected()) {
-                // Increment likes count and update TextView
-                video.setLikes(video.getLikes() + 1);
-                tv_like.setText("Likes: " + video.getLikes());
-                Toast.makeText(getApplicationContext(), "Liked!", Toast.LENGTH_SHORT).show();
-
-            } else {
-                // Decrement likes count and update TextView
-                video.setLikes(video.getLikes() - 1);
-                tv_like.setText("Likes: " + video.getLikes());
-                Toast.makeText(getApplicationContext(), "Unliked!", Toast.LENGTH_SHORT).show();
-            }
-            videoViewModel.update(video);
-        });
+        iv_like.setOnClickListener(view -> clickLike(view, tv_like));
 
         // Share function:
         ImageView iv_share = findViewById(R.id.iv_share);
-        iv_share.setOnClickListener(view -> {
-            Intent intent = new Intent(Intent.ACTION_SEND);
-            intent.setType("text/plain");
-            intent.putExtra(Intent.EXTRA_SUBJECT, video.getTitle());
-            intent.putExtra(Intent.EXTRA_TEXT, "Check out this video: " + video.getVideoUrl());
-
-            startActivity(Intent.createChooser(intent, "Share Video"));
-        });
+        iv_share.setOnClickListener(view -> shareVideo());
 
         // Video control buttons
         clControl = findViewById(R.id.clControl);
@@ -156,56 +118,100 @@ public class VideoDisplayActivity extends AppCompatActivity implements CommentAd
         ImageButton btnFullscreen = findViewById(R.id.btnFullscreen);
 
         // Video control function
-        btnPlayPause.setOnClickListener(view -> {
-            view.setSelected(!view.isSelected());
-            if (view.isSelected()) {
-                vvVideo.pause();
-            } else {
-                vvVideo.start();
-            }
-        });
-
-        btnForward.setOnClickListener(v -> {
-            int currentPosition = vvVideo.getCurrentPosition();
-            int duration = vvVideo.getDuration();
-            if (currentPosition + 10000 < duration) {
-                vvVideo.seekTo(currentPosition + 10000);
-            } else {
-                vvVideo.seekTo(duration);
-            }
-        });
-
-        btnRewind.setOnClickListener(v -> {
-            int currentPosition = vvVideo.getCurrentPosition();
-            if (currentPosition - 10000 > 0) {
-                vvVideo.seekTo(currentPosition - 10000);
-            } else {
-                vvVideo.seekTo(0);
-            }
-        });
-
-        btnFullscreen.setOnClickListener(v -> {
-            if (isFullScreen) {
-                setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-                isFullScreen = false;
-            } else {
-                setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
-                isFullScreen = true;
-            }
-        });
+        btnPlayPause.setOnClickListener(this::playPause);
+        btnForward.setOnClickListener(v -> forward());
+        btnRewind.setOnClickListener(v -> rewind());
+        btnFullscreen.setOnClickListener(v -> screenSize());
 
         // Show control buttons when user touches the video
-        vvVideo.setOnClickListener(v -> {
-            if (clControl.getVisibility() == View.GONE) {
-                clControl.setVisibility(View.VISIBLE);
-                clControl.postDelayed(() -> clControl.setVisibility(View.GONE), 3000); // Hide after 3 seconds
-            } else {
-                clControl.setVisibility(View.GONE);
-            }
-        });
-
+        vvVideo.setOnClickListener(v -> showControls(clControl));
     }
 
+    private void playPause(View view) {
+        view.setSelected(!view.isSelected());
+        if (view.isSelected()) {
+            vvVideo.pause();
+        } else {
+            vvVideo.start();
+        }
+    }
+
+    private void forward() {
+        int currentPosition = vvVideo.getCurrentPosition();
+        int duration = vvVideo.getDuration();
+        if (currentPosition + 10000 < duration) {
+            vvVideo.seekTo(currentPosition + 10000);
+        } else {
+            vvVideo.seekTo(duration);
+        }
+    }
+
+    private void rewind() {
+        int currentPosition = vvVideo.getCurrentPosition();
+        if (currentPosition - 10000 > 0) {
+            vvVideo.seekTo(currentPosition - 10000);
+        } else {
+            vvVideo.seekTo(0);
+        }
+    }
+
+    private void screenSize() {
+        if (isFullScreen) {
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+            isFullScreen = false;
+        } else {
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+            isFullScreen = true;
+        }
+    }
+
+    private void showControls(ConstraintLayout clControl) {
+        if (clControl.getVisibility() == View.GONE) {
+            clControl.setVisibility(View.VISIBLE);
+            clControl.postDelayed(() -> clControl.setVisibility(View.GONE), 3000); // Hide after 3 seconds
+        } else {
+            clControl.setVisibility(View.GONE);
+        }
+    }
+
+    private void addComment(EditText et_CommentInput) {
+        if (currentUser != null) {
+            String commentText = et_CommentInput.getText().toString().trim();
+            if (!commentText.isEmpty()) {
+                Comment newComment = new Comment(video.getId(), currentUser.getId(), currentUser.getUsername(), commentText, currentUser.getAvatar());
+                commentList.add(newComment);
+                commentAdapter.notifyItemInserted(commentList.size() - 1);
+                et_CommentInput.setText("");
+                videoViewModel.update(video);
+            } else {
+                Toast.makeText(this, "Comment cannot be empty", Toast.LENGTH_SHORT).show();
+            }
+        } else {
+            CustomToast.showToast(this, "Option available just for registered users");
+        }
+    }
+
+    private void clickLike(View view, TextView tv_like) {
+        view.setSelected(!view.isSelected());
+        if (view.isSelected()) {
+            video.setLikes(video.getLikes() + 1);
+            tv_like.setText("Likes: " + video.getLikes());
+            Toast.makeText(getApplicationContext(), "Liked!", Toast.LENGTH_SHORT).show();
+        } else {
+            video.setLikes(video.getLikes() - 1);
+            tv_like.setText("Likes: " + video.getLikes());
+            Toast.makeText(getApplicationContext(), "Unliked!", Toast.LENGTH_SHORT).show();
+        }
+        videoViewModel.update(video);
+    }
+
+    private void shareVideo() {
+        Intent intent = new Intent(Intent.ACTION_SEND);
+        intent.setType("text/plain");
+        intent.putExtra(Intent.EXTRA_SUBJECT, video.getTitle());
+        intent.putExtra(Intent.EXTRA_TEXT, "Check out this video: " + video.getVideoUrl());
+        startActivity(Intent.createChooser(intent, "Share Video"));
+    }
 
     @Override
     public void onConfigurationChanged(@NonNull Configuration newConfig) {

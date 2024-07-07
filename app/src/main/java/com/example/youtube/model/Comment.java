@@ -15,12 +15,12 @@ public class Comment implements Serializable {
     private int videoId;
     private int userId;
 
-    public Comment(String username, String content, String avatar, int videoId, int userId) {
+    public Comment(int videoId, int userId, String username, String content, String avatar) {
+        this.videoId = videoId;
+        this.userId = userId;
         this.username = username;
         this.content = content;
         this.avatar = avatar;
-        this.videoId = videoId;
-        this.userId = userId;
     }
 
     // Getters and setters
