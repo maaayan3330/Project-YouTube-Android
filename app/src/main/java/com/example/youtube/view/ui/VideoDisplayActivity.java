@@ -178,7 +178,7 @@ public class VideoDisplayActivity extends AppCompatActivity implements CommentAd
         if (currentUser != null) {
             String commentText = et_CommentInput.getText().toString().trim();
             if (!commentText.isEmpty()) {
-                Comment newComment = new Comment(video.getId(), currentUser.getId(), currentUser.getUsername(), commentText, currentUser.getAvatar());
+                Comment newComment = new Comment(video.getId(), currentUser.getId(), currentUser.getNickname(), commentText, currentUser.getAvatar());
                 commentList.add(newComment);
                 commentAdapter.notifyItemInserted(commentList.size() - 1);
                 et_CommentInput.setText("");

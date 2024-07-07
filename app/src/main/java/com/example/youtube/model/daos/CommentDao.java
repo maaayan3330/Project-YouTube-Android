@@ -8,7 +8,6 @@ import androidx.room.Update;
 
 import com.example.youtube.model.Comment;
 
-
 import java.util.List;
 
 @Dao
@@ -41,4 +40,8 @@ public interface CommentDao {
     // Insert a list of comments
     @Insert
     void insertList(List<Comment> commentList);
+
+    // Query to get comments by video ID
+    @Query("SELECT * FROM comment WHERE videoId = :videoId")
+    List<Comment> getCommentsByVideoId(int videoId);
 }
