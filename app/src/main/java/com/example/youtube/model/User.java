@@ -1,7 +1,5 @@
 package com.example.youtube.model;
 
-import android.net.Uri;
-
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
@@ -12,13 +10,13 @@ public class User {
     private final String username;
     private final String password;
     private final String nickname;
-    private final Uri profileImageUri;
+    private final String avatar;
 
-    public User(String username, String password, String nickname, Uri profileImageUri) {
+    public User(String username, String password, String nickname, String avatar) {
         this.username = username;
         this.password = password;
         this.nickname = nickname;
-        this.profileImageUri = profileImageUri;
+        this.avatar = avatar;
     }
 
     public String getUsername() {
@@ -33,8 +31,8 @@ public class User {
         return nickname;
     }
 
-    public Uri getProfileImageUri() {
-        return profileImageUri;
+    public String getAvatar() {
+        return avatar;
     }
 
     public int getId() {

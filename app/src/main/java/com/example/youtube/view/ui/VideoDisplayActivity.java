@@ -21,9 +21,6 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -81,7 +78,7 @@ public class VideoDisplayActivity extends AppCompatActivity implements CommentAd
         TextView tv_views = findViewById(R.id.tv_view);
         TextView tv_author = findViewById(R.id.tv_author);
         tv_like.setText("Likes: " + video.getLikes());
-        tv_author.setText("Author: " + video.getAuthor());
+        tv_author.setText("Author: " + video.getArtist());
 
         // Increment views count when the video starts playing
         video.setViews(video.getViews() + 1);
@@ -89,7 +86,7 @@ public class VideoDisplayActivity extends AppCompatActivity implements CommentAd
         tv_views.setText("Views: " + video.getViews());
 
         // Set the video URI and start playing
-        vvVideo.setVideoURI(Uri.parse(video.getVideoUri()));
+        vvVideo.setVideoURI(Uri.parse(video.getVideoUrl()));
         vvVideo.start();
 
         // Comment list
@@ -146,7 +143,7 @@ public class VideoDisplayActivity extends AppCompatActivity implements CommentAd
             Intent intent = new Intent(Intent.ACTION_SEND);
             intent.setType("text/plain");
             intent.putExtra(Intent.EXTRA_SUBJECT, video.getTitle());
-            intent.putExtra(Intent.EXTRA_TEXT, "Check out this video: " + video.getVideoUri());
+            intent.putExtra(Intent.EXTRA_TEXT, "Check out this video: " + video.getVideoUrl());
 
             startActivity(Intent.createChooser(intent, "Share Video"));
         });
@@ -233,12 +230,12 @@ public class VideoDisplayActivity extends AppCompatActivity implements CommentAd
         builder.setTitle("Edit Comment");
 
         final EditText input = new EditText(this);
-        input.setText(comment.getCommentText());
+        input.setText(comment.getContent());
         builder.setView(input);
 
         builder.setPositiveButton("OK", (dialog, which) -> {
             String newCommentText = input.getText().toString();
-            comment.setCommentText(newCommentText);
+            comment.setContent(newCommentText);
             videoViewModel.update(video);
             commentAdapter.notifyItemChanged(position);
         });

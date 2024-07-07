@@ -101,10 +101,10 @@ public class VideoListAdapter extends RecyclerView.Adapter<VideoListAdapter.Vide
         holder.tvDescription.setText("Description: "+ video.getDescription());
         holder.tvViews.setText("Views: " + video.getViews());
         holder.tvLikes.setText("Likes: " + video.getLikes());
-        holder.tvAuthor.setText("Author: " + video.getAuthor());
+        holder.tvAuthor.setText("Author: " + video.getArtist());
 
         // Set the video URI
-        holder.vvVideo.setVideoURI(Uri.parse(video.getVideoUri()));
+        holder.vvVideo.setVideoURI(Uri.parse(video.getVideoUrl()));
         holder.vvVideo.seekTo(50000);
 
         // Set click listener to play video on click

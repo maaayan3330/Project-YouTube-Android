@@ -13,7 +13,6 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.youtube.R;
-import com.example.youtube.model.User;
 import com.example.youtube.model.UserManager;
 import com.example.youtube.utils.CustomToast;
 import com.example.youtube.model.Comment;
@@ -61,8 +60,8 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.CommentV
     @Override
     public void onBindViewHolder(CommentViewHolder holder, int position) {
         Comment comment = commentList.get(position);
-        holder.authorTextView.setText(comment.getAuthor());
-        holder.commentTextView.setText(comment.getCommentText());
+        holder.authorTextView.setText(comment.getUsername());
+        holder.commentTextView.setText(comment.getContent());
 
         holder.ib_collapse.setOnClickListener(v -> {
             if (holder.llCollapse.getVisibility() == View.GONE) {

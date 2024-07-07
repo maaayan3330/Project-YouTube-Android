@@ -4,6 +4,7 @@ import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
 import java.io.Serializable;
+import java.util.Date;
 import java.util.List;
 
 
@@ -18,34 +19,38 @@ public class Video implements Serializable {
     private int id;
     private String title;       // Title of the video
     private String description; // Description of the video
-    private String videoUri;       // URI of the video
-    private String author;      // Author of the video
+    private String videoUrl;       // URl of the video
+    private String artist;      // Author of the video
     private int likes;          // Number of likes
     private int views;          // Number of views
-    private List<Comment> comments; // Comments on the video
+    private int subscribers;
+    private String avatar;
+    private Date time;
+    private List<Comment> comments;
 
-    /**
-     * Constructs a new Video with the specified title, description, URI, author, number of likes, number of views, and comments.
-     *
-     * @param title       The title of the video.
-     * @param description The description of the video.
-     * @param videoUri    The URI of the video.
-     * @param author      The author of the video.
-     * @param likes       The number of likes for the video.
-     * @param views       The number of views for the video.
-     * @param comments    The comments on the video.
-     */
-    public Video(String title, String description, String videoUri, String author, int likes, int views, List<Comment> comments) {
+
+    public Video(String title, String description, String videoUrl, String artist, int likes, int views, int subscribers, String avatar, Date time, List<Comment> comments) {
         this.title = title;
         this.description = description;
-        this.videoUri = videoUri; // Convert String to Uri
-        this.author = author;
+        this.videoUrl = videoUrl;
+        this.artist = artist;
         this.likes = likes;
         this.views = views;
+        this.subscribers = subscribers;
+        this.avatar = avatar;
+        this.time = time;
         this.comments = comments;
     }
 
     // Getters and setters
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
 
     public String getTitle() {
         return title;
@@ -63,20 +68,20 @@ public class Video implements Serializable {
         this.description = description;
     }
 
-    public String getVideoUri() {
-        return videoUri;
+    public String getVideoUrl() {
+        return videoUrl;
     }
 
-    public void setVideoUri(String videoUri) {
-        this.videoUri = videoUri;
+    public void setVideoUrl(String videoUrl) {
+        this.videoUrl = videoUrl;
     }
 
-    public String getAuthor() {
-        return author;
+    public String getArtist() {
+        return artist;
     }
 
-    public void setAuthor(String author) {
-        this.author = author;
+    public void setArtist(String artist) {
+        this.artist = artist;
     }
 
     public int getLikes() {
@@ -95,18 +100,35 @@ public class Video implements Serializable {
         this.views = views;
     }
 
+    public int getSubscribers() {
+        return subscribers;
+    }
+
+    public void setSubscribers(int subscribers) {
+        this.subscribers = subscribers;
+    }
+
+    public String getAvatar() {
+        return avatar;
+    }
+
+    public void setAvatar(String avatar) {
+        this.avatar = avatar;
+    }
+
+    public Date getTime() {
+        return time;
+    }
+
+    public void setTime(Date time) {
+        this.time = time;
+    }
+
     public List<Comment> getComments() {
         return comments;
     }
 
     public void setComments(List<Comment> comments) {
         this.comments = comments;
-    }
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
     }
 }

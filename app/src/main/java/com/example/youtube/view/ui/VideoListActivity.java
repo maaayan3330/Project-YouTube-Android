@@ -184,7 +184,7 @@ public class VideoListActivity extends AppCompatActivity implements VideoListAda
         if (currentUser != null) {
             String username = currentUser.getUsername();
             String nickname = currentUser.getNickname();
-            String profileImageUriString = currentUser.getProfileImageUri() != null ? currentUser.getProfileImageUri().toString() : null;
+            String profileImageUriString = currentUser.getAvatar() != null ? currentUser.getAvatar().toString() : null;
 
             Log.d("VideoListActivity", "Loading user info: username=" + username + ", nickname=" + nickname);
 
