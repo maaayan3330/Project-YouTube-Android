@@ -12,10 +12,9 @@ import java.util.List;
 
 @Dao
 public interface CommentDao {
-
-    // Query to get all comments from the table
-    @Query("SELECT * FROM comment")
-    List<Comment> index();
+    // Query to get comments by video ID
+    @Query("SELECT * FROM comment WHERE videoId = :videoId")
+    List<Comment> getCommentsByVideoId(int videoId);
 
     // Query to get a comment by its ID
     @Query("SELECT * FROM comment WHERE id = :id")
@@ -41,7 +40,4 @@ public interface CommentDao {
     @Insert
     void insertList(List<Comment> commentList);
 
-    // Query to get comments by video ID
-    @Query("SELECT * FROM comment WHERE videoId = :videoId")
-    List<Comment> getCommentsByVideoId(int videoId);
 }

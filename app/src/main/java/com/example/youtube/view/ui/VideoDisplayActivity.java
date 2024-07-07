@@ -32,6 +32,7 @@ import com.example.youtube.model.UserManager;
 import com.example.youtube.model.Video;
 import com.example.youtube.utils.CustomToast;
 import com.example.youtube.view.adapter.CommentAdapter;
+import com.example.youtube.viewModel.CommentViewModel;
 import com.example.youtube.viewModel.VideoViewModel;
 
 import java.util.List;
@@ -48,6 +49,7 @@ public class VideoDisplayActivity extends AppCompatActivity implements CommentAd
     private Video video;
     private CommentAdapter commentAdapter;
     private VideoViewModel videoViewModel;
+    private CommentViewModel commentViewModel;
     private User currentUser;
 
 
@@ -55,7 +57,7 @@ public class VideoDisplayActivity extends AppCompatActivity implements CommentAd
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
-        // remove title
+        // remove title of screen
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
@@ -63,6 +65,7 @@ public class VideoDisplayActivity extends AppCompatActivity implements CommentAd
 
 
         videoViewModel = new ViewModelProvider(this).get(VideoViewModel.class);
+        commentViewModel = new ViewModelProvider(this).get(CommentViewModel.class);
         currentUser = UserManager.getInstance().getCurrentUser();
 
         // Get data from intent
@@ -93,8 +96,11 @@ public class VideoDisplayActivity extends AppCompatActivity implements CommentAd
         rvCommentsRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         commentAdapter = new CommentAdapter(this, this);
         rvCommentsRecyclerView.setAdapter(commentAdapter);
-        commentList = video.getComments();
-        commentAdapter.setComments(commentList);
+
+        commentViewModel.getCommentsByVideoId(video.getId()).observe(this, comments -> {
+            commentAdapter.setComments(comments);
+            commentList = comments;
+        });
 
 
         // New comment function
@@ -174,22 +180,7 @@ public class VideoDisplayActivity extends AppCompatActivity implements CommentAd
         }
     }
 
-    private void addComment(EditText et_CommentInput) {
-        if (currentUser != null) {
-            String commentText = et_CommentInput.getText().toString().trim();
-            if (!commentText.isEmpty()) {
-                Comment newComment = new Comment(video.getId(), currentUser.getId(), currentUser.getNickname(), commentText, currentUser.getAvatar());
-                commentList.add(newComment);
-                commentAdapter.notifyItemInserted(commentList.size() - 1);
-                et_CommentInput.setText("");
-                videoViewModel.update(video);
-            } else {
-                Toast.makeText(this, "Comment cannot be empty", Toast.LENGTH_SHORT).show();
-            }
-        } else {
-            CustomToast.showToast(this, "Option available just for registered users");
-        }
-    }
+
 
     private void clickLike(View view, TextView tv_like) {
         view.setSelected(!view.isSelected());
@@ -229,6 +220,23 @@ public class VideoDisplayActivity extends AppCompatActivity implements CommentAd
         vvVideo.setLayoutParams(params);
     }
 
+    private void addComment(EditText et_CommentInput) {
+        if (currentUser != null) {
+            String commentText = et_CommentInput.getText().toString().trim();
+            if (!commentText.isEmpty()) {
+                Comment newComment = new Comment(video.getId(), currentUser.getId(), currentUser.getNickname(), commentText, currentUser.getAvatar());
+                commentList.add(newComment);
+                commentAdapter.notifyItemInserted(commentList.size() - 1);
+                commentViewModel.add(newComment);
+                et_CommentInput.setText("");
+            } else {
+                Toast.makeText(this, "Comment cannot be empty", Toast.LENGTH_SHORT).show();
+            }
+        } else {
+            CustomToast.showToast(this, "Option available just for registered users");
+        }
+    }
+
     @Override
     public void onEditComment(Comment comment, int position) {
         // Show dialog to edit comment
@@ -242,20 +250,19 @@ public class VideoDisplayActivity extends AppCompatActivity implements CommentAd
         builder.setPositiveButton("OK", (dialog, which) -> {
             String newCommentText = input.getText().toString();
             comment.setContent(newCommentText);
-            videoViewModel.update(video);
             commentAdapter.notifyItemChanged(position);
+            commentViewModel.update(comment);
         });
 
         builder.setNegativeButton("Cancel", (dialog, which) -> dialog.cancel());
-
         builder.show();
     }
 
     @Override
     public void onDeleteComment(Comment comment, int position) {
-        videoViewModel.update(video);
         commentList.remove(position);
         commentAdapter.notifyItemRemoved(position);
         commentAdapter.notifyItemRangeChanged(position, commentList.size());
+        commentViewModel.delete(comment);
     }
 }

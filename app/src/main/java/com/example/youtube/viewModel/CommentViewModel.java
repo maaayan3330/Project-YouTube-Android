@@ -10,15 +10,8 @@ import java.util.List;
 
 public class CommentViewModel extends ViewModel {
     private CommentsRepository repository;
-    private LiveData<List<Comment>> comments;
-
     public CommentViewModel() {
         repository = new CommentsRepository();
-        comments = repository.getAll();
-    }
-
-    public LiveData<List<Comment>> get() {
-        return comments;
     }
 
     public LiveData<List<Comment>> getCommentsByVideoId(int videoId) {

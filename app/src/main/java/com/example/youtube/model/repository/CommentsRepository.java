@@ -13,7 +13,7 @@ import java.util.List;
 
 public class CommentsRepository {
     private CommentDao commentDao;
-    private MutableLiveData<List<Comment>> comments;
+    private MutableLiveData<List<Comment>> commentsByVideoId;
 
     public CommentsRepository() {
         AppDB db = Room.databaseBuilder(MyApplication.context, AppDB.class, "CommentsDB")
@@ -21,16 +21,10 @@ public class CommentsRepository {
                 .allowMainThreadQueries()
                 .build();
         commentDao = db.commentDao();
-        comments = new MutableLiveData<>();
-    }
-
-    public LiveData<List<Comment>> getAll() {
-        new Thread(() -> comments.postValue(commentDao.index())).start();
-        return comments;
+        commentsByVideoId = new MutableLiveData<>();
     }
 
     public LiveData<List<Comment>> getCommentsByVideoId(int videoId) {
-        MutableLiveData<List<Comment>> commentsByVideoId = new MutableLiveData<>();
         new Thread(() -> commentsByVideoId.postValue(commentDao.getCommentsByVideoId(videoId))).start();
         return commentsByVideoId;
     }

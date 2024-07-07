@@ -25,11 +25,11 @@ public class Video implements Serializable {
     private int views;          // Number of views
     private int subscribers;
     private String avatar;
-    private Date time;
-    private List<Comment> comments;
+    private String time;
+//    private List<String> comments; // List of comment IDs
 
 
-    public Video(String title, String description, String videoUrl, String artist, int likes, int views, int subscribers, String avatar, Date time, List<Comment> comments) {
+    public Video(String title, String description, String videoUrl, String artist, int likes, int views, int subscribers, String avatar, String time) {
         this.title = title;
         this.description = description;
         this.videoUrl = videoUrl;
@@ -39,7 +39,6 @@ public class Video implements Serializable {
         this.subscribers = subscribers;
         this.avatar = avatar;
         this.time = time;
-        this.comments = comments;
     }
 
     // Getters and setters
@@ -116,19 +115,19 @@ public class Video implements Serializable {
         this.avatar = avatar;
     }
 
-    public Date getTime() {
+    public String getTime() {
         return time;
     }
 
-    public void setTime(Date time) {
+    public void setTime(String time) {
         this.time = time;
     }
 
-    public List<Comment> getComments() {
-        return comments;
-    }
-
-    public void setComments(List<Comment> comments) {
-        this.comments = comments;
-    }
+//    public List<String> getComments() {
+//        return comments;
+//    }
+//
+//    public void setComments(List<String> comments) {
+//        this.comments = comments;
+//    }
 }

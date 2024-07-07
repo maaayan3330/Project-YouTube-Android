@@ -116,7 +116,7 @@ public class AddVideoActivity extends AppCompatActivity {
         Date currentTime = new Date();
 
         // Create a new Video object
-        Video newVideo = new Video(title, description, videoPath, artist, 0, 0, 0, avatar, currentTime, new ArrayList<>());
+        Video newVideo = new Video(title, description, videoPath, artist, 0, 0, 0, avatar, currentTime.toString());
         videoViewModel.add(newVideo);
 
         Intent intent = new Intent(AddVideoActivity.this, VideoListActivity.class);
