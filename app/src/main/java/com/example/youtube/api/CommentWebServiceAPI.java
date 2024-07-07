@@ -20,13 +20,13 @@ public interface CommentWebServiceAPI {
 
     // Add a new comment
     @POST("videos/{pid}/comments/{id}")
-    Call<Comment> addComment(@Path("pid") int videoId, @Path("id") int userId, @Body Comment comment);
+    Call<Comment> add(Comment comment);
 
     // Edit a comment by comment ID
     @PUT("videos/{pid}/comments/{cid}")
-    Call<Comment> editComment(@Path("pid") int videoId, @Path("cid") int commentId, @Body Comment comment);
+    Call<Comment> update(@Body Comment comment);
 
     // Delete a comment by comment ID
     @DELETE("videos/{pid}/comments/{cid}")
-    Call<Void> deleteComment(@Path("pid") int videoId, @Path("cid") int commentId);
+    Call<Void> delete(@Body Comment comment);
 }

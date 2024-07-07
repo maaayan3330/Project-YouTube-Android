@@ -58,15 +58,15 @@ public class CommentAPI {
     }
 
     // Add a new comment
-    public void addComment(int videoId, int userId, Comment comment) {
-        Call<Comment> call = commentWebServiceAPI.addComment(videoId, userId, comment);
+    public void add(Comment comment) {
+        Call<Comment> call = commentWebServiceAPI.add(comment);
         call.enqueue(new Callback<Comment>() {
             @Override
             public void onResponse(Call<Comment> call, Response<Comment> response) {
                 if (response.isSuccessful() && response.body() != null) {
                     new Thread(() -> {
                         commentDao.insert(response.body());
-                        commentsLiveData.postValue(commentDao.getCommentsByVideoId(videoId));
+                        commentsLiveData.postValue(commentDao.getCommentsByVideoId(comment.getVideoId()));
                     }).start();
                 }
             }
@@ -79,15 +79,15 @@ public class CommentAPI {
     }
 
     // Edit a comment
-    public void editComment(int videoId, int commentId, Comment comment) {
-        Call<Comment> call = commentWebServiceAPI.editComment(videoId, commentId, comment);
+    public void update(Comment comment) {
+        Call<Comment> call = commentWebServiceAPI.update(comment);
         call.enqueue(new Callback<Comment>() {
             @Override
             public void onResponse(Call<Comment> call, Response<Comment> response) {
                 if (response.isSuccessful() && response.body() != null) {
                     new Thread(() -> {
                         commentDao.update(response.body());
-                        commentsLiveData.postValue(commentDao.getCommentsByVideoId(videoId));
+                        commentsLiveData.postValue(commentDao.getCommentsByVideoId(comment.getVideoId()));
                     }).start();
                 }
             }
@@ -100,18 +100,15 @@ public class CommentAPI {
     }
 
     // Delete a comment
-    public void deleteComment(int videoId, int commentId) {
-        Call<Void> call = commentWebServiceAPI.deleteComment(videoId, commentId);
+    public void delete(Comment comment) {
+        Call<Void> call = commentWebServiceAPI.delete(comment);
         call.enqueue(new Callback<Void>() {
             @Override
             public void onResponse(Call<Void> call, Response<Void> response) {
                 if (response.isSuccessful()) {
                     new Thread(() -> {
-                        Comment comment = commentDao.get(commentId);
-                        if (comment != null) {
-                            commentDao.delete(comment);
-                            commentsLiveData.postValue(commentDao.getCommentsByVideoId(videoId));
-                        }
+                        commentDao.delete(comment);
+                        commentsLiveData.postValue(commentDao.getCommentsByVideoId(comment.getVideoId()));
                     }).start();
                 }
             }
