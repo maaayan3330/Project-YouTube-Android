@@ -15,8 +15,9 @@ import java.util.List;
 public class Video implements Serializable {
 
 
-    @PrimaryKey(autoGenerate=true)
+    @PrimaryKey(autoGenerate = true)
     private int id;
+    private String userId;
     private String title;       // Title of the video
     private String description; // Description of the video
     private String videoUrl;       // URl of the video
@@ -29,7 +30,7 @@ public class Video implements Serializable {
 //    private List<String> comments; // List of comment IDs
 
 
-    public Video(String title, String description, String videoUrl, String artist, int likes, int views, int subscribers, String avatar, String time) {
+    public Video(String userId, String title, String description, String videoUrl, String artist, int likes, int views, int subscribers, String avatar, String time) {
         this.title = title;
         this.description = description;
         this.videoUrl = videoUrl;
@@ -39,6 +40,7 @@ public class Video implements Serializable {
         this.subscribers = subscribers;
         this.avatar = avatar;
         this.time = time;
+        this.userId = userId;
     }
 
     // Getters and setters
@@ -49,6 +51,14 @@ public class Video implements Serializable {
 
     public void setId(int id) {
         this.id = id;
+    }
+
+    public String getUserId() {
+        return userId;
+    }
+
+    public void setUserId(String userId) {
+        this.userId = userId;
     }
 
     public String getTitle() {

@@ -27,7 +27,6 @@ import com.example.youtube.utils.CustomToast;
 import com.example.youtube.model.Video;
 import com.example.youtube.viewModel.VideoViewModel;
 
-import java.util.ArrayList;
 import java.util.Date;
 
 public class AddVideoActivity extends AppCompatActivity {
@@ -111,12 +110,13 @@ public class AddVideoActivity extends AppCompatActivity {
         }
 
         User currentUser = UserManager.getInstance().getCurrentUser();
+        String userId = String.valueOf(currentUser.getId());
         String artist = currentUser.getNickname();
         String avatar = currentUser.getAvatar();
         Date currentTime = new Date();
 
         // Create a new Video object
-        Video newVideo = new Video(title, description, videoPath, artist, 0, 0, 0, avatar, currentTime.toString());
+        Video newVideo = new Video(userId,title, description, videoPath, artist, 0, 0, 0, avatar, currentTime.toString());
         videoViewModel.add(newVideo);
 
         Intent intent = new Intent(AddVideoActivity.this, VideoListActivity.class);

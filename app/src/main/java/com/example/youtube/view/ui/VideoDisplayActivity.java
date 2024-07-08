@@ -97,10 +97,12 @@ public class VideoDisplayActivity extends AppCompatActivity implements CommentAd
         commentAdapter = new CommentAdapter(this, this);
         rvCommentsRecyclerView.setAdapter(commentAdapter);
 
-        commentViewModel.getCommentsByVideoId(video.getId()).observe(this, comments -> {
-            commentAdapter.setComments(comments);
-            commentList = comments;
-        });
+        //מושבת זמני
+//        commentViewModel.getCommentsByVideoId(video.getId()).observe(this, comments -> {
+//            commentAdapter.setComments(comments);
+//            commentList = comments;
+//        });
+
 
 
         // New comment function
@@ -179,7 +181,6 @@ public class VideoDisplayActivity extends AppCompatActivity implements CommentAd
             clControl.setVisibility(View.GONE);
         }
     }
-
 
 
     private void clickLike(View view, TextView tv_like) {
