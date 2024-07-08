@@ -109,8 +109,11 @@ public class VideoListActivity extends AppCompatActivity {
             } else if (itemId == R.id.Help) {
                 CustomToast.showToast(VideoListActivity.this, "Help");
                 return true;
-            } else if (itemId == R.id.Setting) {
-                CustomToast.showToast(VideoListActivity.this, "Setting");
+            } else if (itemId == R.id.delete_user) {
+                CustomToast.showToast(VideoListActivity.this, "The user deleted successfully");
+                return true;
+            } else if (itemId == R.id.edit_user) {
+                CustomToast.showToast(VideoListActivity.this, "edit user");
                 return true;
             } else {
                 return false;
