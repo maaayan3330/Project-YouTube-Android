@@ -23,7 +23,7 @@ public interface VideoWebServiceAPI {
      * @return A Call object to make the network request.
      */
     @GET("videos")
-    Call<List<Video>> getVideos();
+    Call<VideoResponse> getVideos();
 
     /**
      * Creates a new video entry in the server.

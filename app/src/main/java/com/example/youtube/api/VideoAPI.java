@@ -54,27 +54,36 @@ public class VideoAPI {
      */
     public void get() {
         // Make a network call to fetch videos
-        Call<List<Video>> call = videoWebServiceAPI.getVideos();
-        call.enqueue(new Callback<List<Video>>() {
+        Call<VideoResponse> call = videoWebServiceAPI.getVideos();
+        call.enqueue(new Callback<VideoResponse>() {
             @Override
-            public void onResponse(Call<List<Video>> call, Response<List<Video>> response) {
+            public void onResponse(Call<VideoResponse> call, Response<VideoResponse> response) {
+                List<Video> videos = response.body() != null ? response.body().getVideos() : null;
+                adjustVideoUrls(videos); // Adjust the URLs here
                 // Run database operations on a separate thread
                 new Thread(() -> {
                     // Clear existing video data
                     videoDao.clear();
                     // Insert the fetched videos data
-                    videoDao.insertList(response.body());
+                    videoDao.insertList(videos);
                     // Post the updated video list to LiveData
                     videoListData.postValue(videoDao.index());
                 }).start();
             }
 
             @Override
-            public void onFailure(Call<List<Video>> call, Throwable t) {
+            public void onFailure(Call<VideoResponse> call, Throwable t) {
                 // Handle the failure (e.g., log the error, notify the user)
                 Log.e("api",t.getMessage());
             }
         });
+    }
+
+    private void adjustVideoUrls(List<Video> videos) {
+        for (Video video : videos) {
+            String adjustedUrl = video.getVideoUrl().replace("http://localhost", "http://10.0.2.2");
+            video.setVideoUrl(adjustedUrl);
+        }
     }
 
     public void add(Video video){
