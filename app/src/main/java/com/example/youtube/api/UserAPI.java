@@ -1,9 +1,9 @@
 package com.example.youtube.api;
-import static android.content.ContentValues.TAG;
 
 import android.util.Log;
 import androidx.lifecycle.MutableLiveData;
 
+import com.example.youtube.api.response.UserResponse;
 import com.example.youtube.model.User;
 import com.example.youtube.model.daos.UserDao;
 
@@ -78,7 +78,7 @@ public class UserAPI {
     }
 
     public void delete(User user) {
-        Call<Void> call = userWebServiceAPI.deleteUser(user.getId());
+        Call<Void> call = userWebServiceAPI.deleteUser(user.getRoomId());
         call.enqueue(new Callback<Void>() {
             @Override
             public void onResponse(Call<Void> call, Response<Void> response) {
@@ -96,7 +96,7 @@ public class UserAPI {
     }
 
     public void update(User user) {
-        Call<Void> call = userWebServiceAPI.updateVideo(user.getId(), user);
+        Call<Void> call = userWebServiceAPI.updateVideo(user.getRoomId(), user);
         call.enqueue(new Callback<Void>() {
             @Override
             public void onResponse(Call<Void> call, Response<Void> response) {

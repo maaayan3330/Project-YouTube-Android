@@ -1,8 +1,7 @@
 package com.example.youtube.api;
 
+import com.example.youtube.api.response.UserResponse;
 import com.example.youtube.model.User;
-
-import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.http.Body;

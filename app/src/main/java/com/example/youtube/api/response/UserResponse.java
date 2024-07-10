@@ -1,4 +1,4 @@
-package com.example.youtube.api;
+package com.example.youtube.api.response;
 
 import com.example.youtube.model.User;
 

@@ -9,7 +9,7 @@ import com.example.youtube.model.repository.CommentsRepository;
 import java.util.List;
 
 public class CommentViewModel extends ViewModel {
-    private CommentsRepository repository;
+    private final CommentsRepository repository;
     public CommentViewModel() {
         repository = new CommentsRepository();
     }
