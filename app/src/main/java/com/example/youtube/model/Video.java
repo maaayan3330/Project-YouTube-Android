@@ -1,8 +1,9 @@
 package com.example.youtube.model;
 
 import androidx.room.Entity;
-import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
+
+import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;
 
@@ -16,7 +17,8 @@ public class Video implements Serializable {
 
     @PrimaryKey(autoGenerate = true)
     private int roomId;
-    private String _id;
+    @SerializedName("_id")
+    private String apiId;
 
     private String userId;
     private String title;       // Title of the video
@@ -42,7 +44,7 @@ public class Video implements Serializable {
         this.avatar = avatar;
         this.time = time;
         this.userId = userId;
-        this._id=new String();
+        this.apiId =new String();
     }
 
     // Getters and setters
@@ -134,12 +136,12 @@ public class Video implements Serializable {
     public void setTime(String time) {
         this.time = time;
     }
-    public String get_id() {
-        return _id;
+    public String getApiId() {
+        return apiId;
     }
 
-    public void set_id(String _id) {
-        this._id = _id;
+    public void setApiId(String apiId) {
+        this.apiId = apiId;
     }
 
 }

@@ -97,7 +97,7 @@ public class VideoDisplayActivity extends AppCompatActivity implements CommentAd
         commentAdapter = new CommentAdapter(this, this);
         rvCommentsRecyclerView.setAdapter(commentAdapter);
 
-        commentViewModel.getCommentsByVideoId(video.get_id()).observe(this, comments -> {
+        commentViewModel.getCommentsByVideoId(video.getApiId()).observe(this, comments -> {
             commentAdapter.setComments(comments);
             commentList = comments;
         });
@@ -224,7 +224,7 @@ public class VideoDisplayActivity extends AppCompatActivity implements CommentAd
         if (currentUser != null) {
             String commentText = et_CommentInput.getText().toString().trim();
             if (!commentText.isEmpty()) {
-                Comment newComment = new Comment(video.get_id(), currentUser.get_id(), currentUser.getNickname(), commentText, currentUser.getAvatar());
+                Comment newComment = new Comment(video.getApiId(), currentUser.get_id(), currentUser.getNickname(), commentText, currentUser.getAvatar());
                 commentList.add(newComment);
                 commentAdapter.notifyItemInserted(commentList.size() - 1);
                 commentViewModel.add(newComment);
