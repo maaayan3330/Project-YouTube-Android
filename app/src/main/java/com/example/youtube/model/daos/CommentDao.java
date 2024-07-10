@@ -7,6 +7,7 @@ import androidx.room.Query;
 import androidx.room.Update;
 
 import com.example.youtube.model.Comment;
+import com.example.youtube.model.User;
 
 import java.util.List;
 
@@ -14,10 +15,13 @@ import java.util.List;
 public interface CommentDao {
     // Query to get comments by video ID
     @Query("SELECT * FROM comment WHERE videoId = :videoId")
-    List<Comment> getCommentsByVideoId(int videoId);
+    List<Comment> getCommentsByVideoId(String videoId);
+
+    @Query("SELECT * FROM comment")
+    List<Comment> index();
 
     // Query to get a comment by its ID
-    @Query("SELECT * FROM comment WHERE id = :id")
+    @Query("SELECT * FROM comment WHERE roomId = :id")
     Comment get(int id);
 
     // Insert one or more comments

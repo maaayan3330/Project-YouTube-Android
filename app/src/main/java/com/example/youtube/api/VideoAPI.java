@@ -5,6 +5,7 @@ import android.util.Log;
 import androidx.lifecycle.MutableLiveData;
 
 import com.example.youtube.R;
+import com.example.youtube.api.response.VideoResponse;
 import com.example.youtube.model.Video;
 import com.example.youtube.model.daos.VideoDao;
 import com.example.youtube.utils.MyApplication;
@@ -83,8 +84,8 @@ public class VideoAPI {
         for (Video video : videos) {
             String adjustedVideoUrl = video.getVideoUrl().replace("http://localhost", "http://10.0.2.2");
             video.setVideoUrl(adjustedVideoUrl);
-//            String adjustedAvatarUrl = video.getAvatar().replace("http://localhost", "http://10.0.2.2");
-//            video.setAvatar(adjustedAvatarUrl);
+            String adjustedAvatarUrl = video.getAvatar().replace( "/localPhotos/", "http://10.0.2.2/localPhotos/");
+            video.setAvatar(adjustedAvatarUrl);
         }
     }
 

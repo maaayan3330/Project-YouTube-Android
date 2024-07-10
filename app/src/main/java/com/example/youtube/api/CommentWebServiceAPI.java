@@ -1,5 +1,6 @@
 package com.example.youtube.api;
 
+import com.example.youtube.api.response.CommentResponse;
 import com.example.youtube.model.Comment;
 
 import java.util.List;
@@ -16,7 +17,7 @@ public interface CommentWebServiceAPI {
 
     // Fetch all comments for a specific video by video ID
     @GET("videos/{pid}/comments")
-    Call<List<Comment>> getCommentsByVideoId(@Path("pid") int videoId);
+    Call<CommentResponse> getCommentsByVideoId(@Path("pid") String videoId);
 
     // Add a new comment
     @POST("videos/{pid}/comments/{id}")
