@@ -14,18 +14,19 @@ public class Comment implements Serializable {
     @SerializedName("_id")
     private String apiId;
 
-    private String username;
-    private String content;
+    private final String username;
+    @SerializedName("content")
+    private String text;
     private String avatar;
     @SerializedName("video")
     private String videoId;
     private String userId;
 
-    public Comment(String videoId, String userId, String username, String content, String avatar) {
+    public Comment(String videoId, String userId, String username, String text, String avatar) {
         this.videoId = videoId;
         this.userId = userId;
         this.username = username;
-        this.content = content;
+        this.text = text;
         this.avatar = avatar;
         this.apiId = new String();
     }
@@ -44,12 +45,12 @@ public class Comment implements Serializable {
         return username;
     }
 
-    public String getContent() {
-        return content;
+    public String getText() {
+        return text;
     }
 
-    public void setContent(String newCommentText) {
-        this.content = newCommentText;
+    public void setText(String newCommentText) {
+        this.text = newCommentText;
     }
 
     public String getAvatar() {

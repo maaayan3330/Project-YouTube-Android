@@ -3,13 +3,15 @@ package com.example.youtube.model;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
+import com.google.gson.annotations.SerializedName;
+
 @Entity
 public class User {
     @PrimaryKey(autoGenerate = true)
     private int roomId;
 
-
-    private String _id;
+    @SerializedName("_id")
+    private String apiId;
     private final String username;
     private final String password;
     private final String nickname;
@@ -20,7 +22,7 @@ public class User {
         this.password = password;
         this.nickname = nickname;
         this.avatar = avatar;
-        this._id = new String();
+        this.apiId = new String();
     }
 
     public String getUsername() {
@@ -47,11 +49,11 @@ public class User {
         this.roomId = roomId;
     }
 
-    public String get_id() {
-        return _id;
+    public String getApiId() {
+        return apiId;
     }
 
-    public void set_id(String _id) {
-        this._id = _id;
+    public void setApiId(String apiId) {
+        this.apiId = apiId;
     }
 }

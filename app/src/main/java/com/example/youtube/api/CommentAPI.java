@@ -49,8 +49,7 @@ public class CommentAPI {
                         Log.e("apiComment",response.message());
                         commentDao.clear();
                         commentDao.insertList(response.body().getComments());
-                        List<Comment> comments =commentDao.getCommentsByVideoId(videoId);
-                        commentsLiveData.postValue(comments);
+                        commentsLiveData.postValue(commentDao.getCommentsByVideoId(videoId));
                     }).start();
                 }
             }

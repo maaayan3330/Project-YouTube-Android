@@ -29,11 +29,10 @@ public class Video implements Serializable {
     private int views;          // Number of views
     private int subscribers;
     private String avatar;
-    private String time;
-//    private List<String> comments; // List of comment IDs
 
 
-    public Video(String userId, String title, String description, String videoUrl, String artist, int likes, int views, int subscribers, String avatar, String time) {
+
+    public Video(String userId, String title, String description, String videoUrl, String artist, int likes, int views, int subscribers, String avatar) {
         this.title = title;
         this.description = description;
         this.videoUrl = videoUrl;
@@ -42,7 +41,6 @@ public class Video implements Serializable {
         this.views = views;
         this.subscribers = subscribers;
         this.avatar = avatar;
-        this.time = time;
         this.userId = userId;
         this.apiId =new String();
     }
@@ -129,13 +127,6 @@ public class Video implements Serializable {
         this.avatar = avatar;
     }
 
-    public String getTime() {
-        return time;
-    }
-
-    public void setTime(String time) {
-        this.time = time;
-    }
     public String getApiId() {
         return apiId;
     }
