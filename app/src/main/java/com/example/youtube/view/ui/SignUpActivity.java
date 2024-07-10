@@ -48,6 +48,8 @@ public class SignUpActivity extends AppCompatActivity {
             }
         });
 
+        // find one
+
         ImageView logoImage = findViewById(R.id.logoImage);
         usernameEditText = findViewById(R.id.TextUserName);
         passwordEditText = findViewById(R.id.TextPassword);
@@ -72,6 +74,9 @@ public class SignUpActivity extends AppCompatActivity {
                             if (result) {
                                 userViewModel.getCurrentUser().observe(this, user -> {
                                     if (user != null) {
+                                        // featch one user
+                                        userViewModel.setCurrentUser(userViewModel.getOneUser(user.getApiId()));
+                                        //
                                         Intent intent = new Intent(this, VideoListActivity.class);
                                         startActivity(intent);
                                         showCustomToast("Login successfully!");

@@ -4,11 +4,9 @@ import com.example.youtube.model.User;
 
 import java.util.List;
 
-public class UserResponse {
+public class SingleUserResponse {
     private String message;
-    private List<User> users;
-
-    // Getters and Setters
+    private User user;
 
     public String getMessage() {
         return message;
@@ -18,10 +16,9 @@ public class UserResponse {
         this.message = message;
     }
 
-    public List<User> getUsers() {
-        return users;
+    public User getUser() {
+        return user;
     }
-    public void setUsers(List<User> users) {
-        this.users = users;
-    }
+    public void setUsers(User user) { this.user = user; }
+
 }

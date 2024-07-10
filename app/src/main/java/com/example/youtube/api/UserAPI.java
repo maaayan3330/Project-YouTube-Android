@@ -1,5 +1,4 @@
 package com.example.youtube.api;
-import static android.content.ContentValues.TAG;
 
 import android.util.Log;
 import androidx.lifecycle.MutableLiveData;
@@ -27,18 +26,18 @@ public class UserAPI {
         this.userDao = userDao;
 
         retrofit = new Retrofit.Builder()
-                .baseUrl("http://10.0.2.2:80/users/") // הכתובת הבסיסית של השרת שלך
+                .baseUrl("http://10.0.2.2:80/") // הכתובת הבסיסית של השרת שלך
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
 
         userWebServiceAPI = retrofit.create(UserWebServiceAPI.class);
     }
 
-    public void get() {
-        Call<UserResponse> call = userWebServiceAPI.getUsers();
-        call.enqueue(new Callback<UserResponse>() {
+    public void getAllUsers() {
+        Call<UsersResponse> call = userWebServiceAPI.getUsers();
+        call.enqueue(new Callback<UsersResponse>() {
             @Override
-            public void onResponse(Call<UserResponse> call, Response<UserResponse> response) {
+            public void onResponse(Call<UsersResponse> call, Response<UsersResponse> response) {
                 if (response.isSuccessful() && response.body() != null) {
                     Log.d(TAG, "Response: " + response.body().toString());
                     List<User> users = response.body().getUsers();
@@ -53,12 +52,35 @@ public class UserAPI {
             }
 
             @Override
-            public void onFailure(Call<UserResponse> call, Throwable t) {
+            public void onFailure(Call<UsersResponse> call, Throwable t) {
                 Log.e(TAG, "Failed to fetch users", t);
             }
         });
     }
 
+    public void getUserById(String id) {
+        Call<SingleUserResponse> call = userWebServiceAPI.getUser(id);
+        call.enqueue(new Callback<SingleUserResponse>() {
+            @Override
+            public void onResponse(Call<SingleUserResponse> call, Response<SingleUserResponse> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    Log.d(TAG, "Response: " + response.body().toString());
+                    User user = response.body().getUser();
+                    new Thread(() -> {
+//                        userDao.clear();
+                        userDao.insert(user);
+                    }).start();
+                } else {
+                    Log.e(TAG, "Response body is null or not successful");
+                }
+            }
+
+            @Override
+            public void onFailure(Call<SingleUserResponse> call, Throwable t) {
+                Log.e(TAG, "Failed to fetch one user", t);
+            }
+        });
+    }
     public void add(User user) {
         Call<Void> call = userWebServiceAPI.createUser(user);
         call.enqueue(new Callback<Void>() {
@@ -77,39 +99,39 @@ public class UserAPI {
         });
     }
 
-    public void delete(User user) {
-        Call<Void> call = userWebServiceAPI.deleteUser(user.getId());
-        call.enqueue(new Callback<Void>() {
-            @Override
-            public void onResponse(Call<Void> call, Response<Void> response) {
-                new Thread(() -> {
-                    userDao.delete(user);
-                    userListData.postValue(userDao.index());
-                }).start();
-            }
-
-            @Override
-            public void onFailure(Call<Void> call, Throwable t) {
-                // Handle the failure
-            }
-        });
-    }
-
-    public void update(User user) {
-        Call<Void> call = userWebServiceAPI.updateVideo(user.getId(), user);
-        call.enqueue(new Callback<Void>() {
-            @Override
-            public void onResponse(Call<Void> call, Response<Void> response) {
-                new Thread(() -> {
-                    userDao.update(user);
-                    userListData.postValue(userDao.index());
-                }).start();
-            }
-
-            @Override
-            public void onFailure(Call<Void> call, Throwable t) {
-                // Handle the failure
-            }
-        });
-    }
+//    public void delete(User user) {
+//        Call<Void> call = userWebServiceAPI.deleteUser(user.getId());
+//        call.enqueue(new Callback<Void>() {
+//            @Override
+//            public void onResponse(Call<Void> call, Response<Void> response) {
+//                new Thread(() -> {
+//                    userDao.delete(user);
+//                    userListData.postValue(userDao.index());
+//                }).start();
+//            }
+//
+//            @Override
+//            public void onFailure(Call<Void> call, Throwable t) {
+//                // Handle the failure
+//            }
+//        });
+//    }
+//
+//    public void update(User user) {
+//        Call<Void> call = userWebServiceAPI.updateVideo(user.getId(), user);
+//        call.enqueue(new Callback<Void>() {
+//            @Override
+//            public void onResponse(Call<Void> call, Response<Void> response) {
+//                new Thread(() -> {
+//                    userDao.update(user);
+//                    userListData.postValue(userDao.index());
+//                }).start();
+//            }
+//
+//            @Override
+//            public void onFailure(Call<Void> call, Throwable t) {
+//                // Handle the failure
+//            }
+//        });
+//    }
 }

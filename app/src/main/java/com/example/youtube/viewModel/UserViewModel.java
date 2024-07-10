@@ -27,6 +27,10 @@ public class UserViewModel extends AndroidViewModel {
         return allUsers;
     }
 
+    public User getOneUser(String id) {
+       return userRepository.getOneUser(id);
+    }
+
     private void loadAllUsers() {
         userRepository.getAllUsers().observeForever(users -> allUsers.postValue(users));
     }
@@ -36,15 +40,15 @@ public class UserViewModel extends AndroidViewModel {
         loadAllUsers();
     }
 
-    public void update(User user) {
-        userRepository.updateUser(user);
-        loadAllUsers();
-    }
-
-    public void delete(User user) {
-        userRepository.deleteUser(user);
-        loadAllUsers();
-    }
+//    public void update(User user) {
+//        userRepository.updateUser(user);
+//        loadAllUsers();
+//    }
+//
+//    public void delete(User user) {
+//        userRepository.deleteUser(user);
+//        loadAllUsers();
+//    }
 
     public LiveData<Boolean> isExist(String username) {
         return userRepository.isExist(username);
@@ -57,4 +61,9 @@ public class UserViewModel extends AndroidViewModel {
     public LiveData<User> getCurrentUser() {
         return userRepository.getCurrentUser();
     }
+
+    public void setCurrentUser(User currentUser) {
+        userRepository.setCurrentUser(currentUser);
+    }
 }
+

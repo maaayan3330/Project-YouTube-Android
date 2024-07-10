@@ -11,7 +11,6 @@ import com.example.youtube.model.AppDB;
 import com.example.youtube.model.User;
 import com.example.youtube.model.daos.UserDao;
 
-import java.util.LinkedList;
 import java.util.List;
 
 public class UserRepository {
@@ -29,7 +28,7 @@ public class UserRepository {
         userAPI = new UserAPI(userListData, userDao);
 
         // Load initial data from the server
-        userAPI.get();
+        userAPI.getAllUsers();
     }
 
     public LiveData<List<User>> getAllUsers() {
@@ -40,13 +39,13 @@ public class UserRepository {
         userAPI.add(user);
     }
 
-    public void updateUser(User user) {
-        userAPI.update(user);
-    }
-
-    public void deleteUser(User user) {
-        userAPI.delete(user);
-    }
+//    public void updateUser(User user) {
+//        userAPI.update(user);
+//    }
+//
+//    public void deleteUser(User user) {
+//        userAPI.delete(user);
+//    }
 
     public LiveData<Boolean> isExist(String username) {
         MutableLiveData<Boolean> result = new MutableLiveData<>();
@@ -76,6 +75,17 @@ public class UserRepository {
         return null;
     }
 
+    public User getOneUser(String id) {
+        List<User> users = userDao.index();
+        if (users != null) {
+            for (User user : users) {
+                if (user.getApiId().equals(id)) {
+                    return user;
+                }
+            }
+        }
+        return null; // אם המשתמש לא נמצא
+    }
     public LiveData<User> getCurrentUser() {
         MutableLiveData<User> currentUserLiveData = new MutableLiveData<>();
         currentUserLiveData.postValue(currentUser);
