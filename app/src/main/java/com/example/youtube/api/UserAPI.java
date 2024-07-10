@@ -20,6 +20,7 @@ public class UserAPI {
     private UserDao userDao;
     private Retrofit retrofit;
     private UserWebServiceAPI userWebServiceAPI;
+    private static final String TAG = "UserAPI";
 
     public UserAPI(MutableLiveData<List<User>> userListData, UserDao userDao) {
         this.userListData = userListData;
@@ -34,25 +35,25 @@ public class UserAPI {
     }
 
     public void get() {
-        Call<List<User>> call = userWebServiceAPI.getUsers();
-        call.enqueue(new Callback<List<User>>() {
+        Call<UserResponse> call = userWebServiceAPI.getUsers();
+        call.enqueue(new Callback<UserResponse>() {
             @Override
-            public void onResponse(Call<List<User>> call, Response<List<User>> response) {
-                if (response.body() != null) {
+            public void onResponse(Call<UserResponse> call, Response<UserResponse> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    Log.d(TAG, "Response: " + response.body().toString());
+                    List<User> users = response.body().getUsers();
                     new Thread(() -> {
                         userDao.clear();
-                        userDao.insertList(response.body());
+                        userDao.insertList(users);
                         userListData.postValue(userDao.index());
                     }).start();
                 } else {
-                    Log.e(TAG, "Response body is null");
+                    Log.e(TAG, "Response body is null or not successful");
                 }
             }
 
             @Override
-            public void onFailure(Call<List<User>> call, Throwable t) {
-                // Handle the failure (e.g., log the error, notify the user)
-
+            public void onFailure(Call<UserResponse> call, Throwable t) {
                 Log.e(TAG, "Failed to fetch users", t);
             }
         });
