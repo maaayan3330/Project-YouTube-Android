@@ -6,7 +6,10 @@ import androidx.room.PrimaryKey;
 @Entity
 public class User {
     @PrimaryKey(autoGenerate = true)
-    private int id;
+    private int roomId;
+
+
+    private String _id;
     private final String username;
     private final String password;
     private final String nickname;
@@ -17,6 +20,7 @@ public class User {
         this.password = password;
         this.nickname = nickname;
         this.avatar = avatar;
+        this._id = new String();
     }
 
     public String getUsername() {
@@ -35,11 +39,19 @@ public class User {
         return avatar;
     }
 
-    public int getId() {
-        return id;
+    public int getRoomId() {
+        return roomId;
     }
 
-    public void setId(int id) {
-        this.id = id;
+    public void setRoomId(int roomId) {
+        this.roomId = roomId;
+    }
+
+    public String get_id() {
+        return _id;
+    }
+
+    public void set_id(String _id) {
+        this._id = _id;
     }
 }
