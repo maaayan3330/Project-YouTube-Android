@@ -97,11 +97,10 @@ public class VideoDisplayActivity extends AppCompatActivity implements CommentAd
         commentAdapter = new CommentAdapter(this, this);
         rvCommentsRecyclerView.setAdapter(commentAdapter);
 
-        //מושבת זמני
-//        commentViewModel.getCommentsByVideoId(video.getId()).observe(this, comments -> {
-//            commentAdapter.setComments(comments);
-//            commentList = comments;
-//        });
+        commentViewModel.getCommentsByVideoId(video.getId()).observe(this, comments -> {
+            commentAdapter.setComments(comments);
+            commentList = comments;
+        });
 
 
 

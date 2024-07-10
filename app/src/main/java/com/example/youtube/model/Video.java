@@ -133,11 +133,5 @@ public class Video implements Serializable {
         this.time = time;
     }
 
-//    public List<String> getComments() {
-//        return comments;
-//    }
-//
-//    public void setComments(List<String> comments) {
-//        this.comments = comments;
-//    }
+
 }

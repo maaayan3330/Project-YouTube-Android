@@ -64,6 +64,7 @@ public class VideoListActivity extends AppCompatActivity implements VideoListAda
         videoViewModel = new ViewModelProvider(this).get(VideoViewModel.class);
 
         // RecyclerView for displaying the video list
+        SwipeRefreshLayout srl_refresh= findViewById(R.id.srl_refresh);
         RecyclerView rvListVideo = findViewById(R.id.rvListVideo);
         rvListVideo.setLayoutManager(new LinearLayoutManager(this));
         videoListAdapter = new VideoListAdapter(this, this);
@@ -71,6 +72,7 @@ public class VideoListActivity extends AppCompatActivity implements VideoListAda
         videoViewModel.get().observe(this, videos -> {
             videoListAdapter.setVideos(videos);
             currentVideos = videos;
+            srl_refresh.setRefreshing(false);
         });
 
         // Initialize Toolbar
@@ -112,11 +114,8 @@ public class VideoListActivity extends AppCompatActivity implements VideoListAda
         });
 
         //refresh function
-        SwipeRefreshLayout srl_refresh= findViewById(R.id.srl_refresh);
         srl_refresh.setOnRefreshListener(()->{
             videoViewModel.reload();
-            //שורה הזו צריכה לעבור לאובזרב של הליסט וידאו
-            srl_refresh.setRefreshing(false);
         });
     }
 
