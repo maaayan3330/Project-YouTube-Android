@@ -1,4 +1,4 @@
-package com.example.youtube.videoList;
+package com.example.youtube.view.ui;
 
 import android.content.Intent;
 import android.content.res.Configuration;
@@ -7,55 +7,76 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.appcompat.widget.SearchView;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.example.youtube.R;
-import com.example.youtube.addVideo.AddVideoActivity;
 
-import com.example.youtube.SignUpPage.SignUpActivity;
-import com.example.youtube.UserManager.User;
-import com.example.youtube.design.CustomToast;
-import com.example.youtube.videoManager.Video;
-import com.example.youtube.videoManager.VideoManager;
+import com.example.youtube.model.User;
+import com.example.youtube.utils.CustomToast;
+import com.example.youtube.model.Video;
+import com.example.youtube.view.adapter.VideoListAdapter;
+import com.example.youtube.viewModel.UserViewModel;
+import com.example.youtube.viewModel.VideoViewModel;
 import com.google.android.material.navigation.NavigationView;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import com.example.youtube.UserManager.UserManager;
+import com.example.youtube.model.UserManager;
 
 import com.google.android.material.imageview.ShapeableImageView;
 
 /**
  * MainActivity class for displaying a list of videos.
  */
-public class VideoListActivity extends AppCompatActivity {
-    VideoManager videoManager;
-    VideoAdapter videoAdapter;
+public class VideoListActivity extends AppCompatActivity implements VideoListAdapter.VideoAdapterListener {
+
+    VideoListAdapter videoListAdapter;
     private DrawerLayout drawerLayout;
     private NavigationView navigationView;
     private ActionBarDrawerToggle drawerToggle;
     private Toolbar toolbar;
     private ShapeableImageView profileImageView;
     private Uri profileImageUri; // Variable to store the profile image URI
-    private static final int REQUEST_CODE_VIDEO_PICK = 1;
-
+    private VideoViewModel videoViewModel;
+    private UserViewModel userViewModel;
+    private List<Video> currentVideos;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_list_video);
+
+        videoViewModel = new ViewModelProvider(this).get(VideoViewModel.class);
+
+        // RecyclerView for displaying the video list
+        SwipeRefreshLayout srl_refresh= findViewById(R.id.srl_refresh);
+        RecyclerView rvListVideo = findViewById(R.id.rvListVideo);
+        rvListVideo.setLayoutManager(new LinearLayoutManager(this));
+        videoListAdapter = new VideoListAdapter(this, this);
+        rvListVideo.setAdapter(videoListAdapter);
+        videoViewModel.get().observe(this, videos -> {
+            videoListAdapter.setVideos(videos);
+            currentVideos = videos;
+            srl_refresh.setRefreshing(false);
+        });
+
 
         // Initialize Toolbar
         toolbar = findViewById(R.id.toolbar);
@@ -70,69 +91,7 @@ public class VideoListActivity extends AppCompatActivity {
         drawerLayout.addDrawerListener(drawerToggle);
         drawerToggle.syncState();
 
-        navigationView.setNavigationItemSelectedListener(item -> {
-            int itemId = item.getItemId();
-            if (itemId == R.id.login_yes) {
-                Intent intentForLogIn = new Intent(VideoListActivity.this, SignUpActivity.class);
-                CustomToast.showToast(VideoListActivity.this, "Login");
-                startActivity(intentForLogIn);
-                return true;
-            } else if (itemId == R.id.logout_yes) {
-                // Clear user session data
-                UserManager.getInstance().clearCurrentUser();
-
-                // Navigate to login page
-                Intent intentForLogIn = new Intent(VideoListActivity.this, SignUpActivity.class);
-                CustomToast.showToast(VideoListActivity.this, "Logout");
-                startActivity(intentForLogIn);
-                finish(); // Close the current activity
-                return true;
-            } else if (itemId == R.id.upload_data_yes) {
-                if (UserManager.getInstance().getCurrentUser() != null) {
-
-                    Intent intentForVideo = new Intent(VideoListActivity.this, AddVideoActivity.class);
-                    CustomToast.showToast(VideoListActivity.this, "Upload video");
-                    startActivity(intentForVideo);
-                }else { CustomToast.showToast(this, "Option available just for register users");
-                }return true;
-            } else if (itemId == R.id.dark_mode_yes) {
-                // Toggle dark mode
-                int currentNightMode = getResources().getConfiguration().uiMode & Configuration.UI_MODE_NIGHT_MASK;
-                if (currentNightMode == Configuration.UI_MODE_NIGHT_NO) {
-                    AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
-                    CustomToast.showToast(VideoListActivity.this, "Switched to Dark Mode");
-                } else {
-                    AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
-                    CustomToast.showToast(VideoListActivity.this, "Switched to Light Mode");
-                }
-                return true;
-            } else if (itemId == R.id.Help) {
-                CustomToast.showToast(VideoListActivity.this, "Help");
-                return true;
-            } else if (itemId == R.id.delete_user) {
-                CustomToast.showToast(VideoListActivity.this, "The user deleted successfully");
-                return true;
-            } else if (itemId == R.id.edit_user) {
-                CustomToast.showToast(VideoListActivity.this, "edit user");
-                return true;
-            } else {
-                return false;
-            }
-        });
-
-        // Initialize RecyclerView
-        // RecyclerView for displaying the video list
-        RecyclerView rvListVideo = findViewById(R.id.rvListVideo);
-        rvListVideo.setLayoutManager(new LinearLayoutManager(this)); // Set layout manager
-        videoManager = VideoManager.getInstance();
-        // Load videos from JSON
-        videoManager.loadVideosFromJson(this);
-
-
-        // Set adapter to the RecyclerView
-        // Adapter for the RecyclerView
-        videoAdapter = new VideoAdapter(videoManager.getVideoList(), this);
-        rvListVideo.setAdapter(videoAdapter);
+        navigationView.setNavigationItemSelectedListener(this::NavigationItemSelected);
 
         // Initialize user info views from header
         View headerView = navigationView.getHeaderView(0);
@@ -156,6 +115,65 @@ public class VideoListActivity extends AppCompatActivity {
                 return true;
             }
         });
+
+        //refresh function
+        srl_refresh.setOnRefreshListener(()->{
+            videoViewModel.reload();
+        });
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        Log.d("VideoListActivity", "onDestroy called");
+    }
+
+    private boolean NavigationItemSelected(MenuItem item) {
+        {
+            int itemId = item.getItemId();
+            if (itemId == R.id.login_yes) {
+                Intent intentForLogIn = new Intent(VideoListActivity.this, SignUpActivity.class);
+                CustomToast.showToast(VideoListActivity.this, "Login");
+                startActivity(intentForLogIn);
+                return true;
+            } else if (itemId == R.id.logout_yes) {
+                // Clear user session data
+                UserManager.getInstance().clearCurrentUser();
+
+                // Navigate to login page
+                Intent intentForLogIn = new Intent(VideoListActivity.this, SignUpActivity.class);
+                CustomToast.showToast(VideoListActivity.this, "Logout");
+                startActivity(intentForLogIn);
+                finish(); // Close the current activity
+                return true;
+            } else if (itemId == R.id.upload_data_yes) {
+                if (UserManager.getInstance().getCurrentUser() != null) {
+
+                    Intent intentForVideo = new Intent(VideoListActivity.this, AddVideoActivity.class);
+                    CustomToast.showToast(VideoListActivity.this, "Upload video");
+                    startActivity(intentForVideo);
+                } else {
+                    CustomToast.showToast(this, "Option available just for register users");
+                }
+                return true;
+            } else if (itemId == R.id.dark_mode_yes) {
+                // Toggle dark mode
+                int currentNightMode = getResources().getConfiguration().uiMode & Configuration.UI_MODE_NIGHT_MASK;
+                if (currentNightMode == Configuration.UI_MODE_NIGHT_NO) {
+                    AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+                    CustomToast.showToast(VideoListActivity.this, "Switched to Dark Mode");
+                } else {
+                    AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+                    CustomToast.showToast(VideoListActivity.this, "Switched to Light Mode");
+                }
+                return true;
+            } else if (itemId == R.id.Help) {
+                CustomToast.showToast(VideoListActivity.this, "Help");
+                return true;
+            } else {
+                return false;
+            }
+        }
     }
 
     private void loadUserInfoFromManager() {
@@ -165,7 +183,7 @@ public class VideoListActivity extends AppCompatActivity {
         if (currentUser != null) {
             String username = currentUser.getUsername();
             String nickname = currentUser.getNickname();
-            String profileImageUriString = currentUser.getProfileImageUri() != null ? currentUser.getProfileImageUri().toString() : null;
+            String profileImageUriString = currentUser.getAvatar() != null ? currentUser.getAvatar().toString() : null;
 
             Log.d("VideoListActivity", "Loading user info: username=" + username + ", nickname=" + nickname);
 
@@ -196,12 +214,6 @@ public class VideoListActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        Log.d("VideoListActivity", "onDestroy called");
-    }
-
-    @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         if (drawerToggle.onOptionsItemSelected(item)) {
             return true;
@@ -219,8 +231,9 @@ public class VideoListActivity extends AppCompatActivity {
     }
 
     private void filterVideoList(String text) {
+
         List<Video> filteredList = new ArrayList<>();
-        for (Video video : videoManager.getVideoList()) {
+        for (Video video : currentVideos) {
             if (video.getTitle().toLowerCase().contains(text.toLowerCase())) {
                 filteredList.add(video);
             }
@@ -229,8 +242,52 @@ public class VideoListActivity extends AppCompatActivity {
         if (filteredList.isEmpty()) {
             Toast.makeText(this, "No video found", Toast.LENGTH_SHORT).show();
         } else {
-            videoAdapter.setFilterList(filteredList);
+            videoListAdapter.setFilterList(filteredList);
         }
     }
 
+    @Override
+    public void onEditVideo(Video video, int position) {
+// Show dialog to edit comment
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Edit Title and Description");
+
+        // Create a LinearLayout to hold the EditTexts
+        LinearLayout layout = new LinearLayout(this);
+        layout.setOrientation(LinearLayout.VERTICAL);
+        layout.setPadding(50, 40, 50, 10); // Optional: Add padding for better UI
+
+        // Create EditTexts for title and description
+        final EditText inputTitle = new EditText(this);
+        inputTitle.setHint("Title");
+        inputTitle.setText(video.getTitle());
+        layout.addView(inputTitle);
+
+        final EditText inputDescription = new EditText(this);
+        inputDescription.setHint("Description");
+        inputDescription.setText(video.getDescription());
+        layout.addView(inputDescription);
+
+        builder.setView(layout);
+
+        builder.setPositiveButton("OK", (dialog, which) -> {
+            String newTitle = inputTitle.getText().toString();
+            String newDescription = inputDescription.getText().toString();
+            video.setTitle(newTitle);
+            video.setDescription(newDescription);
+            videoViewModel.update(video);
+            videoListAdapter.notifyItemChanged(position);
+
+        });
+        builder.setNegativeButton("Cancel", (dialog, which) -> dialog.cancel());
+        builder.show();
+    }
+
+    @Override
+    public void onDeleteVideo(Video video, int position) {
+        videoViewModel.delete(video);
+        currentVideos.remove(position);
+        videoListAdapter.notifyItemRemoved(position);
+        videoListAdapter.notifyItemRangeChanged(position, currentVideos.size());
+    }
 }

@@ -22,7 +22,7 @@ public interface UserWebServiceAPI {
      *
      * @return A Call object to make the network request.
      */
-    @GET("users")
+    @GET("fetchUsers")
     Call<List<User>> getUsers();
 
     /**
