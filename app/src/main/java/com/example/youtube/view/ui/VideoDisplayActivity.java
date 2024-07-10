@@ -97,7 +97,7 @@ public class VideoDisplayActivity extends AppCompatActivity implements CommentAd
         commentAdapter = new CommentAdapter(this, this);
         rvCommentsRecyclerView.setAdapter(commentAdapter);
 
-        commentViewModel.getCommentsByVideoId(video.getId()).observe(this, comments -> {
+        commentViewModel.getCommentsByVideoId(video.getApiId()).observe(this, comments -> {
             commentAdapter.setComments(comments);
             commentList = comments;
         });
@@ -224,7 +224,7 @@ public class VideoDisplayActivity extends AppCompatActivity implements CommentAd
         if (currentUser != null) {
             String commentText = et_CommentInput.getText().toString().trim();
             if (!commentText.isEmpty()) {
-                Comment newComment = new Comment(video.getId(), currentUser.getId(), currentUser.getNickname(), commentText, currentUser.getAvatar());
+                Comment newComment = new Comment(video.getApiId(), currentUser.getApiId(), currentUser.getNickname(), commentText, currentUser.getAvatar());
                 commentList.add(newComment);
                 commentAdapter.notifyItemInserted(commentList.size() - 1);
                 commentViewModel.add(newComment);
@@ -244,12 +244,12 @@ public class VideoDisplayActivity extends AppCompatActivity implements CommentAd
         builder.setTitle("Edit Comment");
 
         final EditText input = new EditText(this);
-        input.setText(comment.getContent());
+        input.setText(comment.getText());
         builder.setView(input);
 
         builder.setPositiveButton("OK", (dialog, which) -> {
             String newCommentText = input.getText().toString();
-            comment.setContent(newCommentText);
+            comment.setText(newCommentText);
             commentAdapter.notifyItemChanged(position);
             commentViewModel.update(comment);
         });

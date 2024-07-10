@@ -5,6 +5,7 @@ import android.util.Log;
 import androidx.lifecycle.MutableLiveData;
 
 import com.example.youtube.R;
+import com.example.youtube.api.response.CommentResponse;
 import com.example.youtube.model.Comment;
 import com.example.youtube.model.daos.CommentDao;
 import com.example.youtube.utils.MyApplication;
@@ -38,22 +39,23 @@ public class CommentAPI {
     }
 
     // Fetch comments for a specific video by video ID
-    public void fetchCommentsByVideoId(int videoId) {
-        Call<List<Comment>> call = commentWebServiceAPI.getCommentsByVideoId(videoId);
-        call.enqueue(new Callback<List<Comment>>() {
+    public void fetchCommentsByVideoId(String videoId) {
+        Call<CommentResponse> call = commentWebServiceAPI.getCommentsByVideoId(videoId);
+        call.enqueue(new Callback<CommentResponse>() {
             @Override
-            public void onResponse(Call<List<Comment>> call, Response<List<Comment>> response) {
+            public void onResponse(Call<CommentResponse> call, Response<CommentResponse> response) {
                 if (response.isSuccessful() && response.body() != null) {
                     new Thread(() -> {
+                        Log.e("apiComment",response.message());
                         commentDao.clear();
-                        commentDao.insertList(response.body());
+                        commentDao.insertList(response.body().getComments());
                         commentsLiveData.postValue(commentDao.getCommentsByVideoId(videoId));
                     }).start();
                 }
             }
 
             @Override
-            public void onFailure(Call<List<Comment>> call, Throwable t) {
+            public void onFailure(Call<CommentResponse> call, Throwable t) {
                 Log.e("apiComment",t.getMessage());
             }
         });

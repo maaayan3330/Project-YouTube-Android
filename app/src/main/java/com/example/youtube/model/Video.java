@@ -3,9 +3,9 @@ package com.example.youtube.model;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
+import com.google.gson.annotations.SerializedName;
+
 import java.io.Serializable;
-import java.util.Date;
-import java.util.List;
 
 
 /**
@@ -16,7 +16,10 @@ public class Video implements Serializable {
 
 
     @PrimaryKey(autoGenerate = true)
-    private int id;
+    private int roomId;
+    @SerializedName("_id")
+    private String apiId;
+
     private String userId;
     private String title;       // Title of the video
     private String description; // Description of the video
@@ -26,11 +29,10 @@ public class Video implements Serializable {
     private int views;          // Number of views
     private int subscribers;
     private String avatar;
-    private String time;
-//    private List<String> comments; // List of comment IDs
 
 
-    public Video(String userId, String title, String description, String videoUrl, String artist, int likes, int views, int subscribers, String avatar, String time) {
+
+    public Video(String userId, String title, String description, String videoUrl, String artist, int likes, int views, int subscribers, String avatar) {
         this.title = title;
         this.description = description;
         this.videoUrl = videoUrl;
@@ -39,18 +41,18 @@ public class Video implements Serializable {
         this.views = views;
         this.subscribers = subscribers;
         this.avatar = avatar;
-        this.time = time;
         this.userId = userId;
+        this.apiId =new String();
     }
 
     // Getters and setters
 
-    public int getId() {
-        return id;
+    public int getRoomId() {
+        return roomId;
     }
 
-    public void setId(int id) {
-        this.id = id;
+    public void setRoomId(int roomId) {
+        this.roomId = roomId;
     }
 
     public String getUserId() {
@@ -125,13 +127,12 @@ public class Video implements Serializable {
         this.avatar = avatar;
     }
 
-    public String getTime() {
-        return time;
+    public String getApiId() {
+        return apiId;
     }
 
-    public void setTime(String time) {
-        this.time = time;
+    public void setApiId(String apiId) {
+        this.apiId = apiId;
     }
-
 
 }

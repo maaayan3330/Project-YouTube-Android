@@ -27,7 +27,7 @@ public class CommentsRepository {
         commentAPI = new CommentAPI(commentsByVideoId, commentDao);
     }
 
-    public LiveData<List<Comment>> getCommentsByVideoId(int videoId) {
+    public LiveData<List<Comment>> getCommentsByVideoId(String videoId) {
         new Thread(() -> {
             commentAPI.fetchCommentsByVideoId(videoId);
         }).start();

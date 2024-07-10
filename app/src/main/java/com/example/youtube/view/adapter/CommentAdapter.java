@@ -61,7 +61,7 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.CommentV
     public void onBindViewHolder(CommentViewHolder holder, int position) {
         Comment comment = commentList.get(position);
         holder.authorTextView.setText(comment.getUsername());
-        holder.commentTextView.setText(comment.getContent());
+        holder.commentTextView.setText(comment.getText());
 
         holder.ib_collapse.setOnClickListener(v -> {
             if (holder.llCollapse.getVisibility() == View.GONE) {

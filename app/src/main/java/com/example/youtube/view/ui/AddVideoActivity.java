@@ -110,13 +110,12 @@ public class AddVideoActivity extends AppCompatActivity {
         }
 
         User currentUser = UserManager.getInstance().getCurrentUser();
-        String userId = String.valueOf(currentUser.getId());
+        String userId = String.valueOf(currentUser.getRoomId());
         String artist = currentUser.getNickname();
         String avatar = currentUser.getAvatar();
-        Date currentTime = new Date();
 
         // Create a new Video object
-        Video newVideo = new Video(userId,title, description, videoPath, artist, 0, 0, 0, avatar, currentTime.toString());
+        Video newVideo = new Video(userId,title, description, videoPath, artist, 0, 0, 0, avatar);
         videoViewModel.add(newVideo);
 
         Intent intent = new Intent(AddVideoActivity.this, VideoListActivity.class);
