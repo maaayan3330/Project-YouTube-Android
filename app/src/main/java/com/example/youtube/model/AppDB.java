@@ -11,7 +11,7 @@ import com.example.youtube.model.daos.CommentDao;
 import com.example.youtube.model.daos.UserDao;
 import com.example.youtube.model.daos.VideoDao;
 
-@Database(entities = {Video.class, User.class,Comment.class}, version = 5)
+@Database(entities = {Video.class, User.class,Comment.class}, version = 7)
 @TypeConverters({UriConverter.class, DateConverter.class})
 public abstract class AppDB extends RoomDatabase{
     public abstract VideoDao videoDao();
