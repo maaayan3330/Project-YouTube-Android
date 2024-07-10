@@ -22,8 +22,8 @@ public interface UserWebServiceAPI {
      *
      * @return A Call object to make the network request.
      */
-    @GET("users")
-    Call<List<User>> getUsers();
+    @GET("fetchUsers")
+    Call<UserResponse> getUsers();
 
     /**
      * Creates a new user entry in the server.

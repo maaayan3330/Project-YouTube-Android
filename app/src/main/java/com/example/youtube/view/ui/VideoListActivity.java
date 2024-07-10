@@ -31,6 +31,7 @@ import com.example.youtube.model.User;
 import com.example.youtube.utils.CustomToast;
 import com.example.youtube.model.Video;
 import com.example.youtube.view.adapter.VideoListAdapter;
+import com.example.youtube.viewModel.UserViewModel;
 import com.example.youtube.viewModel.VideoViewModel;
 import com.google.android.material.navigation.NavigationView;
 
@@ -54,6 +55,7 @@ public class VideoListActivity extends AppCompatActivity implements VideoListAda
     private ShapeableImageView profileImageView;
     private Uri profileImageUri; // Variable to store the profile image URI
     private VideoViewModel videoViewModel;
+    private UserViewModel userViewModel;
     private List<Video> currentVideos;
 
     @Override
@@ -74,6 +76,7 @@ public class VideoListActivity extends AppCompatActivity implements VideoListAda
             currentVideos = videos;
             srl_refresh.setRefreshing(false);
         });
+
 
         // Initialize Toolbar
         toolbar = findViewById(R.id.toolbar);
@@ -166,9 +169,6 @@ public class VideoListActivity extends AppCompatActivity implements VideoListAda
                 return true;
             } else if (itemId == R.id.Help) {
                 CustomToast.showToast(VideoListActivity.this, "Help");
-                return true;
-            } else if (itemId == R.id.Setting) {
-                CustomToast.showToast(VideoListActivity.this, "Setting");
                 return true;
             } else {
                 return false;

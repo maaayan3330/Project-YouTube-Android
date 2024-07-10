@@ -20,12 +20,13 @@ import androidx.core.content.ContextCompat;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
+import androidx.lifecycle.ViewModelProvider;
 
 import com.example.youtube.utils.PasswordValidator;
 import com.example.youtube.model.User;
 import com.example.youtube.utils.UploadImage;
 import com.example.youtube.R;
-import com.example.youtube.model.UserManager;
+import com.example.youtube.viewModel.UserViewModel;
 
 public class RegistrationActivity2 extends AppCompatActivity {
     private static final int REQUEST_PERMISSION_CODE = 100;
@@ -35,8 +36,7 @@ public class RegistrationActivity2 extends AppCompatActivity {
     private EditText nicknameEditText;
     private PasswordValidator passwordValidator;
     private UploadImage uploadImage;
-    private UserManager userManager;
-    // field to keep the photo
+    private UserViewModel userViewModel;
     private Uri profileImageUri;
 
     @Override
@@ -44,7 +44,6 @@ public class RegistrationActivity2 extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_registration2);
 
-        // Enable edge-to-edge UI
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
@@ -53,38 +52,30 @@ public class RegistrationActivity2 extends AppCompatActivity {
 
         passwordValidator = new PasswordValidator();
         uploadImage = new UploadImage(this);
-        userManager = UserManager.getInstance(); //  UserManager
+        userViewModel = new ViewModelProvider(this).get(UserViewModel.class);
 
         usernameEditText = findViewById(R.id.TextUserName);
         passwordEditText = findViewById(R.id.TextPassword);
         confirmPasswordEditText = findViewById(R.id.TextVerificationPassword);
         nicknameEditText = findViewById(R.id.TextNikeName);
 
-        // Find the logo ImageView
         ImageView logoImage = findViewById(R.id.logoImage);
-
-        // Set up the logo click listener
         logoImage.setOnClickListener(v -> {
             Intent intent = new Intent(RegistrationActivity2.this, VideoListActivity.class);
             startActivity(intent);
         });
 
-        // Check and request permissions
         checkPermissions();
 
-        // Add button click listener for image upload
         Button uploadImageButton = findViewById(R.id.button_upload_image);
         uploadImageButton.setOnClickListener(v -> uploadImage.showImagePickerDialog());
 
-        // connect with a button if the user is on
         Button buttonForSignUp = findViewById(R.id.alredyReg);
         buttonForSignUp.setOnClickListener(v -> {
             Intent intent = new Intent(this, SignUpActivity.class);
-            // Start a new activity
             startActivity(intent);
         });
 
-        // Add button click listener for registration
         Button registerButton = findViewById(R.id.registerButton);
         registerButton.setOnClickListener(v -> {
             String resultMessage = passwordValidator.registerUser(
@@ -95,23 +86,17 @@ public class RegistrationActivity2 extends AppCompatActivity {
                     nicknameEditText.getText().toString()
             );
 
-            // Display a custom toast message
             showCustomToast(resultMessage);
 
-            // If the user is registered successfully, navigate to the login page
             if (resultMessage.equals("User registered successfully")) {
-                // Convert the profile image URI to a string
                 String avatarUriString = profileImageUri != null ? profileImageUri.toString() : null;
-                // Add the user to the list of users with profile image URI
                 User newUser = new User(usernameEditText.getText().toString(), passwordEditText.getText().toString(),
                         nicknameEditText.getText().toString(), avatarUriString);
-                userManager.addUser(newUser);
-                // Move to the next page back after the user registers successfully
+                userViewModel.insert(newUser);
                 Intent intent = new Intent(RegistrationActivity2.this, SignUpActivity.class);
                 startActivity(intent);
             }
         });
-
     }
 
     private void checkPermissions() {
