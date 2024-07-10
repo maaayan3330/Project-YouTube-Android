@@ -81,8 +81,10 @@ public class VideoAPI {
 
     private void adjustVideoUrls(List<Video> videos) {
         for (Video video : videos) {
-            String adjustedUrl = video.getVideoUrl().replace("http://localhost", "http://10.0.2.2");
-            video.setVideoUrl(adjustedUrl);
+            String adjustedVideoUrl = video.getVideoUrl().replace("http://localhost", "http://10.0.2.2");
+            video.setVideoUrl(adjustedVideoUrl);
+//            String adjustedAvatarUrl = video.getAvatar().replace("http://localhost", "http://10.0.2.2");
+//            video.setAvatar(adjustedAvatarUrl);
         }
     }
 

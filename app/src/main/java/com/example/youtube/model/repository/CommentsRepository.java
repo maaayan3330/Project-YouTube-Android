@@ -28,14 +28,14 @@ public class CommentsRepository {
     }
 
     public LiveData<List<Comment>> getCommentsByVideoId(int videoId) {
-        commentsByVideoId.postValue(commentDao.getCommentsByVideoId(videoId));
+        new Thread(() -> {
+            commentAPI.fetchCommentsByVideoId(videoId);
+        }).start();
         return commentsByVideoId;
     }
 
     public void add(Comment comment) {
-        new Thread(() -> {
-            commentDao.insert(comment);
-        }).start();
+
     }
 
     public void delete(Comment comment) {
