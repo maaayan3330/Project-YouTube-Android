@@ -16,8 +16,8 @@ public class Video implements Serializable {
 
     @PrimaryKey(autoGenerate = true)
     private int roomId;
-
     private String _id;
+
     private String userId;
     private String title;       // Title of the video
     private String description; // Description of the video

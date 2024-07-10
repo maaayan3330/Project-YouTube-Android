@@ -38,7 +38,7 @@ public class CommentAPI {
     }
 
     // Fetch comments for a specific video by video ID
-    public void fetchCommentsByVideoId(int videoId) {
+    public void fetchCommentsByVideoId(String videoId) {
         Call<List<Comment>> call = commentWebServiceAPI.getCommentsByVideoId(videoId);
         call.enqueue(new Callback<List<Comment>>() {
             @Override

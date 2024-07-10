@@ -16,7 +16,7 @@ public interface CommentWebServiceAPI {
 
     // Fetch all comments for a specific video by video ID
     @GET("videos/{pid}/comments")
-    Call<List<Comment>> getCommentsByVideoId(@Path("pid") int videoId);
+    Call<List<Comment>> getCommentsByVideoId(@Path("pid") String videoId);
 
     // Add a new comment
     @POST("videos/{pid}/comments/{id}")

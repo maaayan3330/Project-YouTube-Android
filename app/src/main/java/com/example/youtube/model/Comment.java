@@ -8,29 +8,32 @@ import java.io.Serializable;
 @Entity
 public class Comment implements Serializable {
     @PrimaryKey(autoGenerate = true)
-    private int id;
+    private int roomId;
+    private String _id;
+
     private String username;
     private String content;
     private String avatar;
-    private int videoId;
+    private String videoId;
     private int userId;
 
-    public Comment(int videoId, int userId, String username, String content, String avatar) {
+    public Comment(String videoId, int userId, String username, String content, String avatar) {
         this.videoId = videoId;
         this.userId = userId;
         this.username = username;
         this.content = content;
         this.avatar = avatar;
+        this._id = new String();
     }
 
     // Getters and setters
 
-    public int getId() {
-        return id;
+    public int getRoomId() {
+        return roomId;
     }
 
-    public void setId(int id) {
-        this.id = id;
+    public void setRoomId(int roomId) {
+        this.roomId = roomId;
     }
 
     public String getUsername() {
@@ -44,6 +47,7 @@ public class Comment implements Serializable {
     public void setContent(String newCommentText) {
         this.content = newCommentText;
     }
+
     public String getAvatar() {
         return avatar;
     }
@@ -52,11 +56,11 @@ public class Comment implements Serializable {
         this.avatar = avatar;
     }
 
-    public int getVideoId() {
+    public String getVideoId() {
         return videoId;
     }
 
-    public void setVideoId(int videoId) {
+    public void setVideoId(String videoId) {
         this.videoId = videoId;
     }
 
@@ -67,4 +71,13 @@ public class Comment implements Serializable {
     public void setUserId(int userId) {
         this.userId = userId;
     }
+
+    public String get_id() {
+        return _id;
+    }
+
+    public void set_id(String _id) {
+        this._id = _id;
+    }
+
 }

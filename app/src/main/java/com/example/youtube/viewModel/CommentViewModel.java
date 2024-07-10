@@ -14,7 +14,7 @@ public class CommentViewModel extends ViewModel {
         repository = new CommentsRepository();
     }
 
-    public LiveData<List<Comment>> getCommentsByVideoId(int videoId) {
+    public LiveData<List<Comment>> getCommentsByVideoId(String videoId) {
         return repository.getCommentsByVideoId(videoId);
     }
 
