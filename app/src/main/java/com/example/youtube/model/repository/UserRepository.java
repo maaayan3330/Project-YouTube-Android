@@ -78,7 +78,7 @@ public class UserRepository {
                 }
             }
         }
-        return null; // אם המשתמש לא נמצא
+        return null;
     }
     public LiveData<User> getCurrentUser(String username) {
         return getUserByUsernameForCurrent(username);
@@ -99,22 +99,11 @@ public class UserRepository {
         return liveDataUser;
     }
 
-
-//    public void setCurrentUser(User user) {
-//        this.currentUser = new MutableLiveData<user>();
-//    }
 public void setCurrentUser(User user) {
     currentUser.setValue(user);
-    String result = getCurrentUserToMenu().getValue().getUsername();
-    Log.d("huu", result);
 }
 
 public MutableLiveData<User> getCurrentUserToMenu(){
-        //debug
-    if(currentUser.getValue() != null){
-        String result = currentUser.getValue().getUsername();
-        Log.d("test1000", result);
-    }
         return currentUser;
 }
 }

@@ -40,7 +40,6 @@ public class UserViewModel extends AndroidViewModel {
         loadAllUsers();
     }
 
-    /////////////////////////////////////////////////////////////////////////////////////////////////
     public LiveData<Boolean> isExist(String username) {
         return userRepository.isExist(username);
     }
@@ -56,7 +55,7 @@ public class UserViewModel extends AndroidViewModel {
     public void setCurrentUser(User currentUser) {
         userRepository.setCurrentUser(currentUser);
     }
-    /////////////////////////////////////////////////////////////////////////////////////////////////
+
     public MutableLiveData<User> getCurrentUserToMenu() {
         return userRepository.getCurrentUserToMenu();
     }
