@@ -11,6 +11,7 @@ import com.example.youtube.api.UserAPI;
 import com.example.youtube.model.AppDB;
 import com.example.youtube.model.User;
 import com.example.youtube.model.daos.CurrentUserDao;
+import com.example.youtube.model.daos.UserCallback;
 import com.example.youtube.model.daos.UserDao;
 
 import java.util.List;
@@ -101,29 +102,43 @@ public class UserRepository {
 
             List<User> currentUsers = currentUserDao.index();
             if (!currentUsers.isEmpty()) {
-                Log.d("UserRepository", "Current user set to: " + currentUsers.get(0).getUsername());
+                Log.d("UserRepository for set", "Current user set to: " + currentUsers.get(0).getUsername());
             } else {
-                Log.e("UserRepository", "Failed to set current user");
+                Log.e("UserRepository for set", "Failed to set current user");
             }
         }).start();
     }
 
-    public LiveData<User> getCurrentUserToMenu() {
-        MutableLiveData<User> currentUserData = new MutableLiveData<>();
+//    public LiveData<User> getCurrentUserToMenu() {
+//        MutableLiveData<User> currentUserData = new MutableLiveData<>();
+//
+//        new Thread(() -> {
+//            List<User> users = currentUserDao.index();
+//
+//            if (users != null && !users.isEmpty()) {
+//                Log.d("we rock", "Current user: " + users.get(0).getUsername());
+//                currentUserData.postValue(users.get(0));
+//            } else {
+//                Log.e("we rock", "No current user found");
+//                currentUserData.postValue(null);
+//            }
+//        }).start();
+//
+//        return currentUserData;
+//    }
+public void getCurrentUserToMenu(UserCallback callback) {
+    new Thread(() -> {
+        List<User> users = currentUserDao.index();
 
-        new Thread(() -> {
-            List<User> users = currentUserDao.index();
+        if (users != null && !users.isEmpty()) {
+            Log.d("we rock", "Current user: " + users.get(0).getUsername());
+            callback.onUserLoaded(users.get(0));
+        } else {
+            Log.e("we rock", "No current user found");
+            callback.onError("No current user found");
+        }
+    }).start();
+}
 
-            if (users != null && !users.isEmpty()) {
-                Log.d("UserRepository", "Current user: " + users.get(0).getUsername());
-                currentUserData.postValue(users.get(0));
-            } else {
-                Log.e("UserRepository", "No current user found");
-                currentUserData.postValue(null);
-            }
-        }).start();
-
-        return currentUserData;
-    }
 
 }

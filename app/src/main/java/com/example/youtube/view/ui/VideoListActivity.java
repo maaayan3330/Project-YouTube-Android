@@ -5,6 +5,7 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
 import com.example.youtube.model.User;
+import com.example.youtube.model.daos.UserCallback;
 import com.example.youtube.model.repository.UserRepository;
 import android.content.Intent;
 import android.content.res.Configuration;
@@ -188,31 +189,68 @@ public class VideoListActivity extends AppCompatActivity implements VideoListAda
         }
     }
 
-    private void loadUserInfoFromRoom () {
-        //fetch user for repository
-        LiveData<User> currentUser = userViewModel.getCurrentUserToMenu();
+//    private void loadUserInfoFromRoom () {
+//        //fetch user for repository
+//        LiveData<User> currentUser = userViewModel.getCurrentUserToMenu();
+//
+//        //if fetched successfully, set its values
+//        if (currentUser.getValue() != null) {
+//            String username = currentUser.getValue().getUsername();
+//            String nickname = currentUser.getValue().getNickname();
+//            String profileImageUriString = currentUser.getValue().getAvatar() != null ? currentUser.getValue().getAvatar().toString() : null;
+//
+//            Log.d("VideoListActivity", "Loading user info: username=" + username + ", nickname=" + nickname);
+//
+//            if (profileImageUriString != null && !profileImageUriString.isEmpty()) {
+//                profileImageUri = Uri.parse(profileImageUriString);
+//                profileImageView.setImageURI(profileImageUri);
+//            } else {
+//                profileImageView.setImageResource(R.drawable.profile_pic);
+//            }
+//
+//            // Update Navigation Drawer menu items
+//            updateNavigationDrawer(username, nickname);
+//        } else {
+//            profileImageView.setImageResource(R.drawable.profile_pic);
+//        }
+//    }
+private void loadUserInfoFromRoom() {
+    userViewModel.getCurrentUserToMenu(new UserCallback() {
+        @Override
+        public void onUserLoaded(User user) {
+            runOnUiThread(() -> {
+                if (user != null) {
+                    String username = user.getUsername();
+                    String nickname = user.getNickname();
+                    String profileImageUriString = user.getAvatar() != null ? user.getAvatar().toString() : null;
 
-        //if fetched successfully, set its values
-        if (currentUser.getValue() != null) {
-            String username = currentUser.getValue().getUsername();
-            String nickname = currentUser.getValue().getNickname();
-            String profileImageUriString = currentUser.getValue().getAvatar() != null ? currentUser.getValue().getAvatar().toString() : null;
+                    Log.d("VideoListActivity", "Loading user info: username=" + username + ", nickname=" + nickname);
 
-            Log.d("VideoListActivity", "Loading user info: username=" + username + ", nickname=" + nickname);
+                    if (profileImageUriString != null && !profileImageUriString.isEmpty()) {
+                        profileImageUri = Uri.parse(profileImageUriString);
+                        profileImageView.setImageURI(profileImageUri);
+                    } else {
+                        profileImageView.setImageResource(R.drawable.profile_pic);
+                    }
 
-            if (profileImageUriString != null && !profileImageUriString.isEmpty()) {
-                profileImageUri = Uri.parse(profileImageUriString);
-                profileImageView.setImageURI(profileImageUri);
-            } else {
-                profileImageView.setImageResource(R.drawable.profile_pic);
-            }
-
-            // Update Navigation Drawer menu items
-            updateNavigationDrawer(username, nickname);
-        } else {
-            profileImageView.setImageResource(R.drawable.profile_pic);
+                    // Update Navigation Drawer menu items
+                    updateNavigationDrawer(username, nickname);
+                } else {
+                    profileImageView.setImageResource(R.drawable.profile_pic);
+                }
+            });
         }
-    }
+
+        @Override
+        public void onError(String error) {
+            runOnUiThread(() -> {
+                Log.e("VideoListActivity", error);
+                profileImageView.setImageResource(R.drawable.profile_pic);
+            });
+        }
+    });
+}
+
 
     private void updateNavigationDrawer(String username, String nickname) {
         MenuItem usernameItem = navigationView.getMenu().findItem(R.id.profile_username);

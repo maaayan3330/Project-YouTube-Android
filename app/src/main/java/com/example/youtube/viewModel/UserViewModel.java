@@ -8,6 +8,7 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
 import com.example.youtube.model.User;
+import com.example.youtube.model.daos.UserCallback;
 import com.example.youtube.model.repository.UserRepository;
 
 import java.util.List;
@@ -52,8 +53,8 @@ public class UserViewModel extends AndroidViewModel {
         userRepository.setCurrentUser(currentUser);
     }
 
-    public LiveData<User> getCurrentUserToMenu() {
-        return userRepository.getCurrentUserToMenu();
+    public void getCurrentUserToMenu(UserCallback callback) {
+        userRepository.getCurrentUserToMenu(callback);
     }
 }
 
