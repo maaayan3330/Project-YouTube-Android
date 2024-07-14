@@ -49,12 +49,20 @@ public class UserViewModel extends AndroidViewModel {
         return userRepository.getCurrentUser(username);
     }
 
-    public void setCurrentUser(User currentUser) {
-        userRepository.setCurrentUser(currentUser);
+//    public void setCurrentUser(User currentUser) {
+//        userRepository.setCurrentUser(currentUser);
+//    }
+//
+//    public void getCurrentUserToMenu(UserCallback callback) {
+//        userRepository.getCurrentUserToMenu(callback);
+//    }
+
+
+    public void login(String username, String password) {
+        userRepository.login(username, password);
     }
 
-    public void getCurrentUserToMenu(UserCallback callback) {
-        userRepository.getCurrentUserToMenu(callback);
+    public LiveData<User> getCurrentUser() {
+        return userRepository.getCurrentUser();
     }
 }
-

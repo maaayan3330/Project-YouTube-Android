@@ -20,6 +20,8 @@ import com.example.youtube.model.User;
 import com.example.youtube.model.daos.UserCallback;
 import com.example.youtube.viewModel.UserViewModel;
 
+import java.security.AlgorithmConstraints;
+
 public class SignUpActivity extends AppCompatActivity {
     private EditText usernameEditText;
     private EditText passwordEditText;
@@ -73,23 +75,15 @@ public class SignUpActivity extends AppCompatActivity {
                     if (isExist) {
                         userViewModel.matchAccount(username, password).observe(this, result -> {
                             if (result) {
-                                userViewModel.getCurrentUserToMenu(new UserCallback() {
-                                    @Override
-                                    public void onUserLoaded(User user) {
-                                        runOnUiThread(() -> {
-                                            // Set the current user
-                                            userViewModel.setCurrentUser(user);
-                                            showCustomToast("Login successfully!");
-                                            Intent intent = new Intent(SignUpActivity.this, VideoListActivity.class);
-                                            startActivity(intent);
-                                        });
-                                    }
-
-                                    @Override
-                                    public void onError(String error) {
-                                        runOnUiThread(() -> {
-                                            showCustomToast("User not found");
-                                        });
+                                userViewModel.login(username, password);
+                                userViewModel.getCurrentUser(username).observe(this, user -> {
+                                    if (user != null) {
+                                        Log.d("SignUpActivity", "Logged in user: " + user.getUsername());
+                                        showCustomToast("Login successfully!");
+                                        Intent intent = new Intent(SignUpActivity.this, VideoListActivity.class);
+                                        startActivity(intent);
+                                    } else {
+                                        showCustomToast("User not found");
                                     }
                                 });
                             } else {

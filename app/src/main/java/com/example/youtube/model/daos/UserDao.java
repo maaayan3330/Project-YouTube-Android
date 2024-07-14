@@ -40,4 +40,8 @@ public interface UserDao {
     // Insert a list of users
     @Insert
     void insertList(List<User> userList);
+
+    // Query to login a user
+    @Query("SELECT * FROM user WHERE username = :username AND password = :password LIMIT 1")
+    User login(String username, String password);
 }
