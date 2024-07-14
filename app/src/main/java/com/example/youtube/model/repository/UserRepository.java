@@ -1,6 +1,7 @@
 package com.example.youtube.model.repository;
 
 import android.content.Context;
+import android.util.Log;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
@@ -15,7 +16,7 @@ import java.util.List;
 
 public class UserRepository {
     private UserDao userDao;
-    private User currentUser;
+    private MutableLiveData<User> currentUser;
     private UserAPI userAPI;
     private MutableLiveData<List<User>> userListData;
 
@@ -26,6 +27,7 @@ public class UserRepository {
         userDao = db.userDao();
         userListData = new MutableLiveData<>();
         userAPI = new UserAPI(userListData, userDao);
+        currentUser = new MutableLiveData<>();
 
         // Load initial data from the server
         userAPI.getAllUsers();
@@ -38,14 +40,6 @@ public class UserRepository {
     public void insertUser(User user) {
         userAPI.add(user);
     }
-
-//    public void updateUser(User user) {
-//        userAPI.update(user);
-//    }
-//
-//    public void deleteUser(User user) {
-//        userAPI.delete(user);
-//    }
 
     public LiveData<Boolean> isExist(String username) {
         MutableLiveData<Boolean> result = new MutableLiveData<>();
@@ -86,13 +80,36 @@ public class UserRepository {
         }
         return null; // אם המשתמש לא נמצא
     }
-    public LiveData<User> getCurrentUser() {
-        MutableLiveData<User> currentUserLiveData = new MutableLiveData<>();
-        currentUserLiveData.postValue(currentUser);
-        return currentUserLiveData;
+    public LiveData<User> getCurrentUser(String username) {
+        return getUserByUsernameForCurrent(username);
     }
 
-    public void setCurrentUser(User user) {
-        this.currentUser = user;
+    private LiveData<User> getUserByUsernameForCurrent(String username) {
+        MutableLiveData<User> liveDataUser = new MutableLiveData<>();
+        new Thread(() -> {
+            List<User> users = userDao.index();
+            for (User user : users) {
+                if (user.getUsername().equals(username)) {
+                    liveDataUser.postValue(user);
+                    return;
+                }
+            }
+            liveDataUser.postValue(null);
+        }).start();
+        return liveDataUser;
     }
+
+
+//    public void setCurrentUser(User user) {
+//        this.currentUser = new MutableLiveData<user>();
+//    }
+public void setCurrentUser(User user) {
+    currentUser.setValue(user);
+    String result = getCurrentUserToMenu().getValue().getUsername();
+    Log.d("huu", result);
+}
+
+public LiveData<User> getCurrentUserToMenu(){
+        return currentUser;
+}
 }

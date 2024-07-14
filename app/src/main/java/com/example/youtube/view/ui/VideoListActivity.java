@@ -1,5 +1,10 @@
 package com.example.youtube.view.ui;
 
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
+
+import com.example.youtube.model.User;
+import com.example.youtube.model.repository.UserRepository;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.net.Uri;
@@ -48,6 +53,7 @@ import com.google.android.material.imageview.ShapeableImageView;
 public class VideoListActivity extends AppCompatActivity implements VideoListAdapter.VideoAdapterListener {
 
     VideoListAdapter videoListAdapter;
+    private UserRepository currentUserRepository;
     private DrawerLayout drawerLayout;
     private NavigationView navigationView;
     private ActionBarDrawerToggle drawerToggle;
@@ -58,12 +64,84 @@ public class VideoListActivity extends AppCompatActivity implements VideoListAda
     private UserViewModel userViewModel;
     private List<Video> currentVideos;
 
+//    @Override
+//    protected void onCreate(Bundle savedInstanceState) {
+//        super.onCreate(savedInstanceState);
+//        setContentView(R.layout.activity_list_video);
+//
+//        videoViewModel = new ViewModelProvider(this).get(VideoViewModel.class);
+//        // Initialize currentUserRepository
+//        currentUserRepository = new UserRepository(getApplicationContext());
+//        userViewModel = new ViewModelProvider(this).get(UserViewModel.class);
+//
+//        // RecyclerView for displaying the video list
+//        SwipeRefreshLayout srl_refresh= findViewById(R.id.srl_refresh);
+//        RecyclerView rvListVideo = findViewById(R.id.rvListVideo);
+//        rvListVideo.setLayoutManager(new LinearLayoutManager(this));
+//        videoListAdapter = new VideoListAdapter(this, this);
+//        rvListVideo.setAdapter(videoListAdapter);
+//        videoViewModel.get().observe(this, videos -> {
+//            videoListAdapter.setVideos(videos);
+//            currentVideos = videos;
+//            srl_refresh.setRefreshing(false);
+//        });
+//
+//
+//        // Initialize Toolbar
+//        toolbar = findViewById(R.id.toolbar);
+//        setSupportActionBar(toolbar);
+//
+//        // Initialize DrawerLayout and NavigationView
+//        drawerLayout = findViewById(R.id.drawer_layout);
+//        navigationView = findViewById(R.id.nav_view);
+//
+//        // Initialize DrawerToggle
+//        drawerToggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.open, R.string.close);
+//        drawerLayout.addDrawerListener(drawerToggle);
+//        drawerToggle.syncState();
+//
+//        navigationView.setNavigationItemSelectedListener(this::NavigationItemSelected);
+//
+//        // Initialize user info views from header
+//        View headerView = navigationView.getHeaderView(0);
+//        profileImageView = headerView.findViewById(R.id.profileImageView);
+//
+//        // Load user data from UserManager
+//
+//            loadUserInfoFromRoom();
+//
+//
+//        // Search function
+//        SearchView sv_search = findViewById(R.id.svSearch);
+//        sv_search.clearFocus();
+//        sv_search.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+//            @Override
+//            public boolean onQueryTextSubmit(String query) {
+//                return false;
+//            }
+//
+//            @Override
+//            public boolean onQueryTextChange(String newText) {
+//                filterVideoList(newText);
+//                return true;
+//            }
+//        });
+//
+//        //refresh function
+//        srl_refresh.setOnRefreshListener(()->{
+//            videoViewModel.reload();
+//        });
+//    }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_list_video);
 
         videoViewModel = new ViewModelProvider(this).get(VideoViewModel.class);
+        userViewModel = new ViewModelProvider(this).get(UserViewModel.class);
+
+        // Initialize currentUserRepository
+        currentUserRepository = new UserRepository(getApplicationContext());
 
         // RecyclerView for displaying the video list
         SwipeRefreshLayout srl_refresh= findViewById(R.id.srl_refresh);
@@ -76,7 +154,6 @@ public class VideoListActivity extends AppCompatActivity implements VideoListAda
             currentVideos = videos;
             srl_refresh.setRefreshing(false);
         });
-
 
         // Initialize Toolbar
         toolbar = findViewById(R.id.toolbar);
@@ -98,7 +175,7 @@ public class VideoListActivity extends AppCompatActivity implements VideoListAda
         profileImageView = headerView.findViewById(R.id.profileImageView);
 
         // Load user data from UserManager
-        loadUserInfoFromManager();
+        loadUserInfoFromRoom();
 
         // Search function
         SearchView sv_search = findViewById(R.id.svSearch);
@@ -116,11 +193,12 @@ public class VideoListActivity extends AppCompatActivity implements VideoListAda
             }
         });
 
-        //refresh function
-        srl_refresh.setOnRefreshListener(()->{
+        // Refresh function
+        srl_refresh.setOnRefreshListener(() -> {
             videoViewModel.reload();
         });
     }
+
 
     @Override
     protected void onDestroy() {
@@ -176,7 +254,33 @@ public class VideoListActivity extends AppCompatActivity implements VideoListAda
         }
     }
 
-    private void loadUserInfoFromManager() {
+    private void loadUserInfoFromRoom () {
+        //fetch user for repository
+        LiveData<User> currentUser = currentUserRepository.getCurrentUserToMenu();
+
+        currentUser.observe(this, user -> {
+            if (user != null) {
+                String username = user.getUsername();
+                String nickname = user.getNickname();
+                String profileImageUriString = user.getAvatar() != null ? user.getAvatar().toString() : null;
+
+                Log.d("VideoListActivity", "Loading user info: username=" + username + ", nickname=" + nickname);
+
+                if (profileImageUriString != null && !profileImageUriString.isEmpty()) {
+                    profileImageUri = Uri.parse(profileImageUriString);
+                    profileImageView.setImageURI(profileImageUri);
+                } else {
+                    profileImageView.setImageResource(R.drawable.profile_pic);
+                }
+
+                // Update Navigation Drawer menu items
+                updateNavigationDrawer(username, nickname);
+            } else {
+                profileImageView.setImageResource(R.drawable.profile_pic);
+            }
+        });
+    }
+    /*private void loadUserInfoFromManager() {
         UserManager userManager = UserManager.getInstance();
         User currentUser = userManager.getCurrentUser();
 
@@ -199,7 +303,7 @@ public class VideoListActivity extends AppCompatActivity implements VideoListAda
         } else {
             profileImageView.setImageResource(R.drawable.profile_pic);
         }
-    }
+    }*/
 
     private void updateNavigationDrawer(String username, String nickname) {
         MenuItem usernameItem = navigationView.getMenu().findItem(R.id.profile_username);

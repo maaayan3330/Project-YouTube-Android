@@ -40,16 +40,7 @@ public class UserViewModel extends AndroidViewModel {
         loadAllUsers();
     }
 
-//    public void update(User user) {
-//        userRepository.updateUser(user);
-//        loadAllUsers();
-//    }
-//
-//    public void delete(User user) {
-//        userRepository.deleteUser(user);
-//        loadAllUsers();
-//    }
-
+    /////////////////////////////////////////////////////////////////////////////////////////////////
     public LiveData<Boolean> isExist(String username) {
         return userRepository.isExist(username);
     }
@@ -58,12 +49,13 @@ public class UserViewModel extends AndroidViewModel {
         return userRepository.matchAccount(username, password);
     }
 
-    public LiveData<User> getCurrentUser() {
-        return userRepository.getCurrentUser();
+    public LiveData<User> getCurrentUser(String username) {
+        return userRepository.getCurrentUser(username);
     }
 
     public void setCurrentUser(User currentUser) {
         userRepository.setCurrentUser(currentUser);
     }
+    /////////////////////////////////////////////////////////////////////////////////////////////////
 }
 

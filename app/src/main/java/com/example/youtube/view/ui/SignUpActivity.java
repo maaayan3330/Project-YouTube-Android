@@ -72,14 +72,14 @@ public class SignUpActivity extends AppCompatActivity {
                     if (isExist) {
                         userViewModel.matchAccount(username, password).observe(this, result -> {
                             if (result) {
-                                userViewModel.getCurrentUser().observe(this, user -> {
+                                userViewModel.getCurrentUser(username).observe(this, user -> {
                                     if (user != null) {
-                                        // featch one user
-                                        userViewModel.setCurrentUser(userViewModel.getOneUser(user.getApiId()));
+                                        // fetch one user
+                                        userViewModel.setCurrentUser(user);
                                         //
+                                        showCustomToast("Login successfully!");
                                         Intent intent = new Intent(this, VideoListActivity.class);
                                         startActivity(intent);
-                                        showCustomToast("Login successfully!");
                                     } else {
                                         showCustomToast("User not found");
                                     }
