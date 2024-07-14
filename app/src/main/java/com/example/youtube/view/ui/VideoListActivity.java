@@ -1,5 +1,6 @@
 package com.example.youtube.view.ui;
 
+import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
@@ -25,6 +26,7 @@ import androidx.appcompat.widget.SearchView;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -249,7 +251,10 @@ public class VideoListActivity extends AppCompatActivity implements VideoListAda
 
     private void loadUserInfoFromRoom () {
         //fetch user for repository
-        LiveData<User> currentUser = userViewModel.getCurrentUserToMenu();
+        MutableLiveData<User> currentUser = userViewModel.getCurrentUserToMenu();
+        if (userViewModel.getCurrentUserToMenu().getValue() != null) {
+            Log.d("again", userViewModel.getCurrentUserToMenu().getValue().getUsername());
+        }
 //        ////////////////////////////////////////////////////
         if (currentUser.getValue() != null) {
             String username = currentUser.getValue().getUsername();

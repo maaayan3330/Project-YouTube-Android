@@ -109,7 +109,7 @@ public void setCurrentUser(User user) {
     Log.d("huu", result);
 }
 
-public LiveData<User> getCurrentUserToMenu(){
+public MutableLiveData<User> getCurrentUserToMenu(){
         //debug
     if(currentUser.getValue() != null){
         String result = currentUser.getValue().getUsername();
