@@ -94,7 +94,6 @@ public class UserRepository {
         return getUserByUsernameForCurrent(username);
     }
 
-    //////////////////////////////////////////////////////////////////////////////////////////
     public void setCurrentUser(User user) {
         new Thread(() -> {
             currentUserDao.clear();
@@ -109,23 +108,6 @@ public class UserRepository {
         }).start();
     }
 
-//    public LiveData<User> getCurrentUserToMenu() {
-//        MutableLiveData<User> currentUserData = new MutableLiveData<>();
-//
-//        new Thread(() -> {
-//            List<User> users = currentUserDao.index();
-//
-//            if (users != null && !users.isEmpty()) {
-//                Log.d("we rock", "Current user: " + users.get(0).getUsername());
-//                currentUserData.postValue(users.get(0));
-//            } else {
-//                Log.e("we rock", "No current user found");
-//                currentUserData.postValue(null);
-//            }
-//        }).start();
-//
-//        return currentUserData;
-//    }
 public void getCurrentUserToMenu(UserCallback callback) {
     new Thread(() -> {
         List<User> users = currentUserDao.index();
