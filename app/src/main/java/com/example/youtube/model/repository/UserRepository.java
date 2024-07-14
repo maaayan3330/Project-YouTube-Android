@@ -10,13 +10,14 @@ import androidx.room.Room;
 import com.example.youtube.api.UserAPI;
 import com.example.youtube.model.AppDB;
 import com.example.youtube.model.User;
+import com.example.youtube.model.daos.CurrentUserDao;
 import com.example.youtube.model.daos.UserDao;
 
 import java.util.List;
 
 public class UserRepository {
     private UserDao userDao;
-    private MutableLiveData<User> currentUser;
+    private CurrentUserDao currentUserDao;
     private UserAPI userAPI;
     private MutableLiveData<List<User>> userListData;
 
@@ -25,9 +26,11 @@ public class UserRepository {
                 .fallbackToDestructiveMigration()
                 .build();
         userDao = db.userDao();
+        currentUserDao = db.currentUserDao();
+
         userListData = new MutableLiveData<>();
         userAPI = new UserAPI(userListData, userDao);
-        currentUser = new MutableLiveData<>();
+//        currentUser = new MutableLiveData<>();
 
         // Load initial data from the server
         userAPI.getAllUsers();
@@ -69,21 +72,7 @@ public class UserRepository {
         return null;
     }
 
-    public User getOneUser(String id) {
-        List<User> users = userDao.index();
-        if (users != null) {
-            for (User user : users) {
-                if (user.getApiId().equals(id)) {
-                    return user;
-                }
-            }
-        }
-        return null;
-    }
-    public LiveData<User> getCurrentUser(String username) {
-        return getUserByUsernameForCurrent(username);
-    }
-
+    //////////////////////////////////////////bring user in sign in//////////////////////////////////////////////////////
     private LiveData<User> getUserByUsernameForCurrent(String username) {
         MutableLiveData<User> liveDataUser = new MutableLiveData<>();
         new Thread(() -> {
@@ -99,11 +88,42 @@ public class UserRepository {
         return liveDataUser;
     }
 
-public void setCurrentUser(User user) {
-    currentUser.setValue(user);
-}
 
-public MutableLiveData<User> getCurrentUserToMenu(){
-        return currentUser;
-}
+    public LiveData<User> getCurrentUser(String username) {
+        return getUserByUsernameForCurrent(username);
+    }
+
+    //////////////////////////////////////////////////////////////////////////////////////////
+    public void setCurrentUser(User user) {
+        new Thread(() -> {
+            currentUserDao.clear();
+            currentUserDao.insert(user);
+
+            List<User> currentUsers = currentUserDao.index();
+            if (!currentUsers.isEmpty()) {
+                Log.d("UserRepository", "Current user set to: " + currentUsers.get(0).getUsername());
+            } else {
+                Log.e("UserRepository", "Failed to set current user");
+            }
+        }).start();
+    }
+
+    public LiveData<User> getCurrentUserToMenu() {
+        MutableLiveData<User> currentUserData = new MutableLiveData<>();
+
+        new Thread(() -> {
+            List<User> users = currentUserDao.index();
+
+            if (users != null && !users.isEmpty()) {
+                Log.d("UserRepository", "Current user: " + users.get(0).getUsername());
+                currentUserData.postValue(users.get(0));
+            } else {
+                Log.e("UserRepository", "No current user found");
+                currentUserData.postValue(null);
+            }
+        }).start();
+
+        return currentUserData;
+    }
+
 }

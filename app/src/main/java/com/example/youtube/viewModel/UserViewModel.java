@@ -27,10 +27,6 @@ public class UserViewModel extends AndroidViewModel {
         return allUsers;
     }
 
-    public User getOneUser(String id) {
-       return userRepository.getOneUser(id);
-    }
-
     private void loadAllUsers() {
         userRepository.getAllUsers().observeForever(users -> allUsers.postValue(users));
     }
@@ -56,7 +52,7 @@ public class UserViewModel extends AndroidViewModel {
         userRepository.setCurrentUser(currentUser);
     }
 
-    public MutableLiveData<User> getCurrentUserToMenu() {
+    public LiveData<User> getCurrentUserToMenu() {
         return userRepository.getCurrentUserToMenu();
     }
 }

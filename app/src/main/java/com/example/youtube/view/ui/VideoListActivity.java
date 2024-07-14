@@ -190,7 +190,7 @@ public class VideoListActivity extends AppCompatActivity implements VideoListAda
 
     private void loadUserInfoFromRoom () {
         //fetch user for repository
-        MutableLiveData<User> currentUser = userViewModel.getCurrentUserToMenu();
+        LiveData<User> currentUser = userViewModel.getCurrentUserToMenu();
 
         //if fetched successfully, set its values
         if (currentUser.getValue() != null) {

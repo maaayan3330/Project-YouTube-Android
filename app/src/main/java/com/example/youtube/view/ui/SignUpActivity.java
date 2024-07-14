@@ -75,8 +75,7 @@ public class SignUpActivity extends AppCompatActivity {
                                 userViewModel.getCurrentUser(username).observe(this, user -> {
                                     if (user != null) {
                                         // fetch one user
-                                        userViewModel.setCurrentUser(user);
-//                                        Log.d("Tomas", userViewModel.getCurrentUserToMenu().toString());
+                                        userViewModel.setCurrentUser(user); //check this!!
                                         showCustomToast("Login successfully!");
                                         Intent intent = new Intent(this, VideoListActivity.class);
                                         startActivity(intent);
