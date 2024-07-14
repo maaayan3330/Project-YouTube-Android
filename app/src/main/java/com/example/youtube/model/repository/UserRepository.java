@@ -110,6 +110,11 @@ public void setCurrentUser(User user) {
 }
 
 public LiveData<User> getCurrentUserToMenu(){
+        //debug
+    if(currentUser.getValue() != null){
+        String result = currentUser.getValue().getUsername();
+        Log.d("test1000", result);
+    }
         return currentUser;
 }
 }

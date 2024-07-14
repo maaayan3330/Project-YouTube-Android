@@ -57,5 +57,8 @@ public class UserViewModel extends AndroidViewModel {
         userRepository.setCurrentUser(currentUser);
     }
     /////////////////////////////////////////////////////////////////////////////////////////////////
+    public LiveData<User> getCurrentUserToMenu() {
+        return userRepository.getCurrentUserToMenu();
+    }
 }
 
