@@ -187,7 +187,14 @@ public class VideoListActivity extends AppCompatActivity implements VideoListAda
 
             Log.d("VideoListActivity", "Loading user info: username=" + username + ", nickname=" + nickname);
 
-            if (profileImageUriString != null && !profileImageUriString.isEmpty()) {
+            // for Defo
+            if (profileImageUriString.equals("/localPhotos/Maayan.png")) {
+                profileImageView.setImageResource(R.drawable.maayan);
+            } else if (profileImageUriString.equals("/localPhotos/Alon.png")) {
+                profileImageView.setImageResource(R.drawable.alon);
+            } else if (profileImageUriString.equals("/localPhotos/Tom.png")) {
+                profileImageView.setImageResource(R.drawable.tom);
+            } else if (profileImageUriString != null && !profileImageUriString.isEmpty()) {
                 profileImageUri = Uri.parse(profileImageUriString);
                 profileImageView.setImageURI(profileImageUri);
             } else {

@@ -2,6 +2,7 @@ package com.example.youtube.view.ui;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
@@ -64,6 +65,7 @@ public class SignUpActivity extends AppCompatActivity {
                             if (result) {
                                 userViewModel.getUserByUsername(username).observe(this, user -> {
                                     userManager.setCurrentUser(user);
+                                    Log.d("photo",userManager.getCurrentUser().getAvatar());
                                     showCustomToast("Login successfully!");
                                     usernameEditText.setText("");
                                     passwordEditText.setText("");
