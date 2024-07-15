@@ -26,7 +26,6 @@ public class UserRepository {
 
         userListData = new MutableLiveData<>();
         userAPI = new UserAPI(userListData, userDao);
-//        currentUser = new MutableLiveData<>();
 
         // Load initial data from the server
         userAPI.getAllUsers();
@@ -40,48 +39,22 @@ public class UserRepository {
         userAPI.add(user);
     }
 
-//    public LiveData<Boolean> isExist(String username) {
-//        MutableLiveData<Boolean> result = new MutableLiveData<>();
-//        new Thread(() -> {
-//            User user = getUserByUsername(username);
-//            result.postValue(user != null);
-//        }).start();
-//        return result;
-//    }
-public LiveData<Boolean> isExist(String username) {
-    MutableLiveData<Boolean> result = new MutableLiveData<>();
-    getUserByUsername(username).observeForever(user -> {
-        result.setValue(user != null);
-    });
-    return result;
-}
+    public LiveData<Boolean> isExist(String username) {
+        MutableLiveData<Boolean> result = new MutableLiveData<>();
+         getUserByUsername(username).observeForever(user -> {
+         result.setValue(user != null);
+      });
+     return result;
+    }
 
-//    public LiveData<Boolean> matchAccount(String username, String password) {
-//        MutableLiveData<Boolean> result = new MutableLiveData<>();
-//        new Thread(() -> {
-//            User user = getUserByUsername(username);
-//            result.postValue(user != null && user.getPassword().equals(password));
-//        }).start();
-//        return result;
-//    }
-//
-//    public User getUserByUsername(String username) {
-//        List<User> users = userDao.index();
-//        for (User user : users) {
-//            if (user.getUsername().equals(username)) {
-//                return user;
-//            }
-//        }
-//        return null;
-//    }
-public LiveData<User> getUserByUsername(String username) {
-    MutableLiveData<User> userLiveData = new MutableLiveData<>();
-    new Thread(() -> {
-        User user = userDao.findByUsername(username);
-        userLiveData.postValue(user);
-    }).start();
-    return userLiveData;
-}
+    public LiveData<User> getUserByUsername(String username) {
+        MutableLiveData<User> userLiveData = new MutableLiveData<>();
+        new Thread(() -> {
+            User user = userDao.findByUsername(username);
+            userLiveData.postValue(user);
+        }).start();
+        return userLiveData;
+    }
 
     public LiveData<Boolean> matchAccount(String username, String password) {
         MutableLiveData<Boolean> result = new MutableLiveData<>();

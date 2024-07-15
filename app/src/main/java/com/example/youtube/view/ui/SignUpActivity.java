@@ -81,15 +81,6 @@ public class SignUpActivity extends AppCompatActivity {
             }
         });
 
-//        userManager.addUser(username, password, "hii", "sss");
-//                                // Find the user object
-//                                User user = null;
-//                                for (User u : userManager.getUserList()) {
-//                                    if (u.getUsername().equals(username)) {
-//                                        user = u;
-//                                        break;
-//                                    }
-//                                }
         if (savedInstanceState != null) {
             String username = savedInstanceState.getString("username");
             String password = savedInstanceState.getString("password");

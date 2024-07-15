@@ -21,7 +21,6 @@ public class UserViewModel extends AndroidViewModel {
         userRepository = new UserRepository(application);
         allUsers = new MutableLiveData<>();
         loadAllUsers();
-
     }
 
     public LiveData<List<User>> getAllUsers() {

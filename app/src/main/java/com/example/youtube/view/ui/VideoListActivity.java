@@ -139,8 +139,7 @@ public class VideoListActivity extends AppCompatActivity implements VideoListAda
                 return true;
             } else if (itemId == R.id.logout_yes) {
                 // Clear user session data
-//                UserManager.getInstance().clearCurrentUser(); //changed to userview model
-//                userViewModel.logOut();
+                UserManager.getInstance().clearCurrentUser();
                 // Navigate to login page
                 Intent intentForLogIn = new Intent(VideoListActivity.this, SignUpActivity.class);
                 CustomToast.showToast(VideoListActivity.this, "Logout");
