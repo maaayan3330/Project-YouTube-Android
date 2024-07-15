@@ -75,15 +75,15 @@ public class UserRepository {
 
     public void login(String username, String password) {
         new Thread(() -> {
-            currentUserDao.clearCurrentUser();
-            currentUserDao.setCurrentUser(username, password);
+            userDao.clearCurrentUser();
+            userDao.setCurrentUser(username, password);
         }).start();
 }
 
     public LiveData<User> getCurrentUser() {
         MutableLiveData<User> currentUserLiveData = new MutableLiveData<>();
         new Thread(() -> {
-            User currentUser = currentUserDao.getCurrentUser();
+            User currentUser = userDao.getCurrentUser();
             currentUserLiveData.postValue(currentUser);
         }).start();
         return currentUserLiveData;
@@ -91,6 +91,6 @@ public class UserRepository {
 
     public void logOut() {
         //call currentUser dao to update the users stored in room
-        currentUserDao.clearCurrentUser();
+        userDao.clearCurrentUser();
     }
 }
