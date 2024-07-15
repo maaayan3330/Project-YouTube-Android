@@ -74,10 +74,6 @@ public class VideoListActivity extends AppCompatActivity implements VideoListAda
         videoViewModel = new ViewModelProvider(this).get(VideoViewModel.class);
         userViewModel = new ViewModelProvider(this).get(UserViewModel.class);
 
-        // Initialize currentUserRepository
-//        currentUserRepository = new UserRepository(getApplicationContext());
-
-
         // RecyclerView for displaying the video list
         SwipeRefreshLayout srl_refresh= findViewById(R.id.srl_refresh);
         RecyclerView rvListVideo = findViewById(R.id.rvListVideo);
@@ -151,8 +147,8 @@ public class VideoListActivity extends AppCompatActivity implements VideoListAda
                 return true;
             } else if (itemId == R.id.logout_yes) {
                 // Clear user session data
-                UserManager.getInstance().clearCurrentUser();
-
+//                UserManager.getInstance().clearCurrentUser(); //changed to userview model
+                userViewModel.logOut();
                 // Navigate to login page
                 Intent intentForLogIn = new Intent(VideoListActivity.this, SignUpActivity.class);
                 CustomToast.showToast(VideoListActivity.this, "Logout");
@@ -189,42 +185,6 @@ public class VideoListActivity extends AppCompatActivity implements VideoListAda
         }
     }
 
-//private void loadUserInfoFromRoom() {
-//    userViewModel.getCurrentUserToMenu(new UserCallback() {
-//        @Override
-//        public void onUserLoaded(User user) {
-//            runOnUiThread(() -> {
-//                if (user != null) {
-//                    String username = user.getUsername();
-//                    String nickname = user.getNickname();
-//                    String profileImageUriString = user.getAvatar() != null ? user.getAvatar().toString() : null;
-//
-//                    Log.d("VideoListActivity", "Loading user info: username=" + username + ", nickname=" + nickname);
-//
-//                    if (profileImageUriString != null && !profileImageUriString.isEmpty()) {
-//                        profileImageUri = Uri.parse(profileImageUriString);
-//                        profileImageView.setImageURI(profileImageUri);
-//                    } else {
-//                        profileImageView.setImageResource(R.drawable.profile_pic);
-//                    }
-//
-//                    // Update Navigation Drawer menu items
-//                    updateNavigationDrawer(username, nickname);
-//                } else {
-//                    profileImageView.setImageResource(R.drawable.profile_pic);
-//                }
-//            });
-//        }
-//
-//        @Override
-//        public void onError(String error) {
-//            runOnUiThread(() -> {
-//                Log.e("VideoListActivity", error);
-//                profileImageView.setImageResource(R.drawable.profile_pic);
-//            });
-//        }
-//    });
-//}
 private void loadUserInfoFromRoom() {
     userViewModel.getCurrentUser().observe(this, user -> {
         if (user != null) {
@@ -248,7 +208,6 @@ private void loadUserInfoFromRoom() {
         }
     });
 }
-
 
     private void updateNavigationDrawer(String username, String nickname) {
         MenuItem usernameItem = navigationView.getMenu().findItem(R.id.profile_username);

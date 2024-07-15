@@ -93,51 +93,13 @@ public class UserRepository {
     public LiveData<User> getCurrentUser(String username) {
         return getUserByUsernameForCurrent(username);
     }
-///////////////////////////////////////////////////////////////////////////////////////////////////
-//    public void setCurrentUser(User user) {
-//        new Thread(() -> {
-//            currentUserDao.clear();
-//            currentUserDao.insert(user);
-//
-//            List<User> currentUsers = currentUserDao.index();
-//            if (!currentUsers.isEmpty()) {
-//                Log.d("UserRepository for set", "Current user set to: " + currentUsers.get(0).getUsername());
-//            } else {
-//                Log.e("UserRepository for set", "Failed to set current user");
-//            }
-//        }).start();
-//    }
-//
-//public void getCurrentUserToMenu(UserCallback callback) {
-//    new Thread(() -> {
-//        List<User> users = currentUserDao.index();
-//
-//        if (users != null && !users.isEmpty()) {
-//            Log.d("UserRepository for menu", "Current user got: " + users.get(0).getUsername());
-//            callback.onUserLoaded(users.get(0));
-//        } else {
-//            Log.e("we rock", "No current user found");
-//            callback.onError("No current user found");
-//        }
-//    }).start();
-//}
-//public void login(String username, String password) {
-//    User user = userDao.login(username, password);
-//    if (user != null) {
-//        currentUserDao.clearCurrentUser();
-//        currentUserDao.setCurrentUser(username, password);
-//    }
-//}
-//
-//    public User getCurrentUser() {
-//        return currentUserDao.getCurrentUser();
-//    }
+
 public void login(String username, String password) {
     new Thread(() -> {
         User user = userDao.login(username, password);
         if (user != null) {
             currentUserDao.clearCurrentUser();
-            currentUserDao.setCurrentUser(username, password);
+            currentUserDao.setCurrentUser(user.getUsername(), user.getPassword());
         }
     }).start();
 }
@@ -151,4 +113,8 @@ public void login(String username, String password) {
         return currentUserLiveData;
     }
 
+    public void logOut() {
+        //call currentUser dao to update the users stored in room
+        currentUserDao.clearCurrentUser();
+    }
 }
