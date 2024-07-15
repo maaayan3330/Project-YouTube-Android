@@ -16,12 +16,14 @@ import java.util.List;
 public class UserViewModel extends AndroidViewModel {
     private UserRepository userRepository;
     private MutableLiveData<List<User>> allUsers;
+    private LiveData<User> currentUser;
 
     public UserViewModel(@NonNull Application application) {
         super(application);
         userRepository = new UserRepository(application);
         allUsers = new MutableLiveData<>();
         loadAllUsers();
+        currentUser = userRepository.getCurrentUser();
     }
 
     public LiveData<List<User>> getAllUsers() {
