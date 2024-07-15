@@ -190,7 +190,7 @@ private void loadUserInfoFromRoom() {
         if (user != null) {
             String username = user.getUsername();
             String nickname = user.getNickname();
-            Boolean isLoggedIn = user.getIsCurrentUser();
+            Boolean isLoggedIn = user.getIsCurrentUser(); //debug
             String profileImageUriString = user.getAvatar() != null ? user.getAvatar() : null;
 
             Log.d("VideoListActivity", "Loading user info: username=" + username + ", nickname=" + nickname + " isLoggedIn: " + isLoggedIn);
