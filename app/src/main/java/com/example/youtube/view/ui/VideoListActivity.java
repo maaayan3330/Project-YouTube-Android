@@ -1,12 +1,5 @@
 package com.example.youtube.view.ui;
 
-import androidx.lifecycle.LifecycleOwner;
-import androidx.lifecycle.LiveData;
-import androidx.lifecycle.MutableLiveData;
-
-import com.example.youtube.model.User;
-import com.example.youtube.model.daos.UserCallback;
-import com.example.youtube.model.repository.UserRepository;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.net.Uri;
@@ -27,7 +20,6 @@ import androidx.appcompat.widget.SearchView;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -106,7 +98,7 @@ public class VideoListActivity extends AppCompatActivity implements VideoListAda
         profileImageView = headerView.findViewById(R.id.profileImageView);
 
         // Load user data from UserManager
-        loadUserInfoFromRoom();
+        loadUserInfoFromManager();
 
         // Search function
         SearchView sv_search = findViewById(R.id.svSearch);
@@ -148,7 +140,7 @@ public class VideoListActivity extends AppCompatActivity implements VideoListAda
             } else if (itemId == R.id.logout_yes) {
                 // Clear user session data
 //                UserManager.getInstance().clearCurrentUser(); //changed to userview model
-                userViewModel.logOut();
+//                userViewModel.logOut();
                 // Navigate to login page
                 Intent intentForLogIn = new Intent(VideoListActivity.this, SignUpActivity.class);
                 CustomToast.showToast(VideoListActivity.this, "Logout");
@@ -185,15 +177,16 @@ public class VideoListActivity extends AppCompatActivity implements VideoListAda
         }
     }
 
-private void loadUserInfoFromRoom() {
-    userViewModel.getCurrentUser().observe(this, user -> {
-        if (user != null) {
-            String username = user.getUsername();
-            String nickname = user.getNickname();
-            Boolean isLoggedIn = user.getIsCurrentUser(); //debug
-            String profileImageUriString = user.getAvatar() != null ? user.getAvatar() : null;
+    private void loadUserInfoFromManager() {
+        UserManager userManager = UserManager.getInstance();
+        User currentUser = userManager.getCurrentUser();
 
-            Log.d("VideoListActivity", "Loading user info: username=" + username + ", nickname=" + nickname + " isLoggedIn: " + isLoggedIn);
+        if (currentUser != null) {
+            String username = currentUser.getUsername();
+            String nickname = currentUser.getNickname();
+            String profileImageUriString = currentUser.getAvatar() != null ? currentUser.getAvatar().toString() : null;
+
+            Log.d("VideoListActivity", "Loading user info: username=" + username + ", nickname=" + nickname);
 
             if (profileImageUriString != null && !profileImageUriString.isEmpty()) {
                 profileImageUri = Uri.parse(profileImageUriString);
@@ -207,9 +200,7 @@ private void loadUserInfoFromRoom() {
         } else {
             profileImageView.setImageResource(R.drawable.profile_pic);
         }
-    });
-}
-
+    }
     private void updateNavigationDrawer(String username, String nickname) {
         MenuItem usernameItem = navigationView.getMenu().findItem(R.id.profile_username);
         MenuItem nicknameItem = navigationView.getMenu().findItem(R.id.profile_nickname);

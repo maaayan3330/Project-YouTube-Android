@@ -8,7 +8,6 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
 import com.example.youtube.model.User;
-import com.example.youtube.model.daos.UserCallback;
 import com.example.youtube.model.repository.UserRepository;
 
 import java.util.List;
@@ -16,14 +15,13 @@ import java.util.List;
 public class UserViewModel extends AndroidViewModel {
     private UserRepository userRepository;
     private MutableLiveData<List<User>> allUsers;
-    private LiveData<User> currentUser;
 
     public UserViewModel(@NonNull Application application) {
         super(application);
         userRepository = new UserRepository(application);
         allUsers = new MutableLiveData<>();
         loadAllUsers();
-        currentUser = userRepository.getCurrentUser();
+
     }
 
     public LiveData<List<User>> getAllUsers() {
@@ -47,15 +45,9 @@ public class UserViewModel extends AndroidViewModel {
         return userRepository.matchAccount(username, password);
     }
 
-    public void login(String username, String password) {
-        userRepository.login(username, password);
+    public LiveData<User> getUserByUsername(String username) {
+        return userRepository.getUserByUsername(username);
     }
 
-    public LiveData<User> getCurrentUser() {
-        return userRepository.getCurrentUser();
-    }
 
-    public void logOut(){
-        userRepository.logOut();
-    }
 }

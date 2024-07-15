@@ -16,7 +16,6 @@ public class User {
     private final String password;
     private final String nickname;
     private final String avatar;
-    private boolean isCurrentUser;
 
     public User(String username, String password, String nickname, String avatar) {
         this.username = username;
@@ -24,10 +23,7 @@ public class User {
         this.nickname = nickname;
         this.avatar = avatar;
         this.apiId = new String();
-        this.isCurrentUser = false;
     }
-    public Boolean getIsCurrentUser() {return isCurrentUser;}
-    public void setIsCurrentUser(Boolean b) {this.isCurrentUser = b;}
     public String getUsername() {
         return username;
     }

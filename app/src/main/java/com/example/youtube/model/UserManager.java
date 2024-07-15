@@ -8,17 +8,17 @@ import com.example.youtube.viewModel.UserViewModel;
 
 import java.util.List;
 
+import android.net.Uri;
+import java.util.ArrayList;
+import java.util.List;
+
 public class UserManager {
+    private final List<User> userList;
     private static UserManager instance;
     private User currentUser;
-    private UserDao userDao;
 
     private UserManager() {
-        AppDB db = Room.databaseBuilder(MyApplication.context, AppDB.class, "AppDB")
-                .fallbackToDestructiveMigration()
-                .allowMainThreadQueries()
-                .build();
-        userDao = db.userDao();
+        userList = new ArrayList<>();
     }
 
     public static UserManager getInstance() {
@@ -28,32 +28,31 @@ public class UserManager {
         return instance;
     }
 
-    public void addUser(User user) {
-        userDao.insert(user);
+    public void addUser(String username, String password, String nickname, String avatar) {
+        User user = new User(username, password, nickname, avatar);
+        userList.add(user);
     }
 
     public List<User> getUserList() {
-        return userDao.index();
+        return userList;
     }
 
-    public User getUserByUsername(String username) {
-        List<User> users = userDao.index();
-        for (User user : users) {
+    public boolean getUserName(String username) {
+        for (User user : userList) {
             if (user.getUsername().equals(username)) {
-                return user;
+                return true;
             }
         }
-        return null;
-    }
-
-    public boolean isExist(String username){
-        User user = getUserByUsername(username);
-        return user != null;
+        return false;
     }
 
     public boolean matchAccount(String username, String password) {
-        User user = getUserByUsername(username);
-        return user != null && user.getPassword().equals(password);
+        for (User user : userList) {
+            if (user.getPassword().equals(password) && user.getUsername().equals(username)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     public User getCurrentUser() {

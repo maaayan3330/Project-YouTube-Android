@@ -1,7 +1,6 @@
 package com.example.youtube.model.repository;
 
 import android.content.Context;
-import android.util.Log;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
@@ -10,15 +9,12 @@ import androidx.room.Room;
 import com.example.youtube.api.UserAPI;
 import com.example.youtube.model.AppDB;
 import com.example.youtube.model.User;
-import com.example.youtube.model.daos.CurrentUserDao;
-import com.example.youtube.model.daos.UserCallback;
 import com.example.youtube.model.daos.UserDao;
 
 import java.util.List;
 
 public class UserRepository {
     private UserDao userDao;
-    private CurrentUserDao currentUserDao;
     private UserAPI userAPI;
     private MutableLiveData<List<User>> userListData;
 
@@ -27,7 +23,6 @@ public class UserRepository {
                 .fallbackToDestructiveMigration()
                 .build();
         userDao = db.userDao();
-        currentUserDao = db.currentUserDao();
 
         userListData = new MutableLiveData<>();
         userAPI = new UserAPI(userListData, userDao);
@@ -45,52 +40,60 @@ public class UserRepository {
         userAPI.add(user);
     }
 
-    public LiveData<Boolean> isExist(String username) {
-        MutableLiveData<Boolean> result = new MutableLiveData<>();
-        new Thread(() -> {
-            User user = getUserByUsername(username);
-            result.postValue(user != null);
-        }).start();
-        return result;
-    }
+//    public LiveData<Boolean> isExist(String username) {
+//        MutableLiveData<Boolean> result = new MutableLiveData<>();
+//        new Thread(() -> {
+//            User user = getUserByUsername(username);
+//            result.postValue(user != null);
+//        }).start();
+//        return result;
+//    }
+public LiveData<Boolean> isExist(String username) {
+    MutableLiveData<Boolean> result = new MutableLiveData<>();
+    getUserByUsername(username).observeForever(user -> {
+        result.setValue(user != null);
+    });
+    return result;
+}
+
+//    public LiveData<Boolean> matchAccount(String username, String password) {
+//        MutableLiveData<Boolean> result = new MutableLiveData<>();
+//        new Thread(() -> {
+//            User user = getUserByUsername(username);
+//            result.postValue(user != null && user.getPassword().equals(password));
+//        }).start();
+//        return result;
+//    }
+//
+//    public User getUserByUsername(String username) {
+//        List<User> users = userDao.index();
+//        for (User user : users) {
+//            if (user.getUsername().equals(username)) {
+//                return user;
+//            }
+//        }
+//        return null;
+//    }
+public LiveData<User> getUserByUsername(String username) {
+    MutableLiveData<User> userLiveData = new MutableLiveData<>();
+    new Thread(() -> {
+        User user = userDao.findByUsername(username);
+        userLiveData.postValue(user);
+    }).start();
+    return userLiveData;
+}
 
     public LiveData<Boolean> matchAccount(String username, String password) {
         MutableLiveData<Boolean> result = new MutableLiveData<>();
-        new Thread(() -> {
-            User user = getUserByUsername(username);
-            result.postValue(user != null && user.getPassword().equals(password));
-        }).start();
+        getUserByUsername(username).observeForever(user -> {
+            if (user != null) {
+                result.setValue(user.getPassword().equals(password));
+            } else {
+                result.setValue(false);
+            }
+        });
         return result;
     }
 
-    private User getUserByUsername(String username) {
-        List<User> users = userDao.index();
-        for (User user : users) {
-            if (user.getUsername().equals(username)) {
-                return user;
-            }
-        }
-        return null;
-    }
 
-    public void login(String username, String password) {
-        new Thread(() -> {
-            userDao.clearCurrentUser();
-            userDao.setCurrentUser(username, password);
-        }).start();
-}
-
-    public LiveData<User> getCurrentUser() {
-        MutableLiveData<User> currentUserLiveData = new MutableLiveData<>();
-        new Thread(() -> {
-            User currentUser = userDao.getCurrentUser();
-            currentUserLiveData.postValue(currentUser);
-        }).start();
-        return currentUserLiveData;
-    }
-
-    public void logOut() {
-        //call currentUser dao to update the users stored in room
-        userDao.clearCurrentUser();
-    }
 }

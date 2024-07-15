@@ -2,7 +2,6 @@ package com.example.youtube.view.ui;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
@@ -17,14 +16,13 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.example.youtube.R;
 import com.example.youtube.model.User;
-import com.example.youtube.model.daos.UserCallback;
+import com.example.youtube.model.UserManager;
 import com.example.youtube.viewModel.UserViewModel;
-
-import java.security.AlgorithmConstraints;
 
 public class SignUpActivity extends AppCompatActivity {
     private EditText usernameEditText;
     private EditText passwordEditText;
+    private UserManager userManager;
     private UserViewModel userViewModel;
     private SwipeRefreshLayout srl_refresh;
 
@@ -38,6 +36,9 @@ public class SignUpActivity extends AppCompatActivity {
 
         // Initialize UserViewModel
         userViewModel = new ViewModelProvider(this).get(UserViewModel.class);
+
+        // Initialize UserManager
+        userManager = UserManager.getInstance();
 
         ImageView logoImage = findViewById(R.id.logoImage);
         usernameEditText = findViewById(R.id.TextUserName);
@@ -61,12 +62,14 @@ public class SignUpActivity extends AppCompatActivity {
                     if (isExist) {
                         userViewModel.matchAccount(username, password).observe(this, result -> {
                             if (result) {
-                                userViewModel.login(username, password);
+                                userViewModel.getUserByUsername(username).observe(this, user -> {
+                                    userManager.setCurrentUser(user);
                                     showCustomToast("Login successfully!");
                                     usernameEditText.setText("");
                                     passwordEditText.setText("");
                                     Intent intent = new Intent(SignUpActivity.this, VideoListActivity.class);
                                     startActivity(intent);
+                                });
                             } else {
                                 showCustomToast("Password and username do not match");
                             }
@@ -78,6 +81,15 @@ public class SignUpActivity extends AppCompatActivity {
             }
         });
 
+//        userManager.addUser(username, password, "hii", "sss");
+//                                // Find the user object
+//                                User user = null;
+//                                for (User u : userManager.getUserList()) {
+//                                    if (u.getUsername().equals(username)) {
+//                                        user = u;
+//                                        break;
+//                                    }
+//                                }
         if (savedInstanceState != null) {
             String username = savedInstanceState.getString("username");
             String password = savedInstanceState.getString("password");
