@@ -39,18 +39,6 @@ public class SignUpActivity extends AppCompatActivity {
         // Initialize UserViewModel
         userViewModel = new ViewModelProvider(this).get(UserViewModel.class);
 
-        // Observe LiveData from ViewModel
-        userViewModel.getAllUsers().observe(this, users -> {
-            if (users != null) {
-                for (User user : users) {
-                    Log.d("SignUpActivity", "User: " + user.getUsername() + ", Nickname: " + user.getNickname() + " IsLoggedIn: " + user.getIsCurrentUser());
-                }
-                srl_refresh.setRefreshing(false);
-            } else {
-                Log.e("SignUpActivity", "users is null");
-            }
-        });
-
         ImageView logoImage = findViewById(R.id.logoImage);
         usernameEditText = findViewById(R.id.TextUserName);
         passwordEditText = findViewById(R.id.TextPassword);
