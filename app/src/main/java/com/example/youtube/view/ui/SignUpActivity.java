@@ -17,7 +17,10 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.example.youtube.R;
 import com.example.youtube.model.User;
+import com.example.youtube.model.daos.UserCallback;
 import com.example.youtube.viewModel.UserViewModel;
+
+import java.security.AlgorithmConstraints;
 
 public class SignUpActivity extends AppCompatActivity {
     private EditText usernameEditText;
@@ -48,8 +51,6 @@ public class SignUpActivity extends AppCompatActivity {
             }
         });
 
-        // find one
-
         ImageView logoImage = findViewById(R.id.logoImage);
         usernameEditText = findViewById(R.id.TextUserName);
         passwordEditText = findViewById(R.id.TextPassword);
@@ -72,13 +73,14 @@ public class SignUpActivity extends AppCompatActivity {
                     if (isExist) {
                         userViewModel.matchAccount(username, password).observe(this, result -> {
                             if (result) {
+                                userViewModel.login(username, password);
                                 userViewModel.getCurrentUser(username).observe(this, user -> {
                                     if (user != null) {
-                                        // fetch one user
-                                        userViewModel.setCurrentUser(user);
-                                        //
+                                        Log.d("SignUpActivity", "Logged in user: " + user.getUsername());
                                         showCustomToast("Login successfully!");
-                                        Intent intent = new Intent(this, VideoListActivity.class);
+                                        usernameEditText.setText("");
+                                        passwordEditText.setText("");
+                                        Intent intent = new Intent(SignUpActivity.this, VideoListActivity.class);
                                         startActivity(intent);
                                     } else {
                                         showCustomToast("User not found");

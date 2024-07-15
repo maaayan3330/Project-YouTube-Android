@@ -8,13 +8,16 @@ import com.example.youtube.model.converters.DateConverter;
 import com.example.youtube.model.converters.UriConverter;
 import com.example.youtube.model.converters.CommentConverter;
 import com.example.youtube.model.daos.CommentDao;
+import com.example.youtube.model.daos.CurrentUserDao;
 import com.example.youtube.model.daos.UserDao;
 import com.example.youtube.model.daos.VideoDao;
 
-@Database(entities = {Video.class, User.class,Comment.class}, version = 13)
+@Database(entities = {Video.class, User.class,Comment.class}, version = 14)
 @TypeConverters({UriConverter.class, DateConverter.class})
 public abstract class AppDB extends RoomDatabase{
     public abstract VideoDao videoDao();
     public abstract CommentDao commentDao();
     public abstract UserDao userDao();
+    public abstract CurrentUserDao currentUserDao();
+
 }

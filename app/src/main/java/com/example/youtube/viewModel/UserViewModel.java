@@ -8,6 +8,7 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
 import com.example.youtube.model.User;
+import com.example.youtube.model.daos.UserCallback;
 import com.example.youtube.model.repository.UserRepository;
 
 import java.util.List;
@@ -27,10 +28,6 @@ public class UserViewModel extends AndroidViewModel {
         return allUsers;
     }
 
-    public User getOneUser(String id) {
-       return userRepository.getOneUser(id);
-    }
-
     private void loadAllUsers() {
         userRepository.getAllUsers().observeForever(users -> allUsers.postValue(users));
     }
@@ -40,7 +37,6 @@ public class UserViewModel extends AndroidViewModel {
         loadAllUsers();
     }
 
-    /////////////////////////////////////////////////////////////////////////////////////////////////
     public LiveData<Boolean> isExist(String username) {
         return userRepository.isExist(username);
     }
@@ -53,12 +49,15 @@ public class UserViewModel extends AndroidViewModel {
         return userRepository.getCurrentUser(username);
     }
 
-    public void setCurrentUser(User currentUser) {
-        userRepository.setCurrentUser(currentUser);
+    public void login(String username, String password) {
+        userRepository.login(username, password);
     }
-    /////////////////////////////////////////////////////////////////////////////////////////////////
-    public MutableLiveData<User> getCurrentUserToMenu() {
-        return userRepository.getCurrentUserToMenu();
+
+    public LiveData<User> getCurrentUser() {
+        return userRepository.getCurrentUser();
+    }
+
+    public void logOut(){
+        userRepository.logOut();
     }
 }
-

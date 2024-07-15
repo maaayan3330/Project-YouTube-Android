@@ -26,7 +26,7 @@ public class UserAPI {
         this.userDao = userDao;
 
         retrofit = new Retrofit.Builder()
-                .baseUrl("http://10.0.2.2:80/") // הכתובת הבסיסית של השרת שלך
+                .baseUrl("http://10.0.2.2:80/") // base url
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
 
@@ -67,7 +67,6 @@ public class UserAPI {
                     Log.d(TAG, "Response: " + response.body().toString());
                     User user = response.body().getUser();
                     new Thread(() -> {
-//                        userDao.clear();
                         userDao.insert(user);
                     }).start();
                 } else {
@@ -98,40 +97,4 @@ public class UserAPI {
             }
         });
     }
-
-//    public void delete(User user) {
-//        Call<Void> call = userWebServiceAPI.deleteUser(user.getId());
-//        call.enqueue(new Callback<Void>() {
-//            @Override
-//            public void onResponse(Call<Void> call, Response<Void> response) {
-//                new Thread(() -> {
-//                    userDao.delete(user);
-//                    userListData.postValue(userDao.index());
-//                }).start();
-//            }
-//
-//            @Override
-//            public void onFailure(Call<Void> call, Throwable t) {
-//                // Handle the failure
-//            }
-//        });
-//    }
-//
-//    public void update(User user) {
-//        Call<Void> call = userWebServiceAPI.updateVideo(user.getId(), user);
-//        call.enqueue(new Callback<Void>() {
-//            @Override
-//            public void onResponse(Call<Void> call, Response<Void> response) {
-//                new Thread(() -> {
-//                    userDao.update(user);
-//                    userListData.postValue(userDao.index());
-//                }).start();
-//            }
-//
-//            @Override
-//            public void onFailure(Call<Void> call, Throwable t) {
-//                // Handle the failure
-//            }
-//        });
-//    }
 }
