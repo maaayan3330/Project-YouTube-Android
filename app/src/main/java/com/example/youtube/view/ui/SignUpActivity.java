@@ -74,18 +74,11 @@ public class SignUpActivity extends AppCompatActivity {
                         userViewModel.matchAccount(username, password).observe(this, result -> {
                             if (result) {
                                 userViewModel.login(username, password);
-                                userViewModel.getCurrentUser(username).observe(this, user -> {
-                                    if (user != null) {
-                                        Log.d("SignUpActivity", "Logged in user: " + user.getUsername());
-                                        showCustomToast("Login successfully!");
-                                        usernameEditText.setText("");
-                                        passwordEditText.setText("");
-                                        Intent intent = new Intent(SignUpActivity.this, VideoListActivity.class);
-                                        startActivity(intent);
-                                    } else {
-                                        showCustomToast("User not found");
-                                    }
-                                });
+                                showCustomToast("Login successfully!");
+                                usernameEditText.setText("");
+                                passwordEditText.setText("");
+                                Intent intent = new Intent(SignUpActivity.this, VideoListActivity.class);
+                                startActivity(intent);
                             } else {
                                 showCustomToast("Password and username do not match");
                             }

@@ -31,7 +31,6 @@ public class UserRepository {
 
         userListData = new MutableLiveData<>();
         userAPI = new UserAPI(userListData, userDao);
-//        currentUser = new MutableLiveData<>();
 
         // Load initial data from the server
         userAPI.getAllUsers();
@@ -73,36 +72,16 @@ public class UserRepository {
         return null;
     }
 
-    //////////////////////////////////////////bring user in sign in//////////////////////////////////////////////////////
-    private LiveData<User> getUserByUsernameForCurrent(String username) {
-        MutableLiveData<User> liveDataUser = new MutableLiveData<>();
+
+    public void login(String username, String password) {
         new Thread(() -> {
-            List<User> users = userDao.index();
-            for (User user : users) {
-                if (user.getUsername().equals(username)) {
-                    liveDataUser.postValue(user);
-                    return;
-                }
-            }
-            liveDataUser.postValue(null);
-        }).start();
-        return liveDataUser;
+         User user = userDao.login(username, password);
+            if (user != null) {
+               currentUserDao.clearCurrentUser();
+               currentUserDao.setCurrentUser(user.getUsername(), user.getPassword());
+         }
+      }).start();
     }
-
-
-    public LiveData<User> getCurrentUser(String username) {
-        return getUserByUsernameForCurrent(username);
-    }
-
-public void login(String username, String password) {
-    new Thread(() -> {
-        User user = userDao.login(username, password);
-        if (user != null) {
-            currentUserDao.clearCurrentUser();
-            currentUserDao.setCurrentUser(user.getUsername(), user.getPassword());
-        }
-    }).start();
-}
 
     public LiveData<User> getCurrentUser() {
         MutableLiveData<User> currentUserLiveData = new MutableLiveData<>();
