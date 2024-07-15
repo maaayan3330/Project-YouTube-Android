@@ -31,6 +31,7 @@ public class UserRepository {
 
         userListData = new MutableLiveData<>();
         userAPI = new UserAPI(userListData, userDao);
+//        currentUser = new MutableLiveData<>();
 
         // Load initial data from the server
         userAPI.getAllUsers();
@@ -72,16 +73,12 @@ public class UserRepository {
         return null;
     }
 
-
     public void login(String username, String password) {
         new Thread(() -> {
-         User user = userDao.login(username, password);
-            if (user != null) {
-               currentUserDao.clearCurrentUser();
-               currentUserDao.setCurrentUser(user.getUsername(), user.getPassword());
-         }
-      }).start();
-    }
+            currentUserDao.clearCurrentUser();
+            currentUserDao.setCurrentUser(username, password);
+        }).start();
+}
 
     public LiveData<User> getCurrentUser() {
         MutableLiveData<User> currentUserLiveData = new MutableLiveData<>();

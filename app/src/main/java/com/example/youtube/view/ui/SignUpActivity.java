@@ -43,7 +43,7 @@ public class SignUpActivity extends AppCompatActivity {
         userViewModel.getAllUsers().observe(this, users -> {
             if (users != null) {
                 for (User user : users) {
-                    Log.d("SignUpActivity", "User: " + user.getUsername() + ", Nickname: " + user.getNickname());
+                    Log.d("SignUpActivity", "User: " + user.getUsername() + ", Nickname: " + user.getNickname() + " IsLoggedIn: " + user.getIsCurrentUser());
                 }
                 srl_refresh.setRefreshing(false);
             } else {
@@ -74,11 +74,11 @@ public class SignUpActivity extends AppCompatActivity {
                         userViewModel.matchAccount(username, password).observe(this, result -> {
                             if (result) {
                                 userViewModel.login(username, password);
-                                showCustomToast("Login successfully!");
-                                usernameEditText.setText("");
-                                passwordEditText.setText("");
-                                Intent intent = new Intent(SignUpActivity.this, VideoListActivity.class);
-                                startActivity(intent);
+                                    showCustomToast("Login successfully!");
+                                    usernameEditText.setText("");
+                                    passwordEditText.setText("");
+                                    Intent intent = new Intent(SignUpActivity.this, VideoListActivity.class);
+                                    startActivity(intent);
                             } else {
                                 showCustomToast("Password and username do not match");
                             }
