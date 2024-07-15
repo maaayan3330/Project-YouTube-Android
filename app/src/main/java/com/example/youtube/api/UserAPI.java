@@ -80,20 +80,30 @@ public class UserAPI {
             }
         });
     }
+
+
+    // we asked from server throw the retrofit - Call<Void> createUser(@Body User user)
+    // - to sent an object to the server
     public void add(User user) {
         Call<Void> call = userWebServiceAPI.createUser(user);
+        // we use call back to get the respond from the server
+        // good respond - we save the user in room
         call.enqueue(new Callback<Void>() {
             @Override
             public void onResponse(Call<Void> call, Response<Void> response) {
-                new Thread(() -> {
-                    userDao.insert(user);
-                    userListData.postValue(userDao.index());
-                }).start();
+                if (response.isSuccessful()) {
+                    new Thread(() -> {
+                        userDao.insert(user);
+                        userListData.postValue(userDao.index());
+                    }).start();
+                } else {
+                    Log.e(TAG, "Response body is null or not successful");
+                }
             }
-
             @Override
             public void onFailure(Call<Void> call, Throwable t) {
                 // Handle the failure
+                Log.e(TAG, "Failed to add a new user", t);
             }
         });
     }

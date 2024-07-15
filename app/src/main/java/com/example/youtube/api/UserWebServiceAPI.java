@@ -32,7 +32,7 @@ public interface UserWebServiceAPI {
      * @param user The user object to be created.
      * @return A Call object to make the network request.
      */
-    @POST("users")
+    @POST("api/users/")
     Call<Void> createUser(@Body User user);
 
     /**
