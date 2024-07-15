@@ -75,11 +75,11 @@ public class UserRepository {
 
     public void login(String username, String password) {
         new Thread(() -> {
-            User user = userDao.login(username, password);
-                if (user != null) {
+//            User user = userDao.login(username, password);
+//                if (user != null) {
                     currentUserDao.clearCurrentUser();
-                    currentUserDao.setCurrentUser(user.getUsername(), user.getPassword());
-                }
+                    currentUserDao.setCurrentUser(username, password);
+//                }
         }).start();
 }
 
