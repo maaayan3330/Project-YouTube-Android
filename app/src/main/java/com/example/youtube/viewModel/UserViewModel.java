@@ -45,10 +45,6 @@ public class UserViewModel extends AndroidViewModel {
         return userRepository.matchAccount(username, password);
     }
 
-    public LiveData<User> getCurrentUser(String username) {
-        return userRepository.getCurrentUser(username);
-    }
-
     public void login(String username, String password) {
         userRepository.login(username, password);
     }
