@@ -182,7 +182,7 @@ public class VideoListActivity extends AppCompatActivity implements VideoListAda
             Log.d("VideoListActivity", "Loading user info: username=" + username + ", nickname=" + nickname);
 
             if (profileImageBase64 != null && !profileImageBase64.isEmpty()) {
-                if (!profileImageBase64.startsWith("data:image/jpeg;base64,")) {
+                if (!profileImageBase64.startsWith("data:image/")) {
                     profileImageBase64 = "data:image/jpeg;base64," + profileImageBase64;
                 }
                 byte[] decodedString = Base64.decode(profileImageBase64.split(",")[1], Base64.DEFAULT);

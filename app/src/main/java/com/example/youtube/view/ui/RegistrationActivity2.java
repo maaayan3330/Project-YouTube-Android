@@ -27,8 +27,6 @@ import com.example.youtube.model.User;
 import com.example.youtube.utils.UploadImage;
 import com.example.youtube.R;
 import com.example.youtube.viewModel.UserViewModel;
-
-
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
@@ -133,7 +131,7 @@ public class RegistrationActivity2 extends AppCompatActivity {
 
             if (resultMessage.equals("User registered successfully")) {
                 String avatarBase64 = profileImageBase64 != null ? profileImageBase64 : "";
-                if (!avatarBase64.startsWith("data:image/jpeg;base64,")) {
+                if (!avatarBase64.startsWith("data:image/")) {
                     avatarBase64 = "data:image/jpeg;base64," + avatarBase64;
                 }
                 User newUser = new User(usernameEditText.getText().toString(), passwordEditText.getText().toString(),
