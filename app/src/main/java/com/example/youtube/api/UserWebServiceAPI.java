@@ -1,5 +1,7 @@
 package com.example.youtube.api;
 
+import com.example.youtube.api.response.TokenRequest;
+import com.example.youtube.api.response.TokenResponse;
 import com.example.youtube.api.response.UserResponse;
 import com.example.youtube.model.User;
 
@@ -10,6 +12,7 @@ import retrofit2.http.GET;
 import retrofit2.http.POST;
 import retrofit2.http.PUT;
 import retrofit2.http.Path;
+import retrofit2.http.Header;
 
 /**
  * UserServiceAPI interface defines the API endpoints for interacting with user-related data on the backend server.
@@ -42,8 +45,8 @@ public interface UserWebServiceAPI {
      * @param id The ID of the user to be deleted.
      * @return A Call object to make the network request.
      */
-    @DELETE("users/{id}")
-    Call<Void> deleteUser(@Path("id") int id);
+    @DELETE("api/users/{id}")
+    Call<Void> deleteUser(@Path("id") String id, @Header("Authorization") String token);
 
     /**
      * Updates an existing user entry by its ID.
@@ -54,4 +57,7 @@ public interface UserWebServiceAPI {
      */
     @PUT("users/{id}")
     Call<Void> updateVideo(@Path("id") int id, @Body User user);
+
+    @POST("api/tokens")
+    Call<TokenResponse> createToken(@Body TokenRequest tokenRequest);
 }

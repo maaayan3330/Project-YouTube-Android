@@ -140,6 +140,7 @@ public class VideoListActivity extends AppCompatActivity implements VideoListAda
             } else if (itemId == R.id.logout_yes) {
                 // Clear user session data
                 UserManager.getInstance().clearCurrentUser();
+                UserManager.getInstance().clearToken(); //added clear token!!!!
                 // Navigate to login page
                 Intent intentForLogIn = new Intent(VideoListActivity.this, SignUpActivity.class);
                 CustomToast.showToast(VideoListActivity.this, "Logout");
@@ -148,7 +149,6 @@ public class VideoListActivity extends AppCompatActivity implements VideoListAda
                 return true;
             } else if (itemId == R.id.upload_data_yes) {
                 if (UserManager.getInstance().getCurrentUser() != null) {
-
                     Intent intentForVideo = new Intent(VideoListActivity.this, AddVideoActivity.class);
                     CustomToast.showToast(VideoListActivity.this, "Upload video");
                     startActivity(intentForVideo);
@@ -170,7 +170,23 @@ public class VideoListActivity extends AppCompatActivity implements VideoListAda
             } else if (itemId == R.id.Help) {
                 CustomToast.showToast(VideoListActivity.this, "Help");
                 return true;
-            } else {
+            }
+            else if (itemId == R.id.delete_user) {
+                if (UserManager.getInstance().getCurrentUser() != null) {
+                    CustomToast.showToast(VideoListActivity.this, "Delete User");
+                    userViewModel.delete(UserManager.getInstance().getCurrentUser()); //delete user from database
+                    UserManager.getInstance().clearCurrentUser(); //clear logged in user from user manager
+                    UserManager.getInstance().clearToken(); //clear token from user manager
+                    Intent intentForDeleteUser = new Intent(VideoListActivity.this, SignUpActivity.class);
+                    startActivity(intentForDeleteUser);
+                    finish(); // Close the current activity
+                }
+                else {
+                    CustomToast.showToast(VideoListActivity.this, "You need to log in to delete user");
+                }
+                return true;
+            }
+            else {
                 return false;
             }
         }
