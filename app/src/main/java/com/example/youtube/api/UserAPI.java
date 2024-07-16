@@ -103,7 +103,7 @@ public class UserAPI {
 
     public void update(User user) {
         Call<Void> call = userWebServiceAPI.updateVideo(user.getRoomId(), user);
-
+    }
 
     // we asked from server throw the retrofit - Call<Void> createUser(@Body User user)
     // - to sent an object to the server
