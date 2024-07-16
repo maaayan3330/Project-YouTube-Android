@@ -1,5 +1,6 @@
 package com.example.youtube.api;
 
+import com.example.youtube.api.response.TokenResponse;
 import com.example.youtube.api.response.UserResponse;
 import com.example.youtube.model.User;
 
@@ -55,4 +56,6 @@ public interface UserWebServiceAPI {
     @PUT("users/{id}")
     Call<Void> updateVideo(@Path("id") int id, @Body User user);
 
+    @POST("api/tokens")
+    Call<TokenResponse> createToken(@Body String userId);
 }

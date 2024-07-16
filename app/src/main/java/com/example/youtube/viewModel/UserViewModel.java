@@ -53,4 +53,7 @@ public class UserViewModel extends AndroidViewModel {
         loadAllUsers();
     }
 
+    public void createToken(User user){
+        userRepository.createToken(user);
+    }
 }

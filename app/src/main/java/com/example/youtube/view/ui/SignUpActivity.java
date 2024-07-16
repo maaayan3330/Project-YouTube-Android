@@ -65,7 +65,7 @@ public class SignUpActivity extends AppCompatActivity {
                             if (result) {
                                 userViewModel.getUserByUsername(username).observe(this, user -> {
                                     userManager.setCurrentUser(user);
-//                                    Log.d("photo",userManager.getCurrentUser().getAvatar());
+                                    userViewModel.createToken(user); //create token from server
                                     showCustomToast("Login successfully!");
                                     usernameEditText.setText("");
                                     passwordEditText.setText("");

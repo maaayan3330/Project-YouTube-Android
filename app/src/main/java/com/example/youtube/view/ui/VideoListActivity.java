@@ -175,6 +175,7 @@ public class VideoListActivity extends AppCompatActivity implements VideoListAda
                 if (UserManager.getInstance().getCurrentUser() != null) {
                     CustomToast.showToast(VideoListActivity.this, "Delete User");
 //                    userViewModel.delete(UserManager.getInstance().getCurrentUser()); //add this after token in sent
+                    Log.d("token test", UserManager.getInstance().getToken());
                     UserManager.getInstance().clearCurrentUser();
                     UserManager.getInstance().clearToken(); //added clear token!!!!
                     Intent intentForDeleteUser = new Intent(VideoListActivity.this, SignUpActivity.class);
