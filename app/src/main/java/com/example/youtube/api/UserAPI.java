@@ -84,7 +84,7 @@ public class UserAPI {
 
 
     public void delete(User user) {
-        Call<Void> call = userWebServiceAPI.deleteUser(user.getRoomId());
+        Call<Void> call = userWebServiceAPI.deleteUser(user.getApiId()); //change to apiId instead of room
         call.enqueue(new Callback<Void>() {
             @Override
             public void onResponse(Call<Void> call, Response<Void> response) {

@@ -148,7 +148,6 @@ public class VideoListActivity extends AppCompatActivity implements VideoListAda
                 return true;
             } else if (itemId == R.id.upload_data_yes) {
                 if (UserManager.getInstance().getCurrentUser() != null) {
-
                     Intent intentForVideo = new Intent(VideoListActivity.this, AddVideoActivity.class);
                     CustomToast.showToast(VideoListActivity.this, "Upload video");
                     startActivity(intentForVideo);
@@ -170,7 +169,22 @@ public class VideoListActivity extends AppCompatActivity implements VideoListAda
             } else if (itemId == R.id.Help) {
                 CustomToast.showToast(VideoListActivity.this, "Help");
                 return true;
-            } else {
+            }
+            else if (itemId == R.id.delete_user) {
+                if (UserManager.getInstance().getCurrentUser() != null) {
+                    CustomToast.showToast(VideoListActivity.this, "Delete User");
+                    userViewModel.delete(UserManager.getInstance().getCurrentUser());
+                    UserManager.getInstance().clearCurrentUser();
+                    Intent intentForDeleteUser = new Intent(VideoListActivity.this, SignUpActivity.class);
+                    startActivity(intentForDeleteUser);
+                    finish(); // Close the current activity
+                }
+                else {
+                    CustomToast.showToast(VideoListActivity.this, "You need to log in to delete user");
+                }
+                return true;
+            }
+            else {
                 return false;
             }
         }

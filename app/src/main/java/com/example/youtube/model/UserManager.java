@@ -5,13 +5,13 @@ import java.util.List;
 import java.util.ArrayList;
 
 public class UserManager {
-    private final List<User> userList;
+//    private final List<User> userList;
     private static UserManager instance;
     private User currentUser;
 
-    private UserManager() {
-        userList = new ArrayList<>();
-    }
+//    private UserManager() {
+//        userList = new ArrayList<>();
+//    }
 
     public static UserManager getInstance() {
         if (instance == null) {

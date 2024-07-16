@@ -42,8 +42,8 @@ public interface UserWebServiceAPI {
      * @param id The ID of the user to be deleted.
      * @return A Call object to make the network request.
      */
-    @DELETE("users/{id}")
-    Call<Void> deleteUser(@Path("id") int id);
+    @DELETE("api/users/{id}")
+    Call<Void> deleteUser(@Path("id") String id);
 
     /**
      * Updates an existing user entry by its ID.
