@@ -68,5 +68,11 @@ public class UserRepository {
         return result;
     }
 
+    public void deleteUser(User user){
+        userAPI.delete(user);
+    }
 
+    public void createToken(User user){
+        userAPI.createToken(user);
+    }
 }

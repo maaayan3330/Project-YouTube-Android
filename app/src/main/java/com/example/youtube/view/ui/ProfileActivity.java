@@ -65,10 +65,14 @@ public class ProfileActivity extends AppCompatActivity implements VideoListAdapt
         rvListVideo.setLayoutManager(new LinearLayoutManager(this));
         videoListAdapter = new VideoListAdapter(this, this);
         rvListVideo.setAdapter(videoListAdapter);
+
+        UserManager userManager = UserManager.getInstance();
+        currentUser = userManager.getCurrentUser();
         //
 //        userViewModel.getCurrentUser().observe(this, user -> {
 //            currentUser = user;
 //        });
+
         currentVideos = videoViewModel.getVideosByUserId(currentUser.getApiId());
         videoListAdapter.setVideos(currentVideos);
 

@@ -39,6 +39,7 @@ dependencies {
     implementation(libs.support.annotations)
     implementation(libs.room.common)
     implementation(libs.room.runtime)
+    implementation(libs.volley)
     annotationProcessor(libs.room.compiler)
     implementation(libs.swiperefreshlayout)
     testImplementation(libs.junit)
