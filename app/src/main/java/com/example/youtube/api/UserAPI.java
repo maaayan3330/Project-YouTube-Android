@@ -26,7 +26,6 @@ public class UserAPI {
     private static final String TAG = "UserAPI";
     private UserManager userManager;
 
-
     public UserAPI(MutableLiveData<List<User>> userListData, UserDao userDao) {
         this.userListData = userListData;
         this.userDao = userDao;
@@ -40,7 +39,6 @@ public class UserAPI {
 
         // Initialize UserManager
         userManager = UserManager.getInstance();
-
     }
 
     public void getAllUsers() {
@@ -90,7 +88,6 @@ public class UserAPI {
             }
         });
     }
-
 
     public void delete(User user) {
         String token = UserManager.getInstance().getToken();
