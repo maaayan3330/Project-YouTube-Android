@@ -2,6 +2,7 @@ package com.example.youtube.api;
 
 import android.util.Log;
 
+import androidx.annotation.NonNull;
 import androidx.lifecycle.MutableLiveData;
 
 import com.example.youtube.R;
@@ -20,9 +21,9 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class CommentAPI {
     private MutableLiveData<List<Comment>> commentsLiveData;
-    private CommentDao commentDao;
-    private Retrofit retrofit;
-    private CommentWebServiceAPI commentWebServiceAPI;
+    private final CommentDao commentDao;
+    private final Retrofit retrofit;
+    private final CommentWebServiceAPI commentWebServiceAPI;
 
     public CommentAPI(MutableLiveData<List<Comment>> commentsLiveData, CommentDao commentDao) {
         this.commentsLiveData = commentsLiveData;
@@ -43,7 +44,7 @@ public class CommentAPI {
         Call<CommentResponse> call = commentWebServiceAPI.getCommentsByVideoId(videoId);
         call.enqueue(new Callback<CommentResponse>() {
             @Override
-            public void onResponse(Call<CommentResponse> call, Response<CommentResponse> response) {
+            public void onResponse( Call<CommentResponse> call,  Response<CommentResponse> response) {
                 if (response.isSuccessful() && response.body() != null) {
                     new Thread(() -> {
                         Log.e("apiComment",response.message());
@@ -77,7 +78,7 @@ public class CommentAPI {
 
             @Override
             public void onFailure(Call<Comment> call, Throwable t) {
-                // Handle the failure (e.g., log the error, notify the user)
+                Log.e("apiComment",t.getMessage());
             }
         });
     }
