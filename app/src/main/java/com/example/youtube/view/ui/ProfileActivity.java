@@ -66,6 +66,7 @@ public class ProfileActivity extends AppCompatActivity implements VideoListAdapt
         videoListAdapter = new VideoListAdapter(this, this);
         rvListVideo.setAdapter(videoListAdapter);
         //
+
         userViewModel.getCurrentUser().observe(this, user -> {
             currentUser = user;
         });
