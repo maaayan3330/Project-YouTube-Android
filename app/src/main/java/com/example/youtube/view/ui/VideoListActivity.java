@@ -182,16 +182,14 @@ public class VideoListActivity extends AppCompatActivity implements VideoListAda
                 }
                 return true;
             }
+            else if (itemId == R.id.Help) {
+                CustomToast.showToast(VideoListActivity.this, "Help");
+                return true;
+             }
             else {
                 return false;
             }
-            return true;
-        } else if (itemId == R.id.Help) {
-            CustomToast.showToast(VideoListActivity.this, "Help");
-            return true;
-        } else {
-            return false;
-        }
+
     }
 
     private void loadUserInfoFromManager() {
