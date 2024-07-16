@@ -36,13 +36,12 @@ import com.example.youtube.view.adapter.VideoListAdapter;
 import com.example.youtube.viewModel.UserViewModel;
 import com.example.youtube.viewModel.VideoViewModel;
 import com.google.android.material.navigation.NavigationView;
+import com.google.android.material.imageview.ShapeableImageView;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import com.example.youtube.model.UserManager;
-
-import com.google.android.material.imageview.ShapeableImageView;
 
 public class VideoListActivity extends AppCompatActivity implements VideoListAdapter.VideoAdapterListener {
 
@@ -183,7 +182,10 @@ public class VideoListActivity extends AppCompatActivity implements VideoListAda
             Log.d("VideoListActivity", "Loading user info: username=" + username + ", nickname=" + nickname);
 
             if (profileImageBase64 != null && !profileImageBase64.isEmpty()) {
-                byte[] decodedString = Base64.decode(profileImageBase64, Base64.DEFAULT);
+                if (!profileImageBase64.startsWith("data:image/jpeg;base64,")) {
+                    profileImageBase64 = "data:image/jpeg;base64," + profileImageBase64;
+                }
+                byte[] decodedString = Base64.decode(profileImageBase64.split(",")[1], Base64.DEFAULT);
                 Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
                 profileImageView.setImageBitmap(decodedByte);
             } else {

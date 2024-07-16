@@ -28,6 +28,49 @@ import com.example.youtube.utils.UploadImage;
 import com.example.youtube.R;
 import com.example.youtube.viewModel.UserViewModel;
 
+
+import android.content.Intent;
+import android.content.res.Configuration;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.os.Bundle;
+import android.util.Base64;
+import android.util.Log;
+import android.view.MenuItem;
+import android.view.View;
+import android.widget.EditText;
+import android.widget.LinearLayout;
+import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBarDrawerToggle;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatDelegate;
+import androidx.appcompat.widget.SearchView;
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.view.GravityCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+
+import com.example.youtube.R;
+import com.example.youtube.model.User;
+import com.example.youtube.utils.CustomToast;
+import com.example.youtube.model.Video;
+import com.example.youtube.view.adapter.VideoListAdapter;
+import com.example.youtube.viewModel.UserViewModel;
+import com.example.youtube.viewModel.VideoViewModel;
+import com.google.android.material.navigation.NavigationView;
+import com.google.android.material.imageview.ShapeableImageView;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import com.example.youtube.model.UserManager;
+
 public class RegistrationActivity2 extends AppCompatActivity {
     private static final int REQUEST_PERMISSION_CODE = 100;
     private EditText usernameEditText;
@@ -90,6 +133,9 @@ public class RegistrationActivity2 extends AppCompatActivity {
 
             if (resultMessage.equals("User registered successfully")) {
                 String avatarBase64 = profileImageBase64 != null ? profileImageBase64 : "";
+                if (!avatarBase64.startsWith("data:image/jpeg;base64,")) {
+                    avatarBase64 = "data:image/jpeg;base64," + avatarBase64;
+                }
                 User newUser = new User(usernameEditText.getText().toString(), passwordEditText.getText().toString(),
                         nicknameEditText.getText().toString(), avatarBase64);
                 userViewModel.insert(newUser);
