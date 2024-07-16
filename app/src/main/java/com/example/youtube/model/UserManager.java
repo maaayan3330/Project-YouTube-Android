@@ -5,13 +5,9 @@ import java.util.List;
 import java.util.ArrayList;
 
 public class UserManager {
-//    private final List<User> userList;
     private static UserManager instance;
     private User currentUser;
-
-//    private UserManager() {
-//        userList = new ArrayList<>();
-//    }
+    private String token;
 
     public static UserManager getInstance() {
         if (instance == null) {
@@ -30,5 +26,17 @@ public class UserManager {
 
     public void clearCurrentUser() {
         this.currentUser = null;
+    }
+
+    public String getToken() {
+        return token;
+    }
+
+    public void setToken(String token) {
+        this.token = token;
+    }
+
+    public void clearToken(){
+        this.token = null;
     }
 }

@@ -54,4 +54,5 @@ public interface UserWebServiceAPI {
      */
     @PUT("users/{id}")
     Call<Void> updateVideo(@Path("id") int id, @Body User user);
+
 }

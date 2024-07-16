@@ -140,6 +140,7 @@ public class VideoListActivity extends AppCompatActivity implements VideoListAda
             } else if (itemId == R.id.logout_yes) {
                 // Clear user session data
                 UserManager.getInstance().clearCurrentUser();
+                UserManager.getInstance().clearToken(); //added clear token!!!!
                 // Navigate to login page
                 Intent intentForLogIn = new Intent(VideoListActivity.this, SignUpActivity.class);
                 CustomToast.showToast(VideoListActivity.this, "Logout");
@@ -173,8 +174,9 @@ public class VideoListActivity extends AppCompatActivity implements VideoListAda
             else if (itemId == R.id.delete_user) {
                 if (UserManager.getInstance().getCurrentUser() != null) {
                     CustomToast.showToast(VideoListActivity.this, "Delete User");
-                    userViewModel.delete(UserManager.getInstance().getCurrentUser());
+//                    userViewModel.delete(UserManager.getInstance().getCurrentUser()); //add this after token in sent
                     UserManager.getInstance().clearCurrentUser();
+                    UserManager.getInstance().clearToken(); //added clear token!!!!
                     Intent intentForDeleteUser = new Intent(VideoListActivity.this, SignUpActivity.class);
                     startActivity(intentForDeleteUser);
                     finish(); // Close the current activity

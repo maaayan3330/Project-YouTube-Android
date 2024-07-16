@@ -83,6 +83,8 @@ public class SignUpActivity extends AppCompatActivity {
             }
         });
 
+
+
         if (savedInstanceState != null) {
             String username = savedInstanceState.getString("username");
             String password = savedInstanceState.getString("password");
