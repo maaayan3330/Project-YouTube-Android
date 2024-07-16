@@ -3,6 +3,7 @@ package com.example.youtube.api;
 import android.util.Log;
 import androidx.lifecycle.MutableLiveData;
 
+import com.example.youtube.api.response.TokenRequest;
 import com.example.youtube.api.response.TokenResponse;
 import com.example.youtube.api.response.UserResponse;
 import com.example.youtube.model.User;
@@ -141,7 +142,8 @@ public class UserAPI {
 
     public void createToken(User user) {
         //use webServiceApi to call server and create token
-        Call<TokenResponse> call = userWebServiceAPI.createToken(user.getApiId());
+        TokenRequest tokenRequest = new TokenRequest(user.getApiId());
+        Call<TokenResponse> call = userWebServiceAPI.createToken(tokenRequest);
 
         call.enqueue(new Callback<TokenResponse>() {
             @Override
