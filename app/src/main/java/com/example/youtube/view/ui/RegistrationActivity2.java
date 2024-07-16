@@ -91,6 +91,9 @@ public class RegistrationActivity2 extends AppCompatActivity {
 
             if (resultMessage.equals("User registered successfully")) {
                 String avatarUriString = profileImageUri != null ? profileImageUri.toString() : null;
+                if (avatarUriString == null) {
+                    avatarUriString = "android.resource://" + getPackageName() + "/" + R.drawable.profile_pic;
+                }
                 User newUser = new User(usernameEditText.getText().toString(), passwordEditText.getText().toString(),
                         nicknameEditText.getText().toString(), avatarUriString);
                 userViewModel.insert(newUser);
