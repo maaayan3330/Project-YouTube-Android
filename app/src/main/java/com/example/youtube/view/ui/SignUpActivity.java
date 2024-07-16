@@ -17,11 +17,13 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.example.youtube.R;
 import com.example.youtube.model.User;
+import com.example.youtube.model.UserManager;
 import com.example.youtube.viewModel.UserViewModel;
 
 public class SignUpActivity extends AppCompatActivity {
     private EditText usernameEditText;
     private EditText passwordEditText;
+    private UserManager userManager;
     private UserViewModel userViewModel;
     private SwipeRefreshLayout srl_refresh;
 
@@ -36,17 +38,8 @@ public class SignUpActivity extends AppCompatActivity {
         // Initialize UserViewModel
         userViewModel = new ViewModelProvider(this).get(UserViewModel.class);
 
-        // Observe LiveData from ViewModel
-        userViewModel.getAllUsers().observe(this, users -> {
-            if (users != null) {
-                for (User user : users) {
-                    Log.d("SignUpActivity", "User: " + user.getUsername() + ", Nickname: " + user.getNickname());
-                }
-                srl_refresh.setRefreshing(false);
-            } else {
-                Log.e("SignUpActivity", "users is null");
-            }
-        });
+        // Initialize UserManager
+        userManager = UserManager.getInstance();
 
         ImageView logoImage = findViewById(R.id.logoImage);
         usernameEditText = findViewById(R.id.TextUserName);
@@ -70,14 +63,14 @@ public class SignUpActivity extends AppCompatActivity {
                     if (isExist) {
                         userViewModel.matchAccount(username, password).observe(this, result -> {
                             if (result) {
-                                userViewModel.getCurrentUser().observe(this, user -> {
-                                    if (user != null) {
-                                        Intent intent = new Intent(this, VideoListActivity.class);
-                                        startActivity(intent);
-                                        showCustomToast("Login successfully!");
-                                    } else {
-                                        showCustomToast("User not found");
-                                    }
+                                userViewModel.getUserByUsername(username).observe(this, user -> {
+                                    userManager.setCurrentUser(user);
+//                                    Log.d("photo",userManager.getCurrentUser().getAvatar());
+                                    showCustomToast("Login successfully!");
+                                    usernameEditText.setText("");
+                                    passwordEditText.setText("");
+                                    Intent intent = new Intent(SignUpActivity.this, VideoListActivity.class);
+                                    startActivity(intent);
                                 });
                             } else {
                                 showCustomToast("Password and username do not match");

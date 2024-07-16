@@ -17,6 +17,9 @@ public interface UserDao {
     @Query("SELECT * FROM user")
     List<User> index();
 
+    @Query("SELECT * FROM user WHERE username = :username LIMIT 1")
+    User findByUsername(String username);
+
     // Query to get a user by their ID
     @Query("SELECT * FROM user WHERE roomId = :id")
     User get(int id);
@@ -40,4 +43,5 @@ public interface UserDao {
     // Insert a list of users
     @Insert
     void insertList(List<User> userList);
+
 }

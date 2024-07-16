@@ -2,8 +2,6 @@ package com.example.youtube.api;
 
 import com.example.youtube.model.User;
 
-import java.util.List;
-
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.DELETE;
@@ -22,8 +20,11 @@ public interface UserWebServiceAPI {
      *
      * @return A Call object to make the network request.
      */
-    @GET("fetchUsers")
-    Call<UserResponse> getUsers();
+    @GET("users/fetchUsers")
+    Call<UsersResponse> getUsers();
+
+    @GET("api/users/{id}")
+    Call<SingleUserResponse> getUser(@Path("id") String id);
 
     /**
      * Creates a new user entry in the server.
@@ -31,7 +32,7 @@ public interface UserWebServiceAPI {
      * @param user The user object to be created.
      * @return A Call object to make the network request.
      */
-    @POST("users")
+    @POST("api/users")
     Call<Void> createUser(@Body User user);
 
     /**

@@ -5,7 +5,7 @@ import androidx.room.PrimaryKey;
 
 import com.google.gson.annotations.SerializedName;
 
-@Entity
+@Entity(tableName = "user")
 public class User {
     @PrimaryKey(autoGenerate = true)
     private int roomId;
@@ -22,9 +22,8 @@ public class User {
         this.password = password;
         this.nickname = nickname;
         this.avatar = avatar;
-        this.apiId = new String();
+        this.apiId = null;
     }
-
     public String getUsername() {
         return username;
     }
