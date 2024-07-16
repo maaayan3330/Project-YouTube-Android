@@ -3,7 +3,6 @@ package com.example.youtube.view.ui;
 import android.Manifest;
 import android.content.pm.PackageManager;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -38,7 +37,7 @@ public class RegistrationActivity2 extends AppCompatActivity {
     private PasswordValidator passwordValidator;
     private UploadImage uploadImage;
     private UserViewModel userViewModel;
-    private Uri profileImageUri;
+    private String profileImageBase64;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -90,12 +89,9 @@ public class RegistrationActivity2 extends AppCompatActivity {
             showCustomToast(resultMessage);
 
             if (resultMessage.equals("User registered successfully")) {
-                String avatarUriString = profileImageUri != null ? profileImageUri.toString() : null;
-                if (avatarUriString == null) {
-                    avatarUriString = "android.resource://" + getPackageName() + "/" + R.drawable.profile_pic;
-                }
+                String avatarBase64 = profileImageBase64 != null ? profileImageBase64 : "";
                 User newUser = new User(usernameEditText.getText().toString(), passwordEditText.getText().toString(),
-                        nicknameEditText.getText().toString(), avatarUriString);
+                        nicknameEditText.getText().toString(), avatarBase64);
                 userViewModel.insert(newUser);
                 Intent intent = new Intent(RegistrationActivity2.this, SignUpActivity.class);
                 startActivity(intent);
@@ -123,8 +119,8 @@ public class RegistrationActivity2 extends AppCompatActivity {
         }
     }
 
-    public void setProfileImageUri(Uri uri) {
-        this.profileImageUri = uri;
+    public void setProfileImageBase64(String base64Image) {
+        this.profileImageBase64 = base64Image;
     }
 
     private void showCustomToast(String message) {

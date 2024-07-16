@@ -2,8 +2,10 @@ package com.example.youtube.view.ui;
 
 import android.content.Intent;
 import android.content.res.Configuration;
-import android.net.Uri;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.util.Base64;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
@@ -42,9 +44,6 @@ import com.example.youtube.model.UserManager;
 
 import com.google.android.material.imageview.ShapeableImageView;
 
-/**
- * MainActivity class for displaying a list of videos.
- */
 public class VideoListActivity extends AppCompatActivity implements VideoListAdapter.VideoAdapterListener {
 
     VideoListAdapter videoListAdapter;
@@ -53,7 +52,7 @@ public class VideoListActivity extends AppCompatActivity implements VideoListAda
     private ActionBarDrawerToggle drawerToggle;
     private Toolbar toolbar;
     private ShapeableImageView profileImageView;
-    private Uri profileImageUri; // Variable to store the profile image URI
+    private String profileImageBase64; // Variable to store the profile image Base64
     private VideoViewModel videoViewModel;
     private UserViewModel userViewModel;
     private List<Video> currentVideos;
@@ -67,7 +66,7 @@ public class VideoListActivity extends AppCompatActivity implements VideoListAda
         userViewModel = new ViewModelProvider(this).get(UserViewModel.class);
 
         // RecyclerView for displaying the video list
-        SwipeRefreshLayout srl_refresh= findViewById(R.id.srl_refresh);
+        SwipeRefreshLayout srl_refresh = findViewById(R.id.srl_refresh);
         RecyclerView rvListVideo = findViewById(R.id.rvListVideo);
         rvListVideo.setLayoutManager(new LinearLayoutManager(this));
         videoListAdapter = new VideoListAdapter(this, this);
@@ -122,7 +121,6 @@ public class VideoListActivity extends AppCompatActivity implements VideoListAda
         });
     }
 
-
     @Override
     protected void onDestroy() {
         super.onDestroy();
@@ -130,49 +128,46 @@ public class VideoListActivity extends AppCompatActivity implements VideoListAda
     }
 
     private boolean NavigationItemSelected(MenuItem item) {
-        {
-            int itemId = item.getItemId();
-            if (itemId == R.id.login_yes) {
-                Intent intentForLogIn = new Intent(VideoListActivity.this, SignUpActivity.class);
-                CustomToast.showToast(VideoListActivity.this, "Login");
-                startActivity(intentForLogIn);
-                return true;
-            } else if (itemId == R.id.logout_yes) {
-                // Clear user session data
-                UserManager.getInstance().clearCurrentUser();
-                // Navigate to login page
-                Intent intentForLogIn = new Intent(VideoListActivity.this, SignUpActivity.class);
-                CustomToast.showToast(VideoListActivity.this, "Logout");
-                startActivity(intentForLogIn);
-                finish(); // Close the current activity
-                return true;
-            } else if (itemId == R.id.upload_data_yes) {
-                if (UserManager.getInstance().getCurrentUser() != null) {
-
-                    Intent intentForVideo = new Intent(VideoListActivity.this, AddVideoActivity.class);
-                    CustomToast.showToast(VideoListActivity.this, "Upload video");
-                    startActivity(intentForVideo);
-                } else {
-                    CustomToast.showToast(this, "Option available just for register users");
-                }
-                return true;
-            } else if (itemId == R.id.dark_mode_yes) {
-                // Toggle dark mode
-                int currentNightMode = getResources().getConfiguration().uiMode & Configuration.UI_MODE_NIGHT_MASK;
-                if (currentNightMode == Configuration.UI_MODE_NIGHT_NO) {
-                    AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
-                    CustomToast.showToast(VideoListActivity.this, "Switched to Dark Mode");
-                } else {
-                    AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
-                    CustomToast.showToast(VideoListActivity.this, "Switched to Light Mode");
-                }
-                return true;
-            } else if (itemId == R.id.Help) {
-                CustomToast.showToast(VideoListActivity.this, "Help");
-                return true;
+        int itemId = item.getItemId();
+        if (itemId == R.id.login_yes) {
+            Intent intentForLogIn = new Intent(VideoListActivity.this, SignUpActivity.class);
+            CustomToast.showToast(VideoListActivity.this, "Login");
+            startActivity(intentForLogIn);
+            return true;
+        } else if (itemId == R.id.logout_yes) {
+            // Clear user session data
+            UserManager.getInstance().clearCurrentUser();
+            // Navigate to login page
+            Intent intentForLogIn = new Intent(VideoListActivity.this, SignUpActivity.class);
+            CustomToast.showToast(VideoListActivity.this, "Logout");
+            startActivity(intentForLogIn);
+            finish(); // Close the current activity
+            return true;
+        } else if (itemId == R.id.upload_data_yes) {
+            if (UserManager.getInstance().getCurrentUser() != null) {
+                Intent intentForVideo = new Intent(VideoListActivity.this, AddVideoActivity.class);
+                CustomToast.showToast(VideoListActivity.this, "Upload video");
+                startActivity(intentForVideo);
             } else {
-                return false;
+                CustomToast.showToast(this, "Option available just for register users");
             }
+            return true;
+        } else if (itemId == R.id.dark_mode_yes) {
+            // Toggle dark mode
+            int currentNightMode = getResources().getConfiguration().uiMode & Configuration.UI_MODE_NIGHT_MASK;
+            if (currentNightMode == Configuration.UI_MODE_NIGHT_NO) {
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+                CustomToast.showToast(VideoListActivity.this, "Switched to Dark Mode");
+            } else {
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+                CustomToast.showToast(VideoListActivity.this, "Switched to Light Mode");
+            }
+            return true;
+        } else if (itemId == R.id.Help) {
+            CustomToast.showToast(VideoListActivity.this, "Help");
+            return true;
+        } else {
+            return false;
         }
     }
 
@@ -183,20 +178,14 @@ public class VideoListActivity extends AppCompatActivity implements VideoListAda
         if (currentUser != null) {
             String username = currentUser.getUsername();
             String nickname = currentUser.getNickname();
-            String profileImageUriString = currentUser.getAvatar() != null ? currentUser.getAvatar().toString() : null;
+            String profileImageBase64 = currentUser.getAvatar();
 
             Log.d("VideoListActivity", "Loading user info: username=" + username + ", nickname=" + nickname);
 
-            // for Defo
-            if (profileImageUriString.equals("/localPhotos/Maayan.png")) {
-                profileImageView.setImageResource(R.drawable.maayan);
-            } else if (profileImageUriString.equals("/localPhotos/Alon.png")) {
-                profileImageView.setImageResource(R.drawable.alon);
-            } else if (profileImageUriString.equals("/localPhotos/Tom.png")) {
-                profileImageView.setImageResource(R.drawable.tom);
-            } else if (profileImageUriString != null && !profileImageUriString.isEmpty()) {
-                profileImageUri = Uri.parse(profileImageUriString);
-                profileImageView.setImageURI(profileImageUri);
+            if (profileImageBase64 != null && !profileImageBase64.isEmpty()) {
+                byte[] decodedString = Base64.decode(profileImageBase64, Base64.DEFAULT);
+                Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
+                profileImageView.setImageBitmap(decodedByte);
             } else {
                 profileImageView.setImageResource(R.drawable.profile_pic);
             }
@@ -207,6 +196,7 @@ public class VideoListActivity extends AppCompatActivity implements VideoListAda
             profileImageView.setImageResource(R.drawable.profile_pic);
         }
     }
+
     private void updateNavigationDrawer(String username, String nickname) {
         MenuItem usernameItem = navigationView.getMenu().findItem(R.id.profile_username);
         MenuItem nicknameItem = navigationView.getMenu().findItem(R.id.profile_nickname);
@@ -237,7 +227,6 @@ public class VideoListActivity extends AppCompatActivity implements VideoListAda
     }
 
     private void filterVideoList(String text) {
-
         List<Video> filteredList = new ArrayList<>();
         for (Video video : currentVideos) {
             if (video.getTitle().toLowerCase().contains(text.toLowerCase())) {
@@ -283,7 +272,6 @@ public class VideoListActivity extends AppCompatActivity implements VideoListAda
             video.setDescription(newDescription);
             videoViewModel.update(video);
             videoListAdapter.notifyItemChanged(position);
-
         });
         builder.setNegativeButton("Cancel", (dialog, which) -> dialog.cancel());
         builder.show();
