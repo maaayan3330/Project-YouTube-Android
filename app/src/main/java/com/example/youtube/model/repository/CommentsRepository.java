@@ -13,9 +13,9 @@ import com.example.youtube.utils.MyApplication;
 import java.util.List;
 
 public class CommentsRepository {
-    private CommentDao commentDao;
+    private final CommentDao commentDao;
     private MutableLiveData<List<Comment>> commentsByVideoId;
-    private CommentAPI commentAPI;
+    private final CommentAPI commentAPI;
 
     public CommentsRepository() {
         AppDB db = Room.databaseBuilder(MyApplication.context, AppDB.class, "CommentsDB")
@@ -27,6 +27,7 @@ public class CommentsRepository {
         commentAPI = new CommentAPI(commentsByVideoId, commentDao);
     }
 
+
     public LiveData<List<Comment>> getCommentsByVideoId(String videoId) {
         new Thread(() -> {
             commentAPI.fetchCommentsByVideoId(videoId);
@@ -35,7 +36,9 @@ public class CommentsRepository {
     }
 
     public void add(Comment comment) {
-
+        new Thread(() -> {
+            commentAPI.add(comment);
+        }).start();
     }
 
     public void delete(Comment comment) {

@@ -14,9 +14,9 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class VideosRepository {
-    private VideoDao videoDao;
+    private final VideoDao videoDao;
     private VideoListData videoListData;
-    private VideoAPI videoAPI;
+    private final VideoAPI videoAPI;
 
     public VideosRepository() {
         AppDB db = Room.databaseBuilder(MyApplication.context, AppDB.class, "VideosDB")
@@ -46,6 +46,9 @@ public class VideosRepository {
     public LiveData<List<Video>> getAll() {
         return videoListData;
     }
+    public List<Video> getVideosByUserId(String userId) {
+        return videoDao.getVideosByUserId(userId);
+    }
 
     public void add(Video video) {
         new Thread(() -> {
@@ -67,9 +70,7 @@ public class VideosRepository {
 
 
     public void reload() {
-        new Thread(() -> {
-            videoAPI.get();
-        }).start();
+        new Thread(videoAPI::get).start();
     }
 }
 

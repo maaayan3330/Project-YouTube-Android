@@ -3,6 +3,7 @@ package com.example.youtube.api;
 import android.util.Log;
 import androidx.lifecycle.MutableLiveData;
 
+import com.example.youtube.api.response.UserResponse;
 import com.example.youtube.model.User;
 import com.example.youtube.model.daos.UserDao;
 
@@ -80,6 +81,28 @@ public class UserAPI {
             }
         });
     }
+
+
+    public void delete(User user) {
+        Call<Void> call = userWebServiceAPI.deleteUser(user.getRoomId());
+        call.enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+                new Thread(() -> {
+                    userDao.delete(user);
+                    userListData.postValue(userDao.index());
+                }).start();
+            }
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+                // Handle the failure
+            }
+        });
+    }
+
+    public void update(User user) {
+        Call<Void> call = userWebServiceAPI.updateVideo(user.getRoomId(), user);
 
 
     // we asked from server throw the retrofit - Call<Void> createUser(@Body User user)
