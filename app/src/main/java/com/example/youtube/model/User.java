@@ -22,7 +22,7 @@ public class User {
         this.password = password;
         this.nickname = nickname;
         this.avatar = avatar;
-        this.apiId = new String();
+        this.apiId = null;
     }
     public String getUsername() {
         return username;

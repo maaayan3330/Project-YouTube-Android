@@ -48,5 +48,4 @@ public class UserViewModel extends AndroidViewModel {
         return userRepository.getUserByUsername(username);
     }
 
-
 }
