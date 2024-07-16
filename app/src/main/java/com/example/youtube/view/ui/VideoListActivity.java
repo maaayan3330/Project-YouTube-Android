@@ -64,6 +64,7 @@ public class VideoListActivity extends AppCompatActivity implements VideoListAda
         setContentView(R.layout.activity_list_video);
 
         videoViewModel = new ViewModelProvider(this).get(VideoViewModel.class);
+        userViewModel = new ViewModelProvider(this).get(UserViewModel.class);
 
         // RecyclerView for displaying the video list
         SwipeRefreshLayout srl_refresh= findViewById(R.id.srl_refresh);
@@ -76,7 +77,6 @@ public class VideoListActivity extends AppCompatActivity implements VideoListAda
             currentVideos = videos;
             srl_refresh.setRefreshing(false);
         });
-
 
         // Initialize Toolbar
         toolbar = findViewById(R.id.toolbar);
@@ -116,11 +116,12 @@ public class VideoListActivity extends AppCompatActivity implements VideoListAda
             }
         });
 
-        //refresh function
-        srl_refresh.setOnRefreshListener(()->{
+        // Refresh function
+        srl_refresh.setOnRefreshListener(() -> {
             videoViewModel.reload();
         });
     }
+
 
     @Override
     protected void onDestroy() {
@@ -139,7 +140,6 @@ public class VideoListActivity extends AppCompatActivity implements VideoListAda
             } else if (itemId == R.id.logout_yes) {
                 // Clear user session data
                 UserManager.getInstance().clearCurrentUser();
-
                 // Navigate to login page
                 Intent intentForLogIn = new Intent(VideoListActivity.this, SignUpActivity.class);
                 CustomToast.showToast(VideoListActivity.this, "Logout");
@@ -187,7 +187,14 @@ public class VideoListActivity extends AppCompatActivity implements VideoListAda
 
             Log.d("VideoListActivity", "Loading user info: username=" + username + ", nickname=" + nickname);
 
-            if (profileImageUriString != null && !profileImageUriString.isEmpty()) {
+            // for Defo
+            if (profileImageUriString.equals("/localPhotos/Maayan.png")) {
+                profileImageView.setImageResource(R.drawable.maayan);
+            } else if (profileImageUriString.equals("/localPhotos/Alon.png")) {
+                profileImageView.setImageResource(R.drawable.alon);
+            } else if (profileImageUriString.equals("/localPhotos/Tom.png")) {
+                profileImageView.setImageResource(R.drawable.tom);
+            } else if (profileImageUriString != null && !profileImageUriString.isEmpty()) {
                 profileImageUri = Uri.parse(profileImageUriString);
                 profileImageView.setImageURI(profileImageUri);
             } else {
@@ -200,7 +207,6 @@ public class VideoListActivity extends AppCompatActivity implements VideoListAda
             profileImageView.setImageResource(R.drawable.profile_pic);
         }
     }
-
     private void updateNavigationDrawer(String username, String nickname) {
         MenuItem usernameItem = navigationView.getMenu().findItem(R.id.profile_username);
         MenuItem nicknameItem = navigationView.getMenu().findItem(R.id.profile_nickname);
@@ -248,7 +254,7 @@ public class VideoListActivity extends AppCompatActivity implements VideoListAda
 
     @Override
     public void onEditVideo(Video video, int position) {
-// Show dialog to edit comment
+        // Show dialog to edit comment
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Edit Title and Description");
 

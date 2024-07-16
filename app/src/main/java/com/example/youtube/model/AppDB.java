@@ -6,7 +6,6 @@ import androidx.room.TypeConverters;
 
 import com.example.youtube.model.converters.DateConverter;
 import com.example.youtube.model.converters.UriConverter;
-import com.example.youtube.model.converters.CommentConverter;
 import com.example.youtube.model.daos.CommentDao;
 import com.example.youtube.model.daos.UserDao;
 import com.example.youtube.model.daos.VideoDao;
