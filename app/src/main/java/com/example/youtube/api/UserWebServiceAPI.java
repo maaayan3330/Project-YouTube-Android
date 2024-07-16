@@ -12,6 +12,7 @@ import retrofit2.http.GET;
 import retrofit2.http.POST;
 import retrofit2.http.PUT;
 import retrofit2.http.Path;
+import retrofit2.http.Header;
 
 /**
  * UserServiceAPI interface defines the API endpoints for interacting with user-related data on the backend server.
@@ -45,7 +46,7 @@ public interface UserWebServiceAPI {
      * @return A Call object to make the network request.
      */
     @DELETE("api/users/{id}")
-    Call<Void> deleteUser(@Path("id") String id);
+    Call<Void> deleteUser(@Path("id") String id, @Header("Authorization") String token);
 
     /**
      * Updates an existing user entry by its ID.
