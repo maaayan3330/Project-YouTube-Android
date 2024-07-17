@@ -21,14 +21,13 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class CommentAPI {
-    private MutableLiveData<List<Comment>> commentsLiveData;
     private final CommentDao commentDao;
     private final Retrofit retrofit;
     private final CommentWebServiceAPI commentWebServiceAPI;
     private UserManager userManager = UserManager.getInstance();
 
-    public CommentAPI(MutableLiveData<List<Comment>> commentsLiveData, CommentDao commentDao) {
-        this.commentsLiveData = commentsLiveData;
+    public CommentAPI( CommentDao commentDao) {
+
         this.commentDao = commentDao;
 
         // Initialize Retrofit
@@ -52,7 +51,6 @@ public class CommentAPI {
                         Log.e("apiComment", response.message());
                         commentDao.clear();
                         commentDao.insertList(response.body().getComments());
-                        commentsLiveData.postValue(commentDao.getCommentsByVideoId(videoId));
                     }).start();
                 }
             }
@@ -74,7 +72,6 @@ public class CommentAPI {
                     new Thread(() -> {
                         Log.e("apiComment", response.message());
                         commentDao.insert(response.body().getComment());
-                        commentsLiveData.postValue(commentDao.getCommentsByVideoId(comment.getVideoId()));
                     }).start();
                 }
             }
@@ -95,7 +92,6 @@ public class CommentAPI {
                 if (response.isSuccessful() && response.body() != null) {
                     new Thread(() -> {
                         commentDao.update(response.body());
-                        commentsLiveData.postValue(commentDao.getCommentsByVideoId(comment.getVideoId()));
                     }).start();
                 }
             }
@@ -116,7 +112,6 @@ public class CommentAPI {
                 if (response.isSuccessful()) {
                     new Thread(() -> {
                         commentDao.delete(comment);
-                        commentsLiveData.postValue(commentDao.getCommentsByVideoId(comment.getVideoId()));
                     }).start();
                 }
             }
