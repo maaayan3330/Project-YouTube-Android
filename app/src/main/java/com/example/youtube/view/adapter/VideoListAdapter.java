@@ -16,6 +16,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.youtube.R;
+import com.example.youtube.model.User;
 import com.example.youtube.model.UserManager;
 import com.example.youtube.utils.CustomToast;
 import com.example.youtube.view.ui.VideoDisplayActivity;
@@ -59,9 +60,9 @@ public class VideoListAdapter extends RecyclerView.Adapter<VideoListAdapter.Vide
 
     private final LayoutInflater inflater;
     private List<Video> videoList; // List of videos to display
-    private  Context context;
+    private final Context context;
     private VideoAdapterListener listener;
-
+    private User currentUser = UserManager.getInstance().getCurrentUser();
 
 
     public VideoListAdapter(Context context, VideoAdapterListener listener) {
@@ -124,16 +125,16 @@ public class VideoListAdapter extends RecyclerView.Adapter<VideoListAdapter.Vide
         });
         //edit function
         holder.tv_edit.setOnClickListener(v -> {
-            if (UserManager.getInstance().getCurrentUser()!= null){
+            if (currentUser != null && currentUser.getUsername().equals(video.getArtist())){
                 listener.onEditVideo(video, position);
                 holder.llCollapse.setVisibility(View.GONE); // Collapse after editing
-            }else {   CustomToast.showToast(context, "Option available just for register users");}
+            }else {   CustomToast.showToast(context, "Option available just for the author user");}
         });
         //delete function
         holder.tv_delete.setOnClickListener(v -> {
-            if (UserManager.getInstance().getCurrentUser()!= null) {
+            if (currentUser != null && currentUser.getUsername().equals(video.getArtist())) {
                 listener.onDeleteVideo(video,position);
-            }else {CustomToast.showToast(context, "Option available just for register users");} });
+            }else {CustomToast.showToast(context, "Option available just for the author user");} });
     }
 
 
