@@ -24,9 +24,9 @@ import retrofit2.converter.gson.GsonConverterFactory;
  */
 public class VideoAPI {
     private MutableLiveData<List<Video>> videoListData;
-    private VideoDao videoDao;
-    private Retrofit retrofit;
-    private VideoWebServiceAPI videoWebServiceAPI;
+    private final VideoDao videoDao;
+    private final Retrofit retrofit;
+    private final VideoWebServiceAPI videoWebServiceAPI;
 
     /**
      * Constructor for VideoAPI.
@@ -80,6 +80,18 @@ public class VideoAPI {
         });
     }
 
+    public void add(Video video){
+
+    }
+
+    public void delete(Video video){
+
+    }
+
+    public void update(Video video){
+
+    }
+
     private void adjustVideoUrls(List<Video> videos) {
         for (Video video : videos) {
             String adjustedVideoUrl = video.getVideoUrl().replace("http://localhost", "http://10.0.2.2");
@@ -87,15 +99,5 @@ public class VideoAPI {
             String adjustedAvatarUrl = video.getAvatar().replace( "/localPhotos/", "http://10.0.2.2/localPhotos/");
             video.setAvatar(adjustedAvatarUrl);
         }
-    }
-
-    public void add(Video video){
-
-    }
-    public void delete(Video video){
-
-    }
-    public void update(Video video){
-
     }
 }

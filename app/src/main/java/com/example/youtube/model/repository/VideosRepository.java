@@ -46,9 +46,7 @@ public class VideosRepository {
     public LiveData<List<Video>> getAll() {
         return videoListData;
     }
-    public List<Video> getVideosByUserId(String userId) {
-        return videoDao.getVideosByUserId(userId);
-    }
+
 
     public void add(Video video) {
         new Thread(() -> {
@@ -71,6 +69,10 @@ public class VideosRepository {
 
     public void reload() {
         new Thread(videoAPI::get).start();
+    }
+
+    public List<Video> getVideosByUserId(String userId) {
+        return videoDao.getVideosByUserId(userId);
     }
 }
 

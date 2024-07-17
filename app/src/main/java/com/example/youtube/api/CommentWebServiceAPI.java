@@ -2,6 +2,7 @@ package com.example.youtube.api;
 
 import com.example.youtube.api.response.CommentResponse;
 import com.example.youtube.api.response.CommentsResponse;
+import com.example.youtube.api.response.UpdateCommentResponse;
 import com.example.youtube.model.Comment;
 
 import retrofit2.Call;
@@ -26,8 +27,8 @@ public interface CommentWebServiceAPI {
 
     // Edit a comment by comment ID
     @PUT("videos/{id}/{pid}/comments/{cid}")
-    Call<CommentResponse> update(@Path("id") String userId, @Path("pid") String videoId,
-                         @Path("cid") String commentId, @Header("Authorization") String token, @Body Comment comment);
+    Call<UpdateCommentResponse> update(@Path("id") String userId, @Path("pid") String videoId,
+                                       @Path("cid") String commentId, @Header("Authorization") String token, @Body Comment comment);
 
     // Delete a comment by comment ID
     @DELETE("videos/{id}/{pid}/comments/{cid}")
