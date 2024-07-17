@@ -3,8 +3,11 @@ package com.example.youtube.api;
 import android.util.Log;
 import androidx.lifecycle.MutableLiveData;
 
+import com.example.youtube.api.response.TokenRequest;
+import com.example.youtube.api.response.TokenResponse;
 import com.example.youtube.api.response.UserResponse;
 import com.example.youtube.model.User;
+import com.example.youtube.model.UserManager;
 import com.example.youtube.model.daos.UserDao;
 
 import java.util.List;
@@ -21,6 +24,7 @@ public class UserAPI {
     private Retrofit retrofit;
     private UserWebServiceAPI userWebServiceAPI;
     private static final String TAG = "UserAPI";
+    private UserManager userManager;
 
     public UserAPI(MutableLiveData<List<User>> userListData, UserDao userDao) {
         this.userListData = userListData;
@@ -32,6 +36,9 @@ public class UserAPI {
                 .build();
 
         userWebServiceAPI = retrofit.create(UserWebServiceAPI.class);
+
+        // Initialize UserManager
+        userManager = UserManager.getInstance();
     }
 
     public void getAllUsers() {
@@ -82,9 +89,9 @@ public class UserAPI {
         });
     }
 
-
     public void delete(User user) {
-        Call<Void> call = userWebServiceAPI.deleteUser(user.getRoomId());
+        String token = UserManager.getInstance().getToken();
+        Call<Void> call = userWebServiceAPI.deleteUser(user.getApiId(), "Bearer " + token);
         call.enqueue(new Callback<Void>() {
             @Override
             public void onResponse(Call<Void> call, Response<Void> response) {
@@ -127,6 +134,30 @@ public class UserAPI {
             public void onFailure(Call<Void> call, Throwable t) {
                 // Handle the failure
                 Log.e(TAG, "Failed to add a new user", t);
+            }
+        });
+    }
+
+    public void createToken(User user) {
+        //use webServiceApi to call server and create token
+        TokenRequest tokenRequest = new TokenRequest(user.getApiId());
+        Call<TokenResponse> call = userWebServiceAPI.createToken(tokenRequest);
+
+        call.enqueue(new Callback<TokenResponse>() {
+            @Override
+            public void onResponse(Call<TokenResponse> call, Response<TokenResponse> response) {
+                //if call was successful, set the token to be the token from the server
+                if (response.isSuccessful() && response.body() != null) {
+                    userManager.setToken(response.body().getToken());
+                    Log.d("Token", "Token: " + response.body().getToken());
+                } else {
+                    Log.e("Token", "Failed to get token");
+                }
+            }
+
+            @Override
+            public void onFailure(Call<TokenResponse> call, Throwable t) {
+                Log.e("Token", "Failed to get token", t);
             }
         });
     }

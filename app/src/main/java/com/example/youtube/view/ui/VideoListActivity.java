@@ -2,8 +2,10 @@ package com.example.youtube.view.ui;
 
 import android.content.Intent;
 import android.content.res.Configuration;
-import android.net.Uri;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.util.Base64;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
@@ -34,17 +36,13 @@ import com.example.youtube.view.adapter.VideoListAdapter;
 import com.example.youtube.viewModel.UserViewModel;
 import com.example.youtube.viewModel.VideoViewModel;
 import com.google.android.material.navigation.NavigationView;
+import com.google.android.material.imageview.ShapeableImageView;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import com.example.youtube.model.UserManager;
 
-import com.google.android.material.imageview.ShapeableImageView;
-
-/**
- * MainActivity class for displaying a list of videos.
- */
 public class VideoListActivity extends AppCompatActivity implements VideoListAdapter.VideoAdapterListener {
 
     VideoListAdapter videoListAdapter;
@@ -53,7 +51,7 @@ public class VideoListActivity extends AppCompatActivity implements VideoListAda
     private ActionBarDrawerToggle drawerToggle;
     private Toolbar toolbar;
     private ShapeableImageView profileImageView;
-    private Uri profileImageUri; // Variable to store the profile image URI
+    private String profileImageBase64; // Variable to store the profile image Base64
     private VideoViewModel videoViewModel;
     private UserViewModel userViewModel;
     private List<Video> currentVideos;
@@ -67,7 +65,7 @@ public class VideoListActivity extends AppCompatActivity implements VideoListAda
         userViewModel = new ViewModelProvider(this).get(UserViewModel.class);
 
         // RecyclerView for displaying the video list
-        SwipeRefreshLayout srl_refresh= findViewById(R.id.srl_refresh);
+        SwipeRefreshLayout srl_refresh = findViewById(R.id.srl_refresh);
         RecyclerView rvListVideo = findViewById(R.id.rvListVideo);
         rvListVideo.setLayoutManager(new LinearLayoutManager(this));
         videoListAdapter = new VideoListAdapter(this, this);
@@ -122,7 +120,6 @@ public class VideoListActivity extends AppCompatActivity implements VideoListAda
         });
     }
 
-
     @Override
     protected void onDestroy() {
         super.onDestroy();
@@ -130,7 +127,6 @@ public class VideoListActivity extends AppCompatActivity implements VideoListAda
     }
 
     private boolean NavigationItemSelected(MenuItem item) {
-        {
             int itemId = item.getItemId();
             if (itemId == R.id.login_yes) {
                 Intent intentForLogIn = new Intent(VideoListActivity.this, SignUpActivity.class);
@@ -140,6 +136,7 @@ public class VideoListActivity extends AppCompatActivity implements VideoListAda
             } else if (itemId == R.id.logout_yes) {
                 // Clear user session data
                 UserManager.getInstance().clearCurrentUser();
+                UserManager.getInstance().clearToken(); //added clear token!!!!
                 // Navigate to login page
                 Intent intentForLogIn = new Intent(VideoListActivity.this, SignUpActivity.class);
                 CustomToast.showToast(VideoListActivity.this, "Logout");
@@ -148,7 +145,6 @@ public class VideoListActivity extends AppCompatActivity implements VideoListAda
                 return true;
             } else if (itemId == R.id.upload_data_yes) {
                 if (UserManager.getInstance().getCurrentUser() != null) {
-
                     Intent intentForVideo = new Intent(VideoListActivity.this, AddVideoActivity.class);
                     CustomToast.showToast(VideoListActivity.this, "Upload video");
                     startActivity(intentForVideo);
@@ -170,10 +166,30 @@ public class VideoListActivity extends AppCompatActivity implements VideoListAda
             } else if (itemId == R.id.Help) {
                 CustomToast.showToast(VideoListActivity.this, "Help");
                 return true;
-            } else {
+            }
+            else if (itemId == R.id.delete_user) {
+                if (UserManager.getInstance().getCurrentUser() != null) {
+                    CustomToast.showToast(VideoListActivity.this, "Delete User");
+                    userViewModel.delete(UserManager.getInstance().getCurrentUser()); //delete user from database
+                    UserManager.getInstance().clearCurrentUser(); //clear logged in user from user manager
+                    UserManager.getInstance().clearToken(); //clear token from user manager
+                    Intent intentForDeleteUser = new Intent(VideoListActivity.this, SignUpActivity.class);
+                    startActivity(intentForDeleteUser);
+                    finish(); // Close the current activity
+                }
+                else {
+                    CustomToast.showToast(VideoListActivity.this, "You need to log in to delete user");
+                }
+                return true;
+            }
+            else if (itemId == R.id.Help) {
+                CustomToast.showToast(VideoListActivity.this, "Help");
+                return true;
+             }
+            else {
                 return false;
             }
-        }
+
     }
 
     private void loadUserInfoFromManager() {
@@ -183,20 +199,23 @@ public class VideoListActivity extends AppCompatActivity implements VideoListAda
         if (currentUser != null) {
             String username = currentUser.getUsername();
             String nickname = currentUser.getNickname();
-            String profileImageUriString = currentUser.getAvatar() != null ? currentUser.getAvatar().toString() : null;
+            String profileImageBase64 = currentUser.getAvatar();
 
             Log.d("VideoListActivity", "Loading user info: username=" + username + ", nickname=" + nickname);
 
-            // for Defo
-            if (profileImageUriString.equals("/localPhotos/Maayan.png")) {
+            if (currentUser.getAvatar().equals("/localPhotos/Maayan.png")) {
                 profileImageView.setImageResource(R.drawable.maayan);
-            } else if (profileImageUriString.equals("/localPhotos/Alon.png")) {
+            } else if (currentUser.getAvatar().equals("/localPhotos/Alon.png")) {
                 profileImageView.setImageResource(R.drawable.alon);
-            } else if (profileImageUriString.equals("/localPhotos/Tom.png")) {
+            } else if (currentUser.getAvatar().equals("/localPhotos/Tom.png")) {
                 profileImageView.setImageResource(R.drawable.tom);
-            } else if (profileImageUriString != null && !profileImageUriString.isEmpty()) {
-                profileImageUri = Uri.parse(profileImageUriString);
-                profileImageView.setImageURI(profileImageUri);
+            } else if (profileImageBase64 != null && !profileImageBase64.isEmpty()) {
+                if (!profileImageBase64.startsWith("data:image/")) {
+                    profileImageBase64 = "data:image/jpeg;base64," + profileImageBase64;
+                }
+                byte[] decodedString = Base64.decode(profileImageBase64.split(",")[1], Base64.DEFAULT);
+                Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
+                profileImageView.setImageBitmap(decodedByte);
             } else {
                 profileImageView.setImageResource(R.drawable.profile_pic);
             }
@@ -207,6 +226,7 @@ public class VideoListActivity extends AppCompatActivity implements VideoListAda
             profileImageView.setImageResource(R.drawable.profile_pic);
         }
     }
+
     private void updateNavigationDrawer(String username, String nickname) {
         MenuItem usernameItem = navigationView.getMenu().findItem(R.id.profile_username);
         MenuItem nicknameItem = navigationView.getMenu().findItem(R.id.profile_nickname);
@@ -237,7 +257,6 @@ public class VideoListActivity extends AppCompatActivity implements VideoListAda
     }
 
     private void filterVideoList(String text) {
-
         List<Video> filteredList = new ArrayList<>();
         for (Video video : currentVideos) {
             if (video.getTitle().toLowerCase().contains(text.toLowerCase())) {
@@ -283,7 +302,6 @@ public class VideoListActivity extends AppCompatActivity implements VideoListAda
             video.setDescription(newDescription);
             videoViewModel.update(video);
             videoListAdapter.notifyItemChanged(position);
-
         });
         builder.setNegativeButton("Cancel", (dialog, which) -> dialog.cancel());
         builder.show();
