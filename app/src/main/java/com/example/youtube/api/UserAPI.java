@@ -177,7 +177,7 @@ public class UserAPI {
         MultipartBody.Part avatarPart = MultipartBody.Part.createFormData("avatar", avatar.getName(), avatarRequestBody);
 
         // Create the call
-        Call<UpdateUserResponse> call = userWebServiceAPI.updateUser(id, token, nicknamePart, avatarPart);
+        Call<UpdateUserResponse> call = userWebServiceAPI.updateUser(id,"Bearer " + token, nicknamePart, avatarPart);
 
         call.enqueue(new Callback<UpdateUserResponse>() {
             @Override

@@ -10,26 +10,18 @@
         android:id="@+id/edit_nickname"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="add a new nickname" />
+        android:hint="Add a new nickname" />
 
     <Button
         android:id="@+id/button_upload_image"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="upload a new profile photo" />
-
-    <com.google.android.material.imageview.ShapeableImageView
-        android:id="@+id/profile_image"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
-        android:src="@drawable/profile_pic"
-        android:layout_marginTop="16dp"
-        app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlay.App.CornerFamily.Circular" />
+        android:text="Upload a new profile photo" />
 
     <Button
         android:id="@+id/button_save"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="keep changes"
+        android:text="Keep changes"
         android:layout_marginTop="16dp" />
 </LinearLayout>
