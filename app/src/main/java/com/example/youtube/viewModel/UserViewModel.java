@@ -58,7 +58,7 @@ public class UserViewModel extends AndroidViewModel {
         userRepository.createToken(user);
     }
 
-    public void updateUser(String nickname, File avatar) {
+    public void updateUser(String nickname, String avatar) {
         userRepository.updateUser(nickname, avatar);
     }
 }

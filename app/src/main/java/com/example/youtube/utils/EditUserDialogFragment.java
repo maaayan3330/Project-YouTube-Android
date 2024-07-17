@@ -22,9 +22,12 @@ import com.example.youtube.model.UserManager;
 import com.example.youtube.viewModel.UserViewModel;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import android.util.Base64;
 
 public class EditUserDialogFragment extends DialogFragment {
     private static final int PICK_IMAGE_REQUEST = 1;
@@ -76,10 +79,36 @@ public class EditUserDialogFragment extends DialogFragment {
         }
     }
 
+//    private void saveChanges() {
+//        String newNickname = editNickname.getText().toString().trim();
+//        userViewModel.updateUser(newNickname, avatarFile);
+//        dismiss();
+//    }
+
     private void saveChanges() {
         String newNickname = editNickname.getText().toString().trim();
-        userViewModel.updateUser(newNickname, avatarFile);
+        String avatarBase64 = null;
+        if (avatarFile != null) {
+            avatarBase64 = fileToBase64(avatarFile);
+            Log.d("EditUserDialogFragment", "Avatar file converted to base64");
+        } else {
+            Log.d("EditUserDialogFragment", "Avatar file is null");
+        }
+        userViewModel.updateUser(newNickname, avatarBase64);
         dismiss();
+    }
+
+    private String fileToBase64(File file) {
+        try {
+            InputStream inputStream = new FileInputStream(file);
+            byte[] bytes = new byte[(int) file.length()];
+            inputStream.read(bytes);
+            inputStream.close();
+            return Base64.encodeToString(bytes, Base64.NO_WRAP);
+        } catch (IOException e) {
+            Log.e("EditUserDialogFragment", "Failed to convert file to base64", e);
+            return null;
+        }
     }
 
     private File uriToFile(Uri uri) {

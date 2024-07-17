@@ -10,6 +10,7 @@ import com.example.youtube.api.response.UserResponse;
 import com.example.youtube.model.User;
 import com.example.youtube.model.UserManager;
 import com.example.youtube.model.daos.UserDao;
+import com.google.gson.JsonObject;
 
 import java.io.File;
 import java.util.List;
@@ -163,21 +164,59 @@ public class UserAPI {
         });
     }
 
-    public void updateUser(String nickname, File avatar) {
-        //get details from UserManager
+//    public void updateUser(String nickname, File avatar) {
+//        //get details from UserManager
+//        UserManager userManager = UserManager.getInstance();
+//        String token = userManager.getToken();
+//        String id = userManager.getCurrentUser().getApiId();
+//
+//        // Prepare the nickname part
+//        RequestBody nicknamePart = RequestBody.create(MediaType.parse("text/plain"), nickname);
+//
+//        // Prepare the avatar part
+//        RequestBody avatarRequestBody = RequestBody.create(MediaType.parse("image/*"), avatar);
+//        MultipartBody.Part avatarPart = MultipartBody.Part.createFormData("avatar", avatar.getName(), avatarRequestBody);
+//
+//        // Create the call
+//        Call<UpdateUserResponse> call = userWebServiceAPI.updateUser(id,"Bearer " + token, nicknamePart, avatarPart);
+//
+//        call.enqueue(new Callback<UpdateUserResponse>() {
+//            @Override
+//            public void onResponse(Call<UpdateUserResponse> call, Response<UpdateUserResponse> response) {
+//                if (response.isSuccessful() && response.body() != null) {
+//                    new Thread(() -> {
+//                        userDao.update(response.body().getUser());
+//                        userListData.postValue(userDao.index()); //check if needed
+//                        userManager.setCurrentUser(response.body().getUser()); //check if needed
+//                    }).start();
+//                } else {
+//                    Log.e(TAG, "Response body is null or not successful");
+//                }
+//            }
+//            @Override
+//            public void onFailure(Call<UpdateUserResponse> call, Throwable t) {
+//                // Handle the failure
+//                Log.e(TAG, "Failed to add a new user", t);
+//            }
+//        });
+//    }
+
+    public void updateUser(String nickname, String avatarBase64) {
         UserManager userManager = UserManager.getInstance();
         String token = userManager.getToken();
         String id = userManager.getCurrentUser().getApiId();
 
-        // Prepare the nickname part
-        RequestBody nicknamePart = RequestBody.create(MediaType.parse("text/plain"), nickname);
+        // Prepare the request body
+        JsonObject jsonObject = new JsonObject();
+        jsonObject.addProperty("nickname", nickname);
+        if (avatarBase64 != null) {
+            jsonObject.addProperty("avatar", avatarBase64);
+        }
 
-        // Prepare the avatar part
-        RequestBody avatarRequestBody = RequestBody.create(MediaType.parse("image/*"), avatar);
-        MultipartBody.Part avatarPart = MultipartBody.Part.createFormData("avatar", avatar.getName(), avatarRequestBody);
+        RequestBody requestBody = RequestBody.create(MediaType.parse("application/json"), jsonObject.toString());
 
         // Create the call
-        Call<UpdateUserResponse> call = userWebServiceAPI.updateUser(id,"Bearer " + token, nicknamePart, avatarPart);
+        Call<UpdateUserResponse> call = userWebServiceAPI.updateUser(id, "Bearer " + token, requestBody);
 
         call.enqueue(new Callback<UpdateUserResponse>() {
             @Override
@@ -185,18 +224,20 @@ public class UserAPI {
                 if (response.isSuccessful() && response.body() != null) {
                     new Thread(() -> {
                         userDao.update(response.body().getUser());
-                        userListData.postValue(userDao.index()); //check if needed
-                        userManager.setCurrentUser(response.body().getUser()); //check if needed
+                        userListData.postValue(userDao.index());
+                        userManager.setCurrentUser(response.body().getUser());
                     }).start();
+                    Log.d(TAG, "User updated successfully: " + response.body().getUser());
                 } else {
-                    Log.e(TAG, "Response body is null or not successful");
+                    Log.e(TAG, "Response body is null or not successful. Code: " + response.code());
                 }
             }
+
             @Override
             public void onFailure(Call<UpdateUserResponse> call, Throwable t) {
-                // Handle the failure
-                Log.e(TAG, "Failed to add a new user", t);
+                Log.e(TAG, "Failed to update user", t);
             }
         });
     }
+
 }

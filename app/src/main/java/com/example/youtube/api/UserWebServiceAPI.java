@@ -53,14 +53,21 @@ public interface UserWebServiceAPI {
     @DELETE("api/users/{id}")
     Call<Void> deleteUser(@Path("id") String id, @Header("Authorization") String token);
 
-    @Multipart
+//    @Multipart
+//    @PUT("api/users/{id}")
+//    Call<UpdateUserResponse> updateUser(
+//            @Path("id") String id,
+//            @Header("Authorization") String token,
+//            @Part("nickname") RequestBody nickname,
+//            @Part MultipartBody.Part avatar
+//    );
     @PUT("api/users/{id}")
     Call<UpdateUserResponse> updateUser(
-            @Path("id") String id,
-            @Header("Authorization") String token,  
-            @Part("nickname") RequestBody nickname,
-            @Part MultipartBody.Part avatar
+        @Path("id") String id,
+        @Header("Authorization") String token,
+        @Body RequestBody requestBody
     );
+
 
     /**
      * Updates an existing user entry by its ID.
