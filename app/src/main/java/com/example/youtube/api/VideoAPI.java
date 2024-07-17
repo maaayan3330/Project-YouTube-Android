@@ -2,10 +2,12 @@ package com.example.youtube.api;
 
 import android.util.Log;
 
+import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
 import com.example.youtube.R;
 import com.example.youtube.api.response.VideoResponse;
+import com.example.youtube.model.UserManager;
 import com.example.youtube.model.Video;
 import com.example.youtube.model.daos.VideoDao;
 import com.example.youtube.utils.MyApplication;
@@ -27,6 +29,7 @@ public class VideoAPI {
     private final VideoDao videoDao;
     private final Retrofit retrofit;
     private final VideoWebServiceAPI videoWebServiceAPI;
+    private final UserManager userManager = UserManager.getInstance();
 
     /**
      * Constructor for VideoAPI.
@@ -48,12 +51,9 @@ public class VideoAPI {
         videoWebServiceAPI = retrofit.create(VideoWebServiceAPI.class);
     }
 
-    /**
-     * Method to fetch video data from the remote server.
-     * Clears the existing video data in the local database and inserts the fetched data.
-     * Updates the MutableLiveData with the new video list.
-     */
-    public void get() {
+
+    //Method to fetch all videos data from the server.
+    public void fetchAllVideos() {
         // Make a network call to fetch videos
         Call<VideoResponse> call = videoWebServiceAPI.getVideos();
         call.enqueue(new Callback<VideoResponse>() {
@@ -75,28 +75,124 @@ public class VideoAPI {
             @Override
             public void onFailure(Call<VideoResponse> call, Throwable t) {
                 // Handle the failure (e.g., log the error, notify the user)
-                Log.e("api",t.getMessage());
+                Log.e("api", t.getMessage());
             }
         });
     }
 
-    public void add(Video video){
 
+    // Fetch videos by user ID
+    public LiveData<List<Video>> fetchVideosByUserId(String userId) {
+        final MutableLiveData<List<Video>> userVideosliveData = new MutableLiveData<>();
+        Call<VideoResponse> call = videoWebServiceAPI.getVideosByUserId(userId);
+        call.enqueue(new Callback<VideoResponse>() {
+            @Override
+            public void onResponse(Call<VideoResponse> call, Response<VideoResponse> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    Log.e("apiVideo", response.message());
+                    userVideosliveData.setValue(response.body().getVideos());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<VideoResponse> call, Throwable t) {
+                Log.e("apiVideo", t.getMessage());
+                userVideosliveData.setValue(null);
+            }
+        });
+        return userVideosliveData;
     }
 
-    public void delete(Video video){
 
+    // Fetch a specific video by user ID and video ID
+    public void getVideo(String userId, String videoId) {
+        Call<VideoResponse> call = videoWebServiceAPI.getVideo(userId, videoId);
+        call.enqueue(new Callback<VideoResponse>() {
+            @Override
+            public void onResponse(Call<VideoResponse> call, Response<VideoResponse> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    Log.e("apiVideo", response.message());
+//                    videoDao.insert(response.body().getVideo());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<VideoResponse> call, Throwable t) {
+                Log.e("apiVideo", t.getMessage());
+            }
+        });
     }
 
-    public void update(Video video){
 
+    // Add a new video
+    public void add(Video video) {
+        String token = "Bearer " + userManager.getToken();
+        Call<Void> call = videoWebServiceAPI.add(video.getUserId(), video, token);
+        call.enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+                if (response.isSuccessful()) {
+                    Log.e("apiVideo", response.message());
+                    videoDao.insert(video);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+                Log.e("apiVideo", t.getMessage());
+            }
+        });
     }
 
+
+    // Edit a video
+    public void update(Video video) {
+        String token = "Bearer " + userManager.getToken();
+        Call<Void> call = videoWebServiceAPI.update(video.getUserId(), video.getApiId(), video, token);
+        call.enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+                if (response.isSuccessful()) {
+                    Log.e("apiVideo", response.message());
+                    videoDao.update(video);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+                Log.e("apiVideo", t.getMessage());
+            }
+        });
+    }
+
+
+    // Delete a video
+    public void delete(Video video) {
+        String token = "Bearer " + userManager.getToken();
+        Call<Void> call = videoWebServiceAPI.delete(video.getUserId(), video.getApiId(), token);
+        call.enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+                if (response.isSuccessful()) {
+                    new Thread(() -> videoDao.delete(video)).start();
+                } else {
+                    Log.e("apiVideo", "Server error: " + response.code() + " " + response.message());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+                Log.e("apiVideo", t.getMessage());
+            }
+        });
+    }
+
+    //adjust the url to fit the localhost
     private void adjustVideoUrls(List<Video> videos) {
         for (Video video : videos) {
             String adjustedVideoUrl = video.getVideoUrl().replace("http://localhost", "http://10.0.2.2");
             video.setVideoUrl(adjustedVideoUrl);
-            String adjustedAvatarUrl = video.getAvatar().replace( "/localPhotos/", "http://10.0.2.2/localPhotos/");
+            String adjustedAvatarUrl = video.getAvatar().replace("/localPhotos/", "http://10.0.2.2/localPhotos/");
             video.setAvatar(adjustedAvatarUrl);
         }
     }

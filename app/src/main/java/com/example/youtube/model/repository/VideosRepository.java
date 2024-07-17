@@ -25,7 +25,7 @@ public class VideosRepository {
                 .build();
         videoDao = db.videoDao();
         videoListData = new VideoListData();
-        videoAPI=new VideoAPI(videoListData,videoDao);
+        videoAPI = new VideoAPI(videoListData, videoDao);
     }
 
     class VideoListData extends MutableLiveData<List<Video>> {
@@ -43,36 +43,52 @@ public class VideosRepository {
         }
     }
 
+
+    //get all local data
     public LiveData<List<Video>> getAll() {
         return videoListData;
     }
 
 
+    //fetch all videos  from the server
+    public void reload() {
+        new Thread(videoAPI::fetchAllVideos).start();
+    }
+
+
+    // get videos by user ID
+    public LiveData<List<Video>> getVideosByUserId(String userId) {
+        return videoAPI.fetchVideosByUserId(userId);
+    }
+
+
+    // get a specific video
+    public void getVideo(String userId, String videoId) {
+        videoAPI.getVideo(userId, videoId);
+    }
+
+
+    // Add a new video
     public void add(Video video) {
         new Thread(() -> {
             videoDao.insert(video);
         }).start();
     }
 
+
+    // Delete a video
     public void delete(Video video) {
         new Thread(() -> {
             videoDao.delete(video);
         }).start();
     }
 
+
+    // update a video
     public void update(Video video) {
         new Thread(() -> {
             videoDao.update(video);
         }).start();
-    }
-
-
-    public void reload() {
-        new Thread(videoAPI::get).start();
-    }
-
-    public List<Video> getVideosByUserId(String userId) {
-        return videoDao.getVideosByUserId(userId);
     }
 }
 

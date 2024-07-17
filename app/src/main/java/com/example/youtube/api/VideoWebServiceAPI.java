@@ -21,23 +21,28 @@ public interface VideoWebServiceAPI {
     @GET("videos")
     Call<VideoResponse> getVideos();
 
+
     //Fetches a list of videos for a specific user by user ID.
     @GET("{userId}/videos")
     Call<VideoResponse> getVideosByUserId(@Path("userId") String userId);
 
+
     //Fetches a specific video by user ID and video ID.
     @GET("{userId}/videos/{videoId}")
     Call<VideoResponse> getVideo(@Path("userId") String userId, @Path("videoId") String videoId);
+
 
     // add a new video entry in the server.
     @POST("{userId}/videos")
     Call<Void> add(@Path("userId") String userId, @Body Video video,
                    @Header("Authorization") String token);
 
+
     //Deletes a video entry by its ID.
     @DELETE("{userId}/videos/{videoId}")
     Call<Void> delete(@Path("userId") String userId, @Path("videoId") String videoId,
                       @Header("Authorization") String token);
+
 
     //Updates an existing video entry by its ID.
     @PUT("{userId}/videos/{videoId}")

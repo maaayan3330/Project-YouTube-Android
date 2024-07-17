@@ -73,8 +73,10 @@ public class ProfileActivity extends AppCompatActivity implements VideoListAdapt
 //            currentUser = user;
 //        });
 
-        currentVideos = videoViewModel.getVideosByUserId(currentUser.getApiId());
-        videoListAdapter.setVideos(currentVideos);
+        videoViewModel.getVideosByUserId(currentUser.getApiId()).observe(this, videos -> {
+            currentVideos = videos;
+            videoListAdapter.setVideos(currentVideos);
+        });
 
 
         // Initialize Toolbar
