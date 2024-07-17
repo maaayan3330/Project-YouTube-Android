@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <EditText
+        android:id="@+id/edit_nickname"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="add a new nickname" />
+
+    <Button
+        android:id="@+id/button_upload_image"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="upload a new profile photo" />
+
+    <com.google.android.material.imageview.ShapeableImageView
+        android:id="@+id/profile_image"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:src="@drawable/profile_pic"
+        android:layout_marginTop="16dp"
+        app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlay.App.CornerFamily.Circular" />
+
+    <Button
+        android:id="@+id/button_save"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="keep changes"
+        android:layout_marginTop="16dp" />
+</LinearLayout>

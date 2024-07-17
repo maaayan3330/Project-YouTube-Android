@@ -32,6 +32,7 @@ import com.example.youtube.R;
 import com.example.youtube.model.User;
 import com.example.youtube.utils.CustomToast;
 import com.example.youtube.model.Video;
+import com.example.youtube.utils.EditUserDialogFragment;
 import com.example.youtube.view.adapter.VideoListAdapter;
 import com.example.youtube.viewModel.UserViewModel;
 import com.example.youtube.viewModel.VideoViewModel;
@@ -142,6 +143,12 @@ public class VideoListActivity extends AppCompatActivity implements VideoListAda
                 CustomToast.showToast(VideoListActivity.this, "Logout");
                 startActivity(intentForLogIn);
                 finish(); // Close the current activity
+                return true;
+
+            }
+            else  if (item.getItemId() == R.id.edit_user) {
+                EditUserDialogFragment dialogFragment = new EditUserDialogFragment();
+                dialogFragment.show(getSupportFragmentManager(), "EditUserDialogFragment");
                 return true;
             } else if (itemId == R.id.upload_data_yes) {
                 if (UserManager.getInstance().getCurrentUser() != null) {
