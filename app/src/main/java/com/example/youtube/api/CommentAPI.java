@@ -2,12 +2,13 @@ package com.example.youtube.api;
 
 import android.util.Log;
 
-import androidx.annotation.NonNull;
 import androidx.lifecycle.MutableLiveData;
 
 import com.example.youtube.R;
 import com.example.youtube.api.response.CommentResponse;
+import com.example.youtube.api.response.CommentsResponse;
 import com.example.youtube.model.Comment;
+import com.example.youtube.model.UserManager;
 import com.example.youtube.model.daos.CommentDao;
 import com.example.youtube.utils.MyApplication;
 
@@ -24,6 +25,7 @@ public class CommentAPI {
     private final CommentDao commentDao;
     private final Retrofit retrofit;
     private final CommentWebServiceAPI commentWebServiceAPI;
+    private UserManager userManager = UserManager.getInstance();
 
     public CommentAPI(MutableLiveData<List<Comment>> commentsLiveData, CommentDao commentDao) {
         this.commentsLiveData = commentsLiveData;
@@ -41,13 +43,13 @@ public class CommentAPI {
 
     // Fetch comments for a specific video by video ID
     public void fetchCommentsByVideoId(String videoId) {
-        Call<CommentResponse> call = commentWebServiceAPI.getCommentsByVideoId(videoId);
-        call.enqueue(new Callback<CommentResponse>() {
+        Call<CommentsResponse> call = commentWebServiceAPI.getCommentsByVideoId(videoId);
+        call.enqueue(new Callback<CommentsResponse>() {
             @Override
-            public void onResponse( Call<CommentResponse> call,  Response<CommentResponse> response) {
+            public void onResponse(Call<CommentsResponse> call, Response<CommentsResponse> response) {
                 if (response.isSuccessful() && response.body() != null) {
                     new Thread(() -> {
-                        Log.e("apiComment",response.message());
+                        Log.e("apiComment", response.message());
                         commentDao.clear();
                         commentDao.insertList(response.body().getComments());
                         commentsLiveData.postValue(commentDao.getCommentsByVideoId(videoId));
@@ -56,29 +58,30 @@ public class CommentAPI {
             }
 
             @Override
-            public void onFailure(Call<CommentResponse> call, Throwable t) {
-                Log.e("apiComment",t.getMessage());
+            public void onFailure(Call<CommentsResponse> call, Throwable t) {
+                Log.e("apiComment", t.getMessage());
             }
         });
     }
 
     // Add a new comment
     public void add(Comment comment) {
-        Call<Comment> call = commentWebServiceAPI.add(comment);
-        call.enqueue(new Callback<Comment>() {
+        Call<CommentResponse> call = commentWebServiceAPI.add(comment.getVideoId(), comment.getUserId(), comment,"Bearer " + userManager.getToken());
+        call.enqueue(new Callback<CommentResponse>() {
             @Override
-            public void onResponse(Call<Comment> call, Response<Comment> response) {
+            public void onResponse(Call<CommentResponse> call, Response<CommentResponse> response) {
                 if (response.isSuccessful() && response.body() != null) {
                     new Thread(() -> {
-                        commentDao.insert(response.body());
+                        Log.e("apiComment", response.message());
+                        commentDao.insert(response.body().getComment());
                         commentsLiveData.postValue(commentDao.getCommentsByVideoId(comment.getVideoId()));
                     }).start();
                 }
             }
 
             @Override
-            public void onFailure(Call<Comment> call, Throwable t) {
-                Log.e("apiComment",t.getMessage());
+            public void onFailure(Call<CommentResponse> call, Throwable t) {
+                Log.e("apiComment", t.getMessage());
             }
         });
     }
