@@ -12,6 +12,7 @@ Video player app inspired by youtube , our app has 6 activities
 * Make sure you have MongoDB installed on your computer - this project is linked to it using the web server in this link: https://github.com/Toms752384/Youtube-web-server.git
 * Follow the instructions in the provided link and activate the server before proceeding.
 * You are provided with 3 default users with the developers names and 20 videos for you to enjoy.
+  
 1- Download the Android Studio software if you haven't downloaded it yet.
 2- Open a new project click "VCS" in the menu and click "get version control".
 Copy the link of our project's Rhypsotry https://github.com/maaayan3330/Project-YouTube-Android.git
