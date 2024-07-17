@@ -1,10 +1,10 @@
 # Project-YouTube-Android
 **Description:**
 Video player app inspired by youtube , our app has 6 activities
-1) registration
-2) signin
+1) registration page
+2) sign in page
 3) video list (home page)
-4) upload video
+4) upload video page
 5) video display
 6) Profile page
 
