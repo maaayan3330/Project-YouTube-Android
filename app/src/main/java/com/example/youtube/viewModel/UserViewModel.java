@@ -10,6 +10,7 @@ import androidx.lifecycle.MutableLiveData;
 import com.example.youtube.model.User;
 import com.example.youtube.model.repository.UserRepository;
 
+import java.io.File;
 import java.util.List;
 
 public class UserViewModel extends AndroidViewModel {
@@ -55,5 +56,9 @@ public class UserViewModel extends AndroidViewModel {
 
     public void createToken(User user){
         userRepository.createToken(user);
+    }
+
+    public void updateUser(String nickname, File avatar) {
+        userRepository.updateUser(nickname, avatar);
     }
 }

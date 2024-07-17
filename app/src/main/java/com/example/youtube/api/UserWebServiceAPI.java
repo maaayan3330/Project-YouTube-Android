@@ -2,15 +2,20 @@ package com.example.youtube.api;
 
 import com.example.youtube.api.response.TokenRequest;
 import com.example.youtube.api.response.TokenResponse;
+import com.example.youtube.api.response.UpdateUserResponse;
 import com.example.youtube.api.response.UserResponse;
 import com.example.youtube.model.User;
 
+import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.DELETE;
 import retrofit2.http.GET;
+import retrofit2.http.Multipart;
 import retrofit2.http.POST;
 import retrofit2.http.PUT;
+import retrofit2.http.Part;
 import retrofit2.http.Path;
 import retrofit2.http.Header;
 
@@ -47,6 +52,15 @@ public interface UserWebServiceAPI {
      */
     @DELETE("api/users/{id}")
     Call<Void> deleteUser(@Path("id") String id, @Header("Authorization") String token);
+
+    @Multipart
+    @PUT("api/users/{id}")
+    Call<UpdateUserResponse> updateUser(
+            @Path("id") String id,
+            @Header("Authorization") String token,
+            @Part("nickname") RequestBody nickname,
+            @Part MultipartBody.Part avatar
+    );
 
     /**
      * Updates an existing user entry by its ID.

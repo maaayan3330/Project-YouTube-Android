@@ -11,6 +11,7 @@ import com.example.youtube.model.AppDB;
 import com.example.youtube.model.User;
 import com.example.youtube.model.daos.UserDao;
 
+import java.io.File;
 import java.util.List;
 
 public class UserRepository {
@@ -74,5 +75,9 @@ public class UserRepository {
 
     public void createToken(User user){
         userAPI.createToken(user);
+    }
+
+    public void updateUser(String nickname, File avatar) {
+        userAPI.updateUser(nickname, avatar);
     }
 }

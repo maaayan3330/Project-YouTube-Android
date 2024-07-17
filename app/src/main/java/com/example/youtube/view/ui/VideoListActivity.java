@@ -147,8 +147,13 @@ public class VideoListActivity extends AppCompatActivity implements VideoListAda
 
             }
             else  if (item.getItemId() == R.id.edit_user) {
-                EditUserDialogFragment dialogFragment = new EditUserDialogFragment();
-                dialogFragment.show(getSupportFragmentManager(), "EditUserDialogFragment");
+                if (UserManager.getInstance().getCurrentUser() != null) {
+                    EditUserDialogFragment dialogFragment = new EditUserDialogFragment();
+                    dialogFragment.show(getSupportFragmentManager(), "EditUserDialogFragment");
+                }
+                else {
+                    CustomToast.showToast(this, "Option available only for registered users");
+                }
                 return true;
             } else if (itemId == R.id.upload_data_yes) {
                 if (UserManager.getInstance().getCurrentUser() != null) {
@@ -156,7 +161,7 @@ public class VideoListActivity extends AppCompatActivity implements VideoListAda
                     CustomToast.showToast(VideoListActivity.this, "Upload video");
                     startActivity(intentForVideo);
                 } else {
-                    CustomToast.showToast(this, "Option available just for register users");
+                    CustomToast.showToast(this, "Option available only for registered users");
                 }
                 return true;
             } else if (itemId == R.id.dark_mode_yes) {
