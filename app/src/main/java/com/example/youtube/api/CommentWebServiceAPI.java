@@ -28,6 +28,6 @@ public interface CommentWebServiceAPI {
     Call<Comment> update(@Body Comment comment);
 
     // Delete a comment by comment ID
-    @DELETE("videos/{pid}/comments/{cid}")
-    Call<Void> delete(@Body Comment comment);
+    @DELETE("videos/{id}/{pid}/comments/{cid}")
+    Call<Void> delete(@Path("id") String userId, @Path("pid") String videoId, @Path("cid") String commentId, @Header("Authorization") String token);
 }

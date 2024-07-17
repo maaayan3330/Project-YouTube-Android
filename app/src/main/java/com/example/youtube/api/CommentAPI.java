@@ -64,7 +64,8 @@ public class CommentAPI {
 
     // Add a new comment
     public void add(Comment comment) {
-        Call<CommentResponse> call = commentWebServiceAPI.add(comment.getVideoId(), comment.getUserId(), comment,"Bearer " + userManager.getToken());
+        Call<CommentResponse> call = commentWebServiceAPI.add(comment.getVideoId(), comment.getUserId(),
+                comment,"Bearer " + userManager.getToken());
         call.enqueue(new Callback<CommentResponse>() {
             @Override
             public void onResponse(Call<CommentResponse> call, Response<CommentResponse> response) {
@@ -105,7 +106,8 @@ public class CommentAPI {
 
     // Delete a comment
     public void delete(Comment comment) {
-        Call<Void> call = commentWebServiceAPI.delete(comment);
+        Call<Void> call = commentWebServiceAPI.delete(comment.getUserId(), comment.getVideoId(), comment.getApiId(),
+                "Bearer " + userManager.getToken() );
         call.enqueue(new Callback<Void>() {
             @Override
             public void onResponse(Call<Void> call, Response<Void> response) {

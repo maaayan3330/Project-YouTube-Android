@@ -1,7 +1,7 @@
 package com.example.youtube.model.repository;
 
 import androidx.lifecycle.LiveData;
-import androidx.lifecycle.MutableLiveData;
+
 import androidx.room.Room;
 
 import com.example.youtube.api.CommentAPI;
@@ -41,13 +41,13 @@ public class CommentsRepository {
 
     public void delete(Comment comment) {
         new Thread(() -> {
-            commentDao.delete(comment);
+            commentAPI.delete(comment);
         }).start();
     }
 
     public void update(Comment comment) {
         new Thread(() -> {
-            commentDao.update(comment);
+            commentAPI.update(comment);
         }).start();
     }
 }
