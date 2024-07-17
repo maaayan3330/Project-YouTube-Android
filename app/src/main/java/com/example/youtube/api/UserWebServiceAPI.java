@@ -57,7 +57,7 @@ public interface UserWebServiceAPI {
     @PUT("api/users/{id}")
     Call<UpdateUserResponse> updateUser(
             @Path("id") String id,
-            @Header("Authorization") String token,
+            @Header("Authorization") String token,  
             @Part("nickname") RequestBody nickname,
             @Part MultipartBody.Part avatar
     );

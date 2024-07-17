@@ -147,7 +147,7 @@ public class VideoListActivity extends AppCompatActivity implements VideoListAda
 
             }
             else  if (item.getItemId() == R.id.edit_user) {
-                if (UserManager.getInstance().getCurrentUser() != null) {
+                if (UserManager.getInstance().getToken() != null) {
                     EditUserDialogFragment dialogFragment = new EditUserDialogFragment();
                     dialogFragment.show(getSupportFragmentManager(), "EditUserDialogFragment");
                 }
@@ -156,7 +156,7 @@ public class VideoListActivity extends AppCompatActivity implements VideoListAda
                 }
                 return true;
             } else if (itemId == R.id.upload_data_yes) {
-                if (UserManager.getInstance().getCurrentUser() != null) {
+                if (UserManager.getInstance().getToken() != null) {
                     Intent intentForVideo = new Intent(VideoListActivity.this, AddVideoActivity.class);
                     CustomToast.showToast(VideoListActivity.this, "Upload video");
                     startActivity(intentForVideo);
@@ -180,7 +180,7 @@ public class VideoListActivity extends AppCompatActivity implements VideoListAda
                 return true;
             }
             else if (itemId == R.id.delete_user) {
-                if (UserManager.getInstance().getCurrentUser() != null) {
+                if (UserManager.getInstance().getToken() != null) {
                     CustomToast.showToast(VideoListActivity.this, "Delete User");
                     userViewModel.delete(UserManager.getInstance().getCurrentUser()); //delete user from database
                     UserManager.getInstance().clearCurrentUser(); //clear logged in user from user manager
