@@ -14,8 +14,8 @@ public class User {
     private String apiId;
     private final String username;
     private final String password;
-    private final String nickname;
-    private final String avatar;
+    private String nickname;
+    private String avatar;
 
     public User(String username, String password, String nickname, String avatar) {
         this.username = username;
@@ -35,10 +35,12 @@ public class User {
     public String getNickname() {
         return nickname;
     }
+    public void setNickname(String nickname) { this.nickname = nickname;}
 
     public String getAvatar() {
         return avatar;
     }
+    public void setAvatar(String avatar) {this.avatar = avatar;}
 
     public int getRoomId() {
         return roomId;

@@ -32,6 +32,7 @@ import com.example.youtube.R;
 import com.example.youtube.model.User;
 import com.example.youtube.utils.CustomToast;
 import com.example.youtube.model.Video;
+import com.example.youtube.utils.EditUserDialogFragment;
 import com.example.youtube.view.adapter.VideoListAdapter;
 import com.example.youtube.viewModel.UserViewModel;
 import com.example.youtube.viewModel.VideoViewModel;
@@ -143,13 +144,24 @@ public class VideoListActivity extends AppCompatActivity implements VideoListAda
                 startActivity(intentForLogIn);
                 finish(); // Close the current activity
                 return true;
+
+            }
+            else  if (item.getItemId() == R.id.edit_user) {
+                if (UserManager.getInstance().getCurrentUser() != null) {
+                    EditUserDialogFragment dialogFragment = new EditUserDialogFragment();
+                    dialogFragment.show(getSupportFragmentManager(), "EditUserDialogFragment");
+                }
+                else {
+                    CustomToast.showToast(this, "Option available only for registered users");
+                }
+                return true;
             } else if (itemId == R.id.upload_data_yes) {
                 if (UserManager.getInstance().getCurrentUser() != null) {
                     Intent intentForVideo = new Intent(VideoListActivity.this, AddVideoActivity.class);
                     CustomToast.showToast(VideoListActivity.this, "Upload video");
                     startActivity(intentForVideo);
                 } else {
-                    CustomToast.showToast(this, "Option available just for register users");
+                    CustomToast.showToast(this, "Option available only for registered users");
                 }
                 return true;
             } else if (itemId == R.id.dark_mode_yes) {

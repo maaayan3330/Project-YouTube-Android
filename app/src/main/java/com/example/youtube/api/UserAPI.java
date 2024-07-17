@@ -5,13 +5,18 @@ import androidx.lifecycle.MutableLiveData;
 
 import com.example.youtube.api.response.TokenRequest;
 import com.example.youtube.api.response.TokenResponse;
+import com.example.youtube.api.response.UpdateUserResponse;
 import com.example.youtube.api.response.UserResponse;
 import com.example.youtube.model.User;
 import com.example.youtube.model.UserManager;
 import com.example.youtube.model.daos.UserDao;
 
+import java.io.File;
 import java.util.List;
 
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -108,10 +113,6 @@ public class UserAPI {
         });
     }
 
-    public void update(User user) {
-        Call<Void> call = userWebServiceAPI.updateVideo(user.getRoomId(), user);
-    }
-
     // we asked from server throw the retrofit - Call<Void> createUser(@Body User user)
     // - to sent an object to the server
     public void add(User user) {
@@ -158,6 +159,43 @@ public class UserAPI {
             @Override
             public void onFailure(Call<TokenResponse> call, Throwable t) {
                 Log.e("Token", "Failed to get token", t);
+            }
+        });
+    }
+
+    public void updateUser(String nickname, File avatar) {
+        //get details from UserManager
+        UserManager userManager = UserManager.getInstance();
+        String token = userManager.getToken();
+        String id = userManager.getCurrentUser().getApiId();
+
+        // Prepare the nickname part
+        RequestBody nicknamePart = RequestBody.create(MediaType.parse("text/plain"), nickname);
+
+        // Prepare the avatar part
+        RequestBody avatarRequestBody = RequestBody.create(MediaType.parse("image/*"), avatar);
+        MultipartBody.Part avatarPart = MultipartBody.Part.createFormData("avatar", avatar.getName(), avatarRequestBody);
+
+        // Create the call
+        Call<UpdateUserResponse> call = userWebServiceAPI.updateUser(id,"Bearer " + token, nicknamePart, avatarPart);
+
+        call.enqueue(new Callback<UpdateUserResponse>() {
+            @Override
+            public void onResponse(Call<UpdateUserResponse> call, Response<UpdateUserResponse> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    new Thread(() -> {
+                        userDao.update(response.body().getUser());
+                        userListData.postValue(userDao.index()); //check if needed
+                        userManager.setCurrentUser(response.body().getUser()); //check if needed
+                    }).start();
+                } else {
+                    Log.e(TAG, "Response body is null or not successful");
+                }
+            }
+            @Override
+            public void onFailure(Call<UpdateUserResponse> call, Throwable t) {
+                // Handle the failure
+                Log.e(TAG, "Failed to add a new user", t);
             }
         });
     }
