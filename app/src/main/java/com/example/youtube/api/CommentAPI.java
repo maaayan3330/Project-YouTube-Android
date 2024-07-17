@@ -12,7 +12,6 @@ import com.example.youtube.model.UserManager;
 import com.example.youtube.model.daos.CommentDao;
 import com.example.youtube.utils.MyApplication;
 
-import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -26,7 +25,7 @@ public class CommentAPI {
     private final CommentWebServiceAPI commentWebServiceAPI;
     private UserManager userManager = UserManager.getInstance();
 
-    public CommentAPI( CommentDao commentDao) {
+    public CommentAPI(CommentDao commentDao) {
 
         this.commentDao = commentDao;
 
@@ -47,11 +46,9 @@ public class CommentAPI {
             @Override
             public void onResponse(Call<CommentsResponse> call, Response<CommentsResponse> response) {
                 if (response.isSuccessful() && response.body() != null) {
-                    new Thread(() -> {
-                        Log.e("apiComment", response.message());
-                        commentDao.clear();
-                        commentDao.insertList(response.body().getComments());
-                    }).start();
+                    Log.e("apiComment", response.message());
+                    commentDao.clear();
+                    commentDao.insertList(response.body().getComments());
                 }
             }
 
@@ -65,15 +62,13 @@ public class CommentAPI {
     // Add a new comment
     public void add(Comment comment) {
         Call<CommentResponse> call = commentWebServiceAPI.add(comment.getVideoId(), comment.getUserId(),
-                comment,"Bearer " + userManager.getToken());
+                comment, "Bearer " + userManager.getToken());
         call.enqueue(new Callback<CommentResponse>() {
             @Override
             public void onResponse(Call<CommentResponse> call, Response<CommentResponse> response) {
                 if (response.isSuccessful() && response.body() != null) {
-                    new Thread(() -> {
-                        Log.e("apiComment", response.message());
-                        commentDao.insert(response.body().getComment());
-                    }).start();
+                    Log.e("apiComment", response.message());
+                    commentDao.insert(response.body().getComment());
                 }
             }
 
@@ -86,19 +81,19 @@ public class CommentAPI {
 
     // Edit a comment
     public void update(Comment comment) {
-        Call<Comment> call = commentWebServiceAPI.update(comment);
-        call.enqueue(new Callback<Comment>() {
+        Call<CommentResponse> call = commentWebServiceAPI.update(comment.getUserId(), comment.getVideoId(),
+                comment.getApiId(), "Bearer " + userManager.getToken(), comment);
+        call.enqueue(new Callback<CommentResponse>() {
             @Override
-            public void onResponse(Call<Comment> call, Response<Comment> response) {
+            public void onResponse(Call<CommentResponse> call, Response<CommentResponse> response) {
                 if (response.isSuccessful() && response.body() != null) {
-                    new Thread(() -> {
-                        commentDao.update(response.body());
-                    }).start();
+                    Log.e("apiComment", response.message());
+                    commentDao.update(response.body().getComment());
                 }
             }
 
             @Override
-            public void onFailure(Call<Comment> call, Throwable t) {
+            public void onFailure(Call<CommentResponse> call, Throwable t) {
                 // Handle the failure (e.g., log the error, notify the user)
             }
         });
@@ -106,16 +101,12 @@ public class CommentAPI {
 
     // Delete a comment
     public void delete(Comment comment) {
-        Call<Void> call = commentWebServiceAPI.delete(comment.getUserId(), comment.getVideoId(), comment.getApiId(),
-                "Bearer " + userManager.getToken() );
+        Call<Void> call = commentWebServiceAPI.delete(comment.getUserId(), comment.getVideoId(),
+                comment.getApiId(), "Bearer " + userManager.getToken());
         call.enqueue(new Callback<Void>() {
             @Override
             public void onResponse(Call<Void> call, Response<Void> response) {
-                if (response.isSuccessful()) {
-                    new Thread(() -> {
-                        commentDao.delete(comment);
-                    }).start();
-                }
+                if (response.isSuccessful()) commentDao.delete(comment);
             }
 
             @Override

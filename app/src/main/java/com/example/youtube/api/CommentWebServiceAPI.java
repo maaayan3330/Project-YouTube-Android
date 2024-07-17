@@ -21,13 +21,16 @@ public interface CommentWebServiceAPI {
 
     // Add a new comment
     @POST("videos/{pid}/comments/{id}")
-    Call<CommentResponse> add(@Path("pid") String videoId, @Path("id") String userId, @Body Comment comment, @Header("Authorization") String token);
+    Call<CommentResponse> add(@Path("pid") String videoId, @Path("id") String userId,
+                              @Body Comment comment, @Header("Authorization") String token);
 
     // Edit a comment by comment ID
-    @PUT("videos/{pid}/comments/{cid}")
-    Call<Comment> update(@Body Comment comment);
+    @PUT("videos/{id}/{pid}/comments/{cid}")
+    Call<CommentResponse> update(@Path("id") String userId, @Path("pid") String videoId,
+                         @Path("cid") String commentId, @Header("Authorization") String token, @Body Comment comment);
 
     // Delete a comment by comment ID
     @DELETE("videos/{id}/{pid}/comments/{cid}")
-    Call<Void> delete(@Path("id") String userId, @Path("pid") String videoId, @Path("cid") String commentId, @Header("Authorization") String token);
+    Call<Void> delete(@Path("id") String userId, @Path("pid") String videoId,
+                      @Path("cid") String commentId, @Header("Authorization") String token);
 }
