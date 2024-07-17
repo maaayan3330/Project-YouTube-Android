@@ -61,7 +61,7 @@ A few minutes the project is loaded💕
 <img width="458" alt="Screenshot 2024-06-19 at 22 38 15" src="https://github.com/maaayan3330/Project-YouTube-Android/assets/155532952/a73ff696-044b-4ad7-852b-2aef847dabcb">
 <img width="458" alt="Screenshot 2024-06-19 at 22 37 59" src="https://github.com/maaayan3330/Project-YouTube-Android/assets/155532952/b70812c9-5a33-4c7e-8561-967e46d545d3">
 <img width="458" alt="Screenshot 2024-06-19 at 22 37 30" src="https://github.com/maaayan3330/Project-YouTube-Android/assets/155532952/3ba86281-971c-4711-a465-b9ae3b85d719">
-<img width="458" alt="Screenshot 2024-06-19 at 22 37 13" src="https://github.com/maaayan3330/Project-YouTube-Android/assets/155532952/d2d85dc2-b991-4f3c-8d6f-783d51cfe15a">
+![image](https://github.com/user-attachments/assets/586ee0d6-d602-43f9-8784-7b3129554f93)
 <img width="458" alt="Screenshot 2024-06-19 at 22 36 41" src="https://github.com/maaayan3330/Project-YouTube-Android/assets/155532952/1cb009c1-bbaf-49d1-b5af-5572d8cbf82a">
 <img width="458" alt="Screenshot 2024-06-19 at 22 39 25" src="https://github.com/maaayan3330/Project-YouTube-Android/assets/155532952/89660e66-70a9-42ff-9d19-8ab336f194cf">
 
