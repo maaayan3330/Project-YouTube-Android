@@ -34,6 +34,7 @@ import com.example.youtube.utils.CustomToast;
 import com.example.youtube.view.adapter.CommentAdapter;
 import com.example.youtube.viewModel.CommentViewModel;
 import com.example.youtube.viewModel.VideoViewModel;
+import com.google.android.material.imageview.ShapeableImageView;
 
 import java.util.List;
 
@@ -51,6 +52,7 @@ public class VideoDisplayActivity extends AppCompatActivity implements CommentAd
     private VideoViewModel videoViewModel;
     private CommentViewModel commentViewModel;
     private User currentUser;
+    private ShapeableImageView profileImageView;
 
 
     @Override
@@ -86,6 +88,8 @@ public class VideoDisplayActivity extends AppCompatActivity implements CommentAd
         video.setViews(video.getViews() + 1);
         videoViewModel.update(video);
         tv_views.setText("Views: " + video.getViews());
+///need get user;
+        profileImageView = findViewById(R.id.profileImageView);
 
         // Set the video URI and start playing
         vvVideo.setVideoURI(Uri.parse(video.getVideoUrl()));
