@@ -7,6 +7,7 @@ import androidx.room.Room;
 import com.example.youtube.api.VideoAPI;
 import com.example.youtube.model.AppDB;
 import com.example.youtube.model.Video;
+import com.example.youtube.model.daos.CommentDao;
 import com.example.youtube.model.daos.VideoDao;
 import com.example.youtube.utils.MyApplication;
 
@@ -16,6 +17,7 @@ import java.util.List;
 public class VideosRepository {
     private final VideoDao videoDao;
     private VideoListData videoListData;
+
     private final VideoAPI videoAPI;
 
     public VideosRepository() {
@@ -71,7 +73,7 @@ public class VideosRepository {
     // Add a new video
     public void add(Video video) {
         new Thread(() -> {
-            videoDao.insert(video);
+            videoAPI.add(video);
         }).start();
     }
 
@@ -79,7 +81,7 @@ public class VideosRepository {
     // Delete a video
     public void delete(Video video) {
         new Thread(() -> {
-            videoDao.delete(video);
+            videoAPI.delete(video);
         }).start();
     }
 
@@ -87,7 +89,7 @@ public class VideosRepository {
     // update a video
     public void update(Video video) {
         new Thread(() -> {
-            videoDao.update(video);
+            videoAPI.update(video);
         }).start();
     }
 }

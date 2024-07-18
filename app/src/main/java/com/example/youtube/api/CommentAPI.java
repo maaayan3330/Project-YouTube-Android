@@ -2,18 +2,14 @@ package com.example.youtube.api;
 
 import android.util.Log;
 
-import androidx.lifecycle.MutableLiveData;
-
 import com.example.youtube.R;
-import com.example.youtube.api.response.CommentResponse;
-import com.example.youtube.api.response.CommentsResponse;
-import com.example.youtube.api.response.UpdateCommentResponse;
+import com.example.youtube.api.response.commentsResponse.CommentResponse;
+import com.example.youtube.api.response.commentsResponse.CommentsResponse;
+import com.example.youtube.api.response.commentsResponse.UpdateCommentResponse;
 import com.example.youtube.model.Comment;
 import com.example.youtube.model.UserManager;
 import com.example.youtube.model.daos.CommentDao;
 import com.example.youtube.utils.MyApplication;
-
-import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;

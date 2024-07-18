@@ -1,4 +1,4 @@
-package com.example.youtube.api.response;
+package com.example.youtube.api.response.commentsResponse;
 
 import com.example.youtube.model.Comment;
 

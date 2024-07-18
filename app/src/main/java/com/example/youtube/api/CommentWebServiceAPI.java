@@ -1,8 +1,8 @@
 package com.example.youtube.api;
 
-import com.example.youtube.api.response.CommentResponse;
-import com.example.youtube.api.response.CommentsResponse;
-import com.example.youtube.api.response.UpdateCommentResponse;
+import com.example.youtube.api.response.commentsResponse.CommentResponse;
+import com.example.youtube.api.response.commentsResponse.CommentsResponse;
+import com.example.youtube.api.response.commentsResponse.UpdateCommentResponse;
 import com.example.youtube.model.Comment;
 
 import retrofit2.Call;
