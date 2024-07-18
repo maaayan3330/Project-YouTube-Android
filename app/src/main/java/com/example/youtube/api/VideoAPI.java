@@ -64,6 +64,7 @@ public class VideoAPI {
             @Override
             public void onResponse(Call<VideosResponse> call, Response<VideosResponse> response) {
                 if (response.isSuccessful() && response.body() != null) {
+
                     List<Video> videos = response.body().getVideos();
                     adjustVideoUrls(videos); // Adjust the URLs here
 
@@ -180,13 +181,19 @@ public class VideoAPI {
 
     // Edit a video
     public void update(Video video) {
+        if (userManager.getToken() == null) {
+            Log.e("apiVideo", "Token is null");
+            return; // Or handle appropriately, e.g., show an error message to the user
+        }
         String token = "Bearer " + userManager.getToken();
+        adjustUpdateVideo(video);
         Call<VideoResponse> call = videoWebServiceAPI.update(video.getUserId(), video.getApiId(), video, token);
         call.enqueue(new Callback<VideoResponse>() {
             @Override
             public void onResponse(Call<VideoResponse> call, Response<VideoResponse> response) {
                 if (response.isSuccessful()) {
                     Log.e("apiVideo", response.message());
+                    adjustUpdateVideo(video);
                     videoDao.update(video);
                 }
             }
@@ -234,8 +241,19 @@ public class VideoAPI {
         for (Video video : videos) {
             String adjustedVideoUrl = video.getVideoUrl().replace("http://localhost", "http://10.0.2.2");
             video.setVideoUrl(adjustedVideoUrl);
-            String adjustedAvatarUrl = video.getAvatar().replace("/localPhotos/", "http://10.0.2.2/localPhotos/");
-            video.setAvatar(adjustedAvatarUrl);
         }
     }
+
+    private void adjustUpdateVideo(Video video) {
+        String adjustedVideoUrl = video.getVideoUrl();
+        if (adjustedVideoUrl.startsWith("http://10.0.2.2:80")) {
+            adjustedVideoUrl = video.getVideoUrl().replace("http://10.0.2.2:80", "");
+        } else if (adjustedVideoUrl.startsWith("http://localhost")) {
+            adjustedVideoUrl = video.getVideoUrl().replace("http://localhost", "http://10.0.2.2");
+        } else if (adjustedVideoUrl.startsWith("/localVideos")) {
+            adjustedVideoUrl = "http://10.0.2.2:80" + adjustedVideoUrl;
+        }
+        video.setVideoUrl(adjustedVideoUrl);
+    }
+
 }
