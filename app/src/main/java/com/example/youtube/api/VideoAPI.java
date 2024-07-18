@@ -66,7 +66,7 @@ public class VideoAPI {
                 if (response.isSuccessful() && response.body() != null) {
 
                     List<Video> videos = response.body().getVideos();
-                    adjustVideoUrls(videos); // Adjust the URLs here
+                    adjustVideosUrls(videos); // Adjust the URLs here
 
                     // Sort videos by views in descending order
                     Collections.sort(videos, new Comparator<Video>() {
@@ -122,7 +122,8 @@ public class VideoAPI {
                 if (response.isSuccessful() && response.body() != null) {
                     Log.e("apiVideo", response.message());
                     List<Video> videos = response.body().getVideos();
-                    adjustVideoUrls(videos); // Adjust the URLs here
+                    adjustVideosUrls(videos);
+                    // Adjust the URLs here
                     userVideosliveData.setValue(videos);
                 }
             }
@@ -192,14 +193,14 @@ public class VideoAPI {
             return; // Or handle appropriately, e.g., show an error message to the user
         }
         String token = "Bearer " + userManager.getToken();
-        adjustUpdateVideo(video);
+        adjustVideoUrl(video);
         Call<VideoResponse> call = videoWebServiceAPI.update(video.getUserId(), video.getApiId(), video, token);
         call.enqueue(new Callback<VideoResponse>() {
             @Override
             public void onResponse(Call<VideoResponse> call, Response<VideoResponse> response) {
                 if (response.isSuccessful()) {
                     Log.e("apiVideo", response.message());
-                    adjustUpdateVideo(video);
+                    adjustVideoUrl(video);
                     videoDao.update(video);
                 }
             }
@@ -242,15 +243,9 @@ public class VideoAPI {
         });
     }
 
-    //adjust the url to fit the localhost
-    private void adjustVideoUrls(List<Video> videos) {
-        for (Video video : videos) {
-            String adjustedVideoUrl = video.getVideoUrl().replace("http://localhost", "http://10.0.2.2");
-            video.setVideoUrl(adjustedVideoUrl);
-        }
-    }
 
-    private void adjustUpdateVideo(Video video) {
+    //adjust the url to fit the localhost
+    private void adjustVideoUrl(Video video) {
         String adjustedVideoUrl = video.getVideoUrl();
         if (adjustedVideoUrl.startsWith("http://10.0.2.2:80")) {
             adjustedVideoUrl = video.getVideoUrl().replace("http://10.0.2.2:80", "");
@@ -261,5 +256,14 @@ public class VideoAPI {
         }
         video.setVideoUrl(adjustedVideoUrl);
     }
+
+    //adjust the url to fit the localhost
+    private void adjustVideosUrls(List<Video> videos) {
+        for (Video video : videos) {
+            adjustVideoUrl(video);
+        }
+    }
+
+
 
 }
