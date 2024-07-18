@@ -131,7 +131,9 @@ public class RegistrationActivity2 extends AppCompatActivity {
 
             if (resultMessage.equals("User registered successfully")) {
                 String avatarBase64 = profileImageBase64 != null ? profileImageBase64 : "";
-                if (!avatarBase64.startsWith("data:image/")) {
+                if (avatarBase64 == "") {
+                    avatarBase64 = "/localPhotos/defualtAvatar.png";
+                } else if (!avatarBase64.startsWith("data:image/")) {
                     avatarBase64 = "data:image/jpeg;base64," + avatarBase64;
                 }
                 User newUser = new User(usernameEditText.getText().toString(), passwordEditText.getText().toString(),
