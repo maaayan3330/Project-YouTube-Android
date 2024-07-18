@@ -126,6 +126,7 @@ public class VideoListAdapter extends RecyclerView.Adapter<VideoListAdapter.Vide
         //edit function
         holder.tv_edit.setOnClickListener(v -> {
             if (currentUser != null && currentUser.getUsername().equals(video.getArtist())){
+
                 listener.onEditVideo(video, position);
                 holder.llCollapse.setVisibility(View.GONE); // Collapse after editing
             }else {   CustomToast.showToast(context, "Option available just for the author user");}
