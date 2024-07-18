@@ -5,13 +5,19 @@ import androidx.lifecycle.MutableLiveData;
 
 import com.example.youtube.api.response.TokenRequest;
 import com.example.youtube.api.response.TokenResponse;
+import com.example.youtube.api.response.UpdateUserResponse;
 import com.example.youtube.api.response.UserResponse;
 import com.example.youtube.model.User;
 import com.example.youtube.model.UserManager;
 import com.example.youtube.model.daos.UserDao;
+import com.google.gson.JsonObject;
 
+import java.io.File;
 import java.util.List;
 
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -108,10 +114,6 @@ public class UserAPI {
         });
     }
 
-    public void update(User user) {
-        Call<Void> call = userWebServiceAPI.updateVideo(user.getRoomId(), user);
-    }
-
     // we asked from server throw the retrofit - Call<Void> createUser(@Body User user)
     // - to sent an object to the server
     public void add(User user) {
@@ -161,4 +163,44 @@ public class UserAPI {
             }
         });
     }
+
+    public void updateUser(String nickname, String avatarBase64) {
+        UserManager userManager = UserManager.getInstance();
+        String token = userManager.getToken();
+        String id = userManager.getCurrentUser().getApiId();
+
+        // Prepare the request body
+        JsonObject jsonObject = new JsonObject();
+        jsonObject.addProperty("nickname", nickname);
+        if (avatarBase64 != null) {
+            jsonObject.addProperty("avatar", avatarBase64);
+        }
+
+        RequestBody requestBody = RequestBody.create(MediaType.parse("application/json"), jsonObject.toString());
+
+        // Create the call
+        Call<UpdateUserResponse> call = userWebServiceAPI.updateUser(id, "Bearer " + token, requestBody);
+
+        call.enqueue(new Callback<UpdateUserResponse>() {
+            @Override
+            public void onResponse(Call<UpdateUserResponse> call, Response<UpdateUserResponse> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    new Thread(() -> {
+                        userDao.update(response.body().getUser());
+                        userListData.postValue(userDao.index());
+                        userManager.setCurrentUser(response.body().getUser());
+                    }).start();
+                    Log.d(TAG, "User updated successfully: " + response.body().getUser());
+                } else {
+                    Log.e(TAG, "Response body is null or not successful. Code: " + response.code());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<UpdateUserResponse> call, Throwable t) {
+                Log.e(TAG, "Failed to update user", t);
+            }
+        });
+    }
+
 }

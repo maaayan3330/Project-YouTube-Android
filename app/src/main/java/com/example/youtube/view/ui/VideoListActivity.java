@@ -32,6 +32,7 @@ import com.example.youtube.R;
 import com.example.youtube.model.User;
 import com.example.youtube.utils.CustomToast;
 import com.example.youtube.model.Video;
+import com.example.youtube.utils.EditUserDialogFragment;
 import com.example.youtube.view.adapter.VideoListAdapter;
 import com.example.youtube.viewModel.UserViewModel;
 import com.example.youtube.viewModel.VideoViewModel;
@@ -127,40 +128,71 @@ public class VideoListActivity extends AppCompatActivity implements VideoListAda
     }
 
     private boolean NavigationItemSelected(MenuItem item) {
-        int itemId = item.getItemId();
-        if (itemId == R.id.login_yes) {
-            Intent intentForLogIn = new Intent(VideoListActivity.this, SignUpActivity.class);
-            CustomToast.showToast(VideoListActivity.this, "Login");
-            startActivity(intentForLogIn);
-            return true;
-        } else if (itemId == R.id.logout_yes) {
-            // Clear user session data
-            UserManager.getInstance().clearCurrentUser();
-            UserManager.getInstance().clearToken(); //added clear token!!!!
-            // Navigate to login page
-            Intent intentForLogIn = new Intent(VideoListActivity.this, SignUpActivity.class);
-            CustomToast.showToast(VideoListActivity.this, "Logout");
-            startActivity(intentForLogIn);
-            finish(); // Close the current activity
-            return true;
-        } else if (itemId == R.id.upload_data_yes) {
-            if (UserManager.getInstance().getCurrentUser() != null) {
-                Intent intentForVideo = new Intent(VideoListActivity.this, AddVideoActivity.class);
-                CustomToast.showToast(VideoListActivity.this, "Upload video");
-                startActivity(intentForVideo);
-            } else {
-                CustomToast.showToast(this, "Option available just for register users");
+            int itemId = item.getItemId();
+            if (itemId == R.id.login_yes) {
+                Intent intentForLogIn = new Intent(VideoListActivity.this, SignUpActivity.class);
+                CustomToast.showToast(VideoListActivity.this, "Login");
+                startActivity(intentForLogIn);
+                return true;
+            } else if (itemId == R.id.logout_yes) {
+                // Clear user session data
+                UserManager.getInstance().clearCurrentUser();
+                UserManager.getInstance().clearToken(); //added clear token!!!!
+                // Navigate to login page
+                Intent intentForLogIn = new Intent(VideoListActivity.this, SignUpActivity.class);
+                CustomToast.showToast(VideoListActivity.this, "Logout");
+                startActivity(intentForLogIn);
+                finish(); // Close the current activity
+                return true;
+
             }
-            return true;
-        } else if (itemId == R.id.dark_mode_yes) {
-            // Toggle dark mode
-            int currentNightMode = getResources().getConfiguration().uiMode & Configuration.UI_MODE_NIGHT_MASK;
-            if (currentNightMode == Configuration.UI_MODE_NIGHT_NO) {
-                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
-                CustomToast.showToast(VideoListActivity.this, "Switched to Dark Mode");
-            } else {
-                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
-                CustomToast.showToast(VideoListActivity.this, "Switched to Light Mode");
+            else  if (item.getItemId() == R.id.edit_user) {
+                if (UserManager.getInstance().getToken() != null) {
+                    EditUserDialogFragment dialogFragment = new EditUserDialogFragment();
+                    dialogFragment.show(getSupportFragmentManager(), "EditUserDialogFragment");
+                }
+                else {
+                    CustomToast.showToast(this, "Option available only for registered users");
+                }
+                return true;
+            } else if (itemId == R.id.upload_data_yes) {
+                if (UserManager.getInstance().getToken() != null) {
+                    Intent intentForVideo = new Intent(VideoListActivity.this, AddVideoActivity.class);
+                    CustomToast.showToast(VideoListActivity.this, "Upload video");
+                    startActivity(intentForVideo);
+                } else {
+                    CustomToast.showToast(this, "Option available only for registered users");
+                }
+                return true;
+            } else if (itemId == R.id.dark_mode_yes) {
+                // Toggle dark mode
+                int currentNightMode = getResources().getConfiguration().uiMode & Configuration.UI_MODE_NIGHT_MASK;
+                if (currentNightMode == Configuration.UI_MODE_NIGHT_NO) {
+                    AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+                    CustomToast.showToast(VideoListActivity.this, "Switched to Dark Mode");
+                } else {
+                    AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+                    CustomToast.showToast(VideoListActivity.this, "Switched to Light Mode");
+                }
+                return true;
+            } else if (itemId == R.id.Help) {
+                CustomToast.showToast(VideoListActivity.this, "Help");
+                return true;
+            }
+            else if (itemId == R.id.delete_user) {
+                if (UserManager.getInstance().getToken() != null) {
+                    CustomToast.showToast(VideoListActivity.this, "Delete User");
+                    userViewModel.delete(UserManager.getInstance().getCurrentUser()); //delete user from database
+                    UserManager.getInstance().clearCurrentUser(); //clear logged in user from user manager
+                    UserManager.getInstance().clearToken(); //clear token from user manager
+                    Intent intentForDeleteUser = new Intent(VideoListActivity.this, SignUpActivity.class);
+                    startActivity(intentForDeleteUser);
+                    finish(); // Close the current activity
+                }
+                else {
+                    CustomToast.showToast(VideoListActivity.this, "You need to log in to delete user");
+                }
+                return true;
             }
             return true;
         } else if (itemId == R.id.Help) {
@@ -205,6 +237,8 @@ public class VideoListActivity extends AppCompatActivity implements VideoListAda
                 profileImageView.setImageResource(R.drawable.alon);
             } else if (currentUser.getAvatar().equals("/localPhotos/Tom.png")) {
                 profileImageView.setImageResource(R.drawable.tom);
+            } else if (currentUser.getAvatar().equals("/localPhotos/defualtAvatar.png")) {
+                profileImageView.setImageResource(R.drawable.profile_pic);
             } else if (profileImageBase64 != null && !profileImageBase64.isEmpty()) {
                     if (!profileImageBase64.startsWith("data:image/")) {
                         profileImageBase64 = "data:image/jpeg;base64," + profileImageBase64;
