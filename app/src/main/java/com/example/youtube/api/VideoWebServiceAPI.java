@@ -30,7 +30,7 @@ public interface VideoWebServiceAPI {
 
     //Fetches a specific video by user ID and video ID.
     @GET("videos/{userId}/videos/{videoId}")
-    Call<VideosResponse> getVideo(@Path("userId") String userId, @Path("videoId") String videoId);
+    Call<VideoResponse> getVideo(@Path("userId") String userId, @Path("videoId") String videoId);
 
 
     // add a new video entry in the server.

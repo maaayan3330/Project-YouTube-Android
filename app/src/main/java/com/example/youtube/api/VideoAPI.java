@@ -121,7 +121,9 @@ public class VideoAPI {
             public void onResponse(Call<VideosResponse> call, Response<VideosResponse> response) {
                 if (response.isSuccessful() && response.body() != null) {
                     Log.e("apiVideo", response.message());
-                    userVideosliveData.setValue(response.body().getVideos());
+                    List<Video> videos = response.body().getVideos();
+                    adjustVideoUrls(videos); // Adjust the URLs here
+                    userVideosliveData.setValue(videos);
                 }
             }
 
@@ -136,22 +138,26 @@ public class VideoAPI {
 
 
     // Fetch a specific video by user ID and video ID
-    public void getVideo(String userId, String videoId) {
-        Call<VideosResponse> call = videoWebServiceAPI.getVideo(userId, videoId);
-        call.enqueue(new Callback<VideosResponse>() {
+    public Video getVideo(String userId, String videoId) {
+        final MutableLiveData<Video> video = new MutableLiveData<>();
+        Call<VideoResponse> call = videoWebServiceAPI.getVideo(userId, videoId);
+        call.enqueue(new Callback<VideoResponse>() {
             @Override
-            public void onResponse(Call<VideosResponse> call, Response<VideosResponse> response) {
+            public void onResponse(Call<VideoResponse> call, Response<VideoResponse> response) {
                 if (response.isSuccessful() && response.body() != null) {
                     Log.e("apiVideo", response.message());
-//                    videoDao.insert(response.body().getVideo());
+                    video.setValue(response.body().getVideo());
+
                 }
             }
 
             @Override
-            public void onFailure(Call<VideosResponse> call, Throwable t) {
+            public void onFailure(Call<VideoResponse> call, Throwable t) {
                 Log.e("apiVideo", t.getMessage());
+                video.setValue(null);
             }
         });
+        return video.getValue();
     }
 
 

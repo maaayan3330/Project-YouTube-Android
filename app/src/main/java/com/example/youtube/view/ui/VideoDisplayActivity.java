@@ -150,8 +150,8 @@ public class VideoDisplayActivity extends AppCompatActivity implements CommentAd
         vvVideo.setOnClickListener(v -> showControls(clControl));
 
         profileImageView.setOnClickListener(v -> {
-            Intent intent= new Intent(this,ProfileActivity.class);
-            intent.putExtra("extra_user", (Serializable) artistUser);
+            Intent intent = new Intent(this, ProfileActivity.class);
+            intent.putExtra("extra_user", artistUser);
             startActivity(intent);
         });
     }

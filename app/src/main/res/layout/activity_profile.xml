@@ -69,8 +69,8 @@
 
             <com.google.android.material.imageview.ShapeableImageView
                 android:id="@+id/siv_profile_pic"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
+                android:layout_width="75dp"
+                android:layout_height="75dp"
                 android:contentDescription="@string/profile"
                 android:scaleType="centerCrop"
                 android:src="@drawable/profile_pic"
@@ -90,16 +90,13 @@
 
         </LinearLayout>
 
-        <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-            android:id="@+id/srl_refresh"
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rvListVideo"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/rvListVideo"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="?attr/android:colorBackground" />
-        </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+            android:layout_height="match_parent"
+            android:background="?attr/android:colorBackground" />
+
     </LinearLayout>
 
     <!-- Navigation drawer -->
