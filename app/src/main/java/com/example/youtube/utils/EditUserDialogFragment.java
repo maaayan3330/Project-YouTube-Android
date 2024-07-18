@@ -1,9 +1,11 @@
 package com.example.youtube.utils;
 
+import android.content.ContentValues;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.util.Base64;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,6 +15,7 @@ import android.widget.EditText;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.DialogFragment;
 import androidx.lifecycle.ViewModelProvider;
 
@@ -24,14 +27,15 @@ import com.example.youtube.viewModel.UserViewModel;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import android.util.Base64;
 
 public class EditUserDialogFragment extends DialogFragment {
     private static final int PICK_IMAGE_REQUEST = 1;
+    private static final int TAKE_PHOTO_REQUEST = 2;
 
     private EditText editNickname;
     private UserViewModel userViewModel;
     private Uri imageUri;
+    private Uri photoUri;
     private UserManager userManager;
 
     @Nullable
@@ -47,7 +51,7 @@ public class EditUserDialogFragment extends DialogFragment {
         Button buttonSave = view.findViewById(R.id.button_save);
 
         // Set up button listeners
-        buttonUploadImage.setOnClickListener(v -> openFileChooser());
+        buttonUploadImage.setOnClickListener(v -> showImagePickerDialog());
         buttonSave.setOnClickListener(v -> saveChanges());
 
         // Set current user data
@@ -59,18 +63,43 @@ public class EditUserDialogFragment extends DialogFragment {
         return view;
     }
 
-    private void openFileChooser() {
-        Intent intent = new Intent();
-        intent.setType("image/*");
-        intent.setAction(Intent.ACTION_GET_CONTENT);
-        startActivityForResult(intent, PICK_IMAGE_REQUEST);
+    private void showImagePickerDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        builder.setTitle("Select Image");
+        builder.setItems(new CharSequence[]{"Take Photo", "Choose from Gallery"}, (dialog, which) -> {
+            switch (which) {
+                case 0:
+                    Intent takePicture = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                    photoUri = createImageUri();
+                    takePicture.putExtra(MediaStore.EXTRA_OUTPUT, photoUri);
+                    startActivityForResult(takePicture, TAKE_PHOTO_REQUEST);
+                    break;
+                case 1:
+                    Intent pickPhoto = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                    startActivityForResult(pickPhoto, PICK_IMAGE_REQUEST);
+                    break;
+            }
+        });
+        builder.show();
+    }
+
+    private Uri createImageUri() {
+        String fileName = "temp_photo_" + System.currentTimeMillis() + ".jpg";
+        ContentValues values = new ContentValues();
+        values.put(MediaStore.Images.Media.TITLE, fileName);
+        values.put(MediaStore.Images.Media.MIME_TYPE, "image/jpeg");
+        return getActivity().getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
     }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == PICK_IMAGE_REQUEST && resultCode == getActivity().RESULT_OK && data != null && data.getData() != null) {
-            imageUri = data.getData();
+        if (resultCode == getActivity().RESULT_OK) {
+            if (requestCode == PICK_IMAGE_REQUEST && data != null && data.getData() != null) {
+                imageUri = data.getData();
+            } else if (requestCode == TAKE_PHOTO_REQUEST) {
+                imageUri = photoUri;
+            }
         }
     }
 
