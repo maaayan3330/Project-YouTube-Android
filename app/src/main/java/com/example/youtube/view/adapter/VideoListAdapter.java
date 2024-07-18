@@ -124,14 +124,14 @@ public class VideoListAdapter extends RecyclerView.Adapter<VideoListAdapter.Vide
         });
         //edit function
         holder.tv_edit.setOnClickListener(v -> {
-            if (UserManager.getInstance().getCurrentUser()!= null){
+            if (UserManager.getInstance().getToken() != null){
                 listener.onEditVideo(video, position);
                 holder.llCollapse.setVisibility(View.GONE); // Collapse after editing
             }else {   CustomToast.showToast(context, "Option available just for register users");}
         });
         //delete function
         holder.tv_delete.setOnClickListener(v -> {
-            if (UserManager.getInstance().getCurrentUser()!= null) {
+            if (UserManager.getInstance().getToken() != null) {
                 listener.onDeleteVideo(video,position);
             }else {CustomToast.showToast(context, "Option available just for register users");} });
     }

@@ -1,9 +1,11 @@
 package com.example.youtube.utils;
 
+import android.content.ContentValues;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.util.Base64;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,6 +15,7 @@ import android.widget.EditText;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.DialogFragment;
 import androidx.lifecycle.ViewModelProvider;
 
@@ -21,19 +24,19 @@ import com.example.youtube.model.User;
 import com.example.youtube.model.UserManager;
 import com.example.youtube.viewModel.UserViewModel;
 
-import java.io.File;
-import java.io.FileOutputStream;
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
 
 public class EditUserDialogFragment extends DialogFragment {
     private static final int PICK_IMAGE_REQUEST = 1;
+    private static final int TAKE_PHOTO_REQUEST = 2;
 
     private EditText editNickname;
     private UserViewModel userViewModel;
     private Uri imageUri;
+    private Uri photoUri;
     private UserManager userManager;
-    private File avatarFile;
 
     @Nullable
     @Override
@@ -48,7 +51,7 @@ public class EditUserDialogFragment extends DialogFragment {
         Button buttonSave = view.findViewById(R.id.button_save);
 
         // Set up button listeners
-        buttonUploadImage.setOnClickListener(v -> openFileChooser());
+        buttonUploadImage.setOnClickListener(v -> showImagePickerDialog());
         buttonSave.setOnClickListener(v -> saveChanges());
 
         // Set current user data
@@ -60,43 +63,68 @@ public class EditUserDialogFragment extends DialogFragment {
         return view;
     }
 
-    private void openFileChooser() {
-        Intent intent = new Intent();
-        intent.setType("image/*");
-        intent.setAction(Intent.ACTION_GET_CONTENT);
-        startActivityForResult(intent, PICK_IMAGE_REQUEST);
+    private void showImagePickerDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        builder.setTitle("Select Image");
+        builder.setItems(new CharSequence[]{"Take Photo", "Choose from Gallery"}, (dialog, which) -> {
+            switch (which) {
+                case 0:
+                    Intent takePicture = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                    photoUri = createImageUri();
+                    takePicture.putExtra(MediaStore.EXTRA_OUTPUT, photoUri);
+                    startActivityForResult(takePicture, TAKE_PHOTO_REQUEST);
+                    break;
+                case 1:
+                    Intent pickPhoto = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                    startActivityForResult(pickPhoto, PICK_IMAGE_REQUEST);
+                    break;
+            }
+        });
+        builder.show();
+    }
+
+    private Uri createImageUri() {
+        String fileName = "temp_photo_" + System.currentTimeMillis() + ".jpg";
+        ContentValues values = new ContentValues();
+        values.put(MediaStore.Images.Media.TITLE, fileName);
+        values.put(MediaStore.Images.Media.MIME_TYPE, "image/jpeg");
+        return getActivity().getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
     }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == PICK_IMAGE_REQUEST && resultCode == getActivity().RESULT_OK && data != null && data.getData() != null) {
-            imageUri = data.getData();
-            avatarFile = uriToFile(imageUri);
+        if (resultCode == getActivity().RESULT_OK) {
+            if (requestCode == PICK_IMAGE_REQUEST && data != null && data.getData() != null) {
+                imageUri = data.getData();
+            } else if (requestCode == TAKE_PHOTO_REQUEST) {
+                imageUri = photoUri;
+            }
         }
     }
 
     private void saveChanges() {
         String newNickname = editNickname.getText().toString().trim();
-        userViewModel.updateUser(newNickname, avatarFile);
+        String avatarBase64 = null;
+        if (imageUri != null) {
+            avatarBase64 = uriToBase64(imageUri);
+            Log.d("EditUserDialogFragment", "Avatar file converted to base64");
+        } else {
+            Log.d("EditUserDialogFragment", "Avatar file is null");
+        }
+        userViewModel.updateUser(newNickname, avatarBase64);
         dismiss();
     }
 
-    private File uriToFile(Uri uri) {
+    private String uriToBase64(Uri uri) {
         try {
             InputStream inputStream = getActivity().getContentResolver().openInputStream(uri);
-            File file = new File(getActivity().getCacheDir(), "avatar.jpg");
-            try (OutputStream outputStream = new FileOutputStream(file)) {
-                byte[] buffer = new byte[1024];
-                int length;
-                while ((length = inputStream.read(buffer)) > 0) {
-                    outputStream.write(buffer, 0, length);
-                }
-                outputStream.flush();
-            }
-            return file;
-        } catch (Exception e) {
-            Log.e("EditUserDialogFragment", "Failed to convert URI to File", e);
+            byte[] bytes = new byte[inputStream.available()];
+            inputStream.read(bytes);
+            inputStream.close();
+            return Base64.encodeToString(bytes, Base64.NO_WRAP);
+        } catch (IOException e) {
+            Log.e("EditUserDialogFragment", "Failed to convert URI to base64", e);
             return null;
         }
     }

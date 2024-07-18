@@ -221,7 +221,7 @@ public class VideoDisplayActivity extends AppCompatActivity implements CommentAd
     }
 
     private void addComment(EditText et_CommentInput) {
-        if (currentUser != null) {
+        if (UserManager.getInstance().getToken() != null) {
             String commentText = et_CommentInput.getText().toString().trim();
             if (!commentText.isEmpty()) {
                 Comment newComment = new Comment(video.getApiId(), currentUser.getApiId(), currentUser.getNickname(), commentText, currentUser.getAvatar());

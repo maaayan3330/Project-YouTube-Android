@@ -77,7 +77,7 @@ public class UserRepository {
         userAPI.createToken(user);
     }
 
-    public void updateUser(String nickname, File avatar) {
+    public void updateUser(String nickname, String avatar) {
         userAPI.updateUser(nickname, avatar);
     }
 }
