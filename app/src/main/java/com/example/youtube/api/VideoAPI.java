@@ -13,6 +13,9 @@ import com.example.youtube.model.Video;
 import com.example.youtube.model.daos.VideoDao;
 import com.example.youtube.utils.MyApplication;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import retrofit2.Call;
@@ -60,17 +63,43 @@ public class VideoAPI {
         call.enqueue(new Callback<VideosResponse>() {
             @Override
             public void onResponse(Call<VideosResponse> call, Response<VideosResponse> response) {
-                List<Video> videos = response.body() != null ? response.body().getVideos() : null;
-                adjustVideoUrls(videos); // Adjust the URLs here
-                // Run database operations on a separate thread
-                new Thread(() -> {
+                if (response.isSuccessful() && response.body() != null) {
+                    List<Video> videos = response.body().getVideos();
+                    adjustVideoUrls(videos); // Adjust the URLs here
+
+                    // Sort videos by views in descending order
+                    Collections.sort(videos, new Comparator<Video>() {
+                        @Override
+                        public int compare(Video v1, Video v2) {
+                            return Integer.compare(v2.getViews(), v1.getViews());
+                        }
+                    });
+
+                    // Get top 10 most viewed videos
+                    List<Video> topViewedVideos = new ArrayList<>(videos.subList(0, Math.min(10, videos.size())));
+
+                    // Get remaining videos after removing top 10
+                    List<Video> remainingVideos = new ArrayList<>(videos.subList(Math.min(10, videos.size()), videos.size()));
+
+                    // Shuffle the remaining videos to select 10 at random
+                    Collections.shuffle(remainingVideos);
+                    List<Video> randomVideos = new ArrayList<>(remainingVideos.subList(0, Math.min(10, remainingVideos.size())));
+
+                    // Combine the lists
+                    List<Video> selectedVideos = new ArrayList<>();
+                    selectedVideos.addAll(topViewedVideos);
+                    selectedVideos.addAll(randomVideos);
+
                     // Clear existing video data
                     videoDao.clear();
-                    // Insert the fetched videos data
-                    videoDao.insertList(videos);
+
+                    // Insert the selected videos data
+                    videoDao.insertList(selectedVideos);
+
                     // Post the updated video list to LiveData
                     videoListData.postValue(videoDao.index());
-                }).start();
+                }
+
             }
 
             @Override
@@ -134,9 +163,9 @@ public class VideoAPI {
             public void onResponse(Call<VideoResponse> call, Response<VideoResponse> response) {
                 if (response.isSuccessful()) {
                     Log.e("apiVideo", response.message());
-                    Video newVideo= response.body().getVideo();
+                    Video newVideo = response.body().getVideo();
                     videoDao.insert(video);
-                }else {
+                } else {
                     Log.e("apiVideoAdd", "Server error: " + response.code() + " " + response.message());
                 }
             }
@@ -161,6 +190,7 @@ public class VideoAPI {
                     videoDao.update(video);
                 }
             }
+
             @Override
             public void onFailure(Call<VideoResponse> call, Throwable t) {
                 Log.e("apiVideo", t.getMessage());
@@ -171,7 +201,7 @@ public class VideoAPI {
 
     // Delete a video
     public void delete(Video video) {
-        Log.e("apiVideo", video.getUserId()+"/videos/"+video.getApiId());
+        Log.e("apiVideo", video.getUserId() + "/videos/" + video.getApiId());
 
         Call<Void> call = videoWebServiceAPI.delete(video.getUserId(), video.getApiId(),
                 "Bearer " + userManager.getToken());
