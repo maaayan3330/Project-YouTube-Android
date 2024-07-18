@@ -195,28 +195,6 @@ public class VideoListActivity extends AppCompatActivity implements VideoListAda
                 return true;
             }
             return true;
-        } else if (itemId == R.id.Help) {
-            CustomToast.showToast(VideoListActivity.this, "Help");
-            return true;
-        } else if (itemId == R.id.delete_user) {
-            if (UserManager.getInstance().getCurrentUser() != null) {
-                CustomToast.showToast(VideoListActivity.this, "Delete User");
-                userViewModel.delete(UserManager.getInstance().getCurrentUser()); //delete user from database
-                UserManager.getInstance().clearCurrentUser(); //clear logged in user from user manager
-                UserManager.getInstance().clearToken(); //clear token from user manager
-                Intent intentForDeleteUser = new Intent(VideoListActivity.this, SignUpActivity.class);
-                startActivity(intentForDeleteUser);
-                finish(); // Close the current activity
-            } else {
-                CustomToast.showToast(VideoListActivity.this, "You need to log in to delete user");
-            }
-            return true;
-        } else if (itemId == R.id.Help) {
-            CustomToast.showToast(VideoListActivity.this, "Help");
-            return true;
-        } else {
-            return false;
-        }
 
     }
 
