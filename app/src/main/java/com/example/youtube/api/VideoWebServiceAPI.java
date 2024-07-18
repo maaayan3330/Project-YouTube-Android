@@ -4,13 +4,17 @@ import com.example.youtube.api.response.videoResponse.VideoResponse;
 import com.example.youtube.api.response.videoResponse.VideosResponse;
 import com.example.youtube.model.Video;
 
+import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.DELETE;
 import retrofit2.http.GET;
 import retrofit2.http.Header;
+import retrofit2.http.Multipart;
 import retrofit2.http.POST;
 import retrofit2.http.PUT;
+import retrofit2.http.Part;
 import retrofit2.http.Path;
 
 /**
@@ -34,9 +38,20 @@ public interface VideoWebServiceAPI {
 
 
     // add a new video entry in the server.
+    @Multipart
     @POST("videos/{userId}/videos")
-    Call<VideoResponse> add(@Path("userId") String userId, @Body Video video,
-                   @Header("Authorization") String token);
+    Call<VideoResponse> addVideo(
+            @Path("userId") String userId,
+            @Part MultipartBody.Part video,
+            @Part("title") RequestBody title,
+            @Part("description") RequestBody description,
+            @Part("artist") RequestBody artist,
+            @Part("views") RequestBody views,
+            @Part("subscribers") RequestBody subscribers,
+            @Part("likes") RequestBody likes,
+            @Part("avatar") RequestBody avatar,
+            @Header("Authorization") String token
+    );
 
 
     //Deletes a video entry by its ID.

@@ -8,16 +8,21 @@ import androidx.lifecycle.MutableLiveData;
 import com.example.youtube.R;
 import com.example.youtube.api.response.videoResponse.VideoResponse;
 import com.example.youtube.api.response.videoResponse.VideosResponse;
+import com.example.youtube.model.Comment;
 import com.example.youtube.model.UserManager;
 import com.example.youtube.model.Video;
 import com.example.youtube.model.daos.VideoDao;
 import com.example.youtube.utils.MyApplication;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -163,16 +168,30 @@ public class VideoAPI {
 
 
     // Add a new video
-    public void add(Video video) {
+    public void addVideo(Video video) {
         String token = "Bearer " + userManager.getToken();
-        Call<VideoResponse> call = videoWebServiceAPI.add(video.getUserId(), video, token);
+        File videoFile = new File(video.getVideoUrl());
+        RequestBody videoRequestBody = RequestBody.create(MediaType.parse("video/*"), videoFile);
+        MultipartBody.Part videoPart = MultipartBody.Part.createFormData("video", videoFile.getName(), videoRequestBody);
+
+        RequestBody title = RequestBody.create(MediaType.parse("text/plain"), video.getTitle());
+        RequestBody description = RequestBody.create(MediaType.parse("text/plain"), video.getDescription());
+        RequestBody artist = RequestBody.create(MediaType.parse("text/plain"), video.getArtist());
+        RequestBody views = RequestBody.create(MediaType.parse("text/plain"), String.valueOf(video.getViews()));
+        RequestBody subscribers = RequestBody.create(MediaType.parse("text/plain"), String.valueOf(video.getSubscribers()));
+        RequestBody likes = RequestBody.create(MediaType.parse("text/plain"), String.valueOf(video.getLikes()));
+        RequestBody avatar = RequestBody.create(MediaType.parse("text/plain"), video.getAvatar());
+
+        Call<VideoResponse> call = videoWebServiceAPI.addVideo(video.getUserId(), videoPart,
+                title, description, artist, views, subscribers, likes, avatar, token);
         call.enqueue(new Callback<VideoResponse>() {
             @Override
             public void onResponse(Call<VideoResponse> call, Response<VideoResponse> response) {
-                if (response.isSuccessful()) {
+                if (response.isSuccessful() && response.body() != null) {
                     Log.e("apiVideo", response.message());
                     Video newVideo = response.body().getVideo();
-                    videoDao.insert(video);
+                    newVideo.setRoomId(video.getRoomId());
+                    videoDao.insert(newVideo);
                 } else {
                     Log.e("apiVideoAdd", "Server error: " + response.code() + " " + response.message());
                 }

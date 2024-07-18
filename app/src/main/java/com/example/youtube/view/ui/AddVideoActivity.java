@@ -90,7 +90,7 @@ public class AddVideoActivity extends AppCompatActivity {
                 getContentResolver().takePersistableUriPermission(selectedVideoUri, takeFlags);
 
                 videoPath = selectedVideoUri.toString();
-                Log.d("alon12", videoPath);
+                Log.d("videoPath", videoPath);
                 CustomToast.showToast(this, "Video Selected: " + videoPath);
                 VideoView vvVideo = findViewById(R.id.vvTest);
                 vvVideo.setVideoURI(selectedVideoUri);

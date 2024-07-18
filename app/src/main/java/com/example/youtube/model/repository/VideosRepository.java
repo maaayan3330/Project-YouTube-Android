@@ -73,7 +73,7 @@ public class VideosRepository {
     // Add a new video
     public void add(Video video) {
         new Thread(() -> {
-            videoAPI.add(video);
+            videoAPI.addVideo(video);
         }).start();
     }
 
