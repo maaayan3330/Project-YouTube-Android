@@ -1,37 +1,49 @@
 package com.example.youtube.utils;
 
 import android.content.Context;
-import com.example.youtube.model.UserManager;
+import androidx.lifecycle.Observer;
 import com.example.youtube.R;
-
-// This class makes sure that all the fields are filled and filled correctly
+import com.example.youtube.model.User;
+import com.example.youtube.viewModel.UserViewModel;
 
 public class PasswordValidator {
-    private UserManager userManager;
+    private UserViewModel userViewModel;
 
-    public PasswordValidator() {
-        userManager = UserManager.getInstance(); //  UserManager
+    public PasswordValidator(UserViewModel userViewModel) {
+        this.userViewModel = userViewModel;
     }
 
-    // this func checks if the fields have been filled correctly
-    public String registerUser(Context context, String username, String password, String confirmPassword, String nickname) {
+    public void registerUser(Context context, String username, String password, String confirmPassword, String nickname, ValidationCallback callback) {
         if (username.isEmpty() || password.isEmpty() || confirmPassword.isEmpty() || nickname.isEmpty()) {
-            return "All fields must be filled";
+            callback.onValidationResult("All fields must be filled");
+            return;
         }
 
         if (!isPasswordValid(password)) {
-            return context.getString(R.string.password_restrictions);
+            callback.onValidationResult(context.getString(R.string.password_restrictions));
+            return;
         }
 
         if (!password.equals(confirmPassword)) {
-            return "The passwords do not match";
+            callback.onValidationResult("The passwords do not match");
+            return;
         }
 
-        // if all the fields are correct we will register the user account if he clicked the button
-        return "User registered successfully";
+        // Check if username is already taken asynchronously
+        userViewModel.getUserByUsername(username).observeForever(new Observer<User>() {
+            @Override
+            public void onChanged(User user) {
+                if (user != null) {
+                    callback.onValidationResult("Username already taken");
+                } else {
+                    callback.onValidationResult("User registered successfully");
+                }
+                // Remove the observer after getting the result
+                userViewModel.getUserByUsername(username).removeObserver(this);
+            }
+        });
     }
 
-    // this func is for checking if the password is valid
     public boolean isPasswordValid(String password) {
         if (password.length() < 8) {
             return false;
@@ -54,5 +66,9 @@ public class PasswordValidator {
             }
         }
         return hasUppercase && hasLowercase && hasDigit && hasSpecialChar;
+    }
+
+    public interface ValidationCallback {
+        void onValidationResult(String result);
     }
 }
