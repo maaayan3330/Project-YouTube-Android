@@ -79,12 +79,6 @@ public class EditUserDialogFragment extends DialogFragment {
         }
     }
 
-//    private void saveChanges() {
-//        String newNickname = editNickname.getText().toString().trim();
-//        userViewModel.updateUser(newNickname, avatarFile);
-//        dismiss();
-//    }
-
     private void saveChanges() {
         String newNickname = editNickname.getText().toString().trim();
         String avatarBase64 = null;
