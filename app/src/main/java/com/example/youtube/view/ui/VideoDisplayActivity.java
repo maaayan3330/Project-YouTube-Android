@@ -41,6 +41,7 @@ import com.example.youtube.viewModel.UserViewModel;
 import com.example.youtube.viewModel.VideoViewModel;
 import com.google.android.material.imageview.ShapeableImageView;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
@@ -95,11 +96,13 @@ public class VideoDisplayActivity extends AppCompatActivity implements CommentAd
         videoViewModel.update(video);
         tv_views.setText("Views: " + video.getViews());
 
-        userViewModel.getUserByUsername(video.getArtist()).observe(this,user -> {
-            artistUser=user;
+
+        profileImageView = findViewById(R.id.siv_profile_pic);
+        userViewModel.getUserByUsername(video.getArtist()).observe(this, user -> {
+            artistUser = user;
+            loadUserPic(artistUser);
         });
-        profileImageView = findViewById(R.id.profileImageView);
-//        loadUserPic(artistUser);
+
 
         // Set the video URI and start playing
         vvVideo.setVideoURI(Uri.parse(video.getVideoUrl()));
@@ -145,6 +148,12 @@ public class VideoDisplayActivity extends AppCompatActivity implements CommentAd
 
         // Show control buttons when user touches the video
         vvVideo.setOnClickListener(v -> showControls(clControl));
+
+        profileImageView.setOnClickListener(v -> {
+            Intent intent= new Intent(this,ProfileActivity.class);
+            intent.putExtra("extra_user", (Serializable) artistUser);
+            startActivity(intent);
+        });
     }
 
     private void playPause(View view) {

@@ -48,9 +48,9 @@ public class ProfileActivity extends AppCompatActivity implements VideoListAdapt
     private ShapeableImageView profileImageView;
     private Uri profileImageUri; // Variable to store the profile image URI
     private VideoViewModel videoViewModel;
-    private UserViewModel userViewModel;
+
     private List<Video> currentVideos;
-    private User currentUser;
+    private User artistUser;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,7 +58,7 @@ public class ProfileActivity extends AppCompatActivity implements VideoListAdapt
         setContentView(R.layout.activity_profile);
 
         videoViewModel = new ViewModelProvider(this).get(VideoViewModel.class);
-        userViewModel = new ViewModelProvider(this).get(UserViewModel.class);
+        artistUser= (User) getIntent().getSerializableExtra("extra_user");
 
         // RecyclerView for displaying the video list
         RecyclerView rvListVideo = findViewById(R.id.rvListVideo);
@@ -66,14 +66,8 @@ public class ProfileActivity extends AppCompatActivity implements VideoListAdapt
         videoListAdapter = new VideoListAdapter(this, this);
         rvListVideo.setAdapter(videoListAdapter);
 
-        UserManager userManager = UserManager.getInstance();
-        currentUser = userManager.getCurrentUser();
-        //
-//        userViewModel.getCurrentUser().observe(this, user -> {
-//            currentUser = user;
-//        });
 
-        videoViewModel.getVideosByUserId(currentUser.getApiId()).observe(this, videos -> {
+        videoViewModel.getVideosByUserId(artistUser.getApiId()).observe(this, videos -> {
             currentVideos = videos;
             videoListAdapter.setVideos(currentVideos);
         });
