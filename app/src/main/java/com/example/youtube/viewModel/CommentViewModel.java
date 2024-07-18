@@ -19,7 +19,9 @@ public class CommentViewModel extends ViewModel {
     }
 
     public void add(Comment comment) {
+
         repository.add(comment);
+
     }
 
     public void delete(Comment comment) {

@@ -1,7 +1,7 @@
 package com.example.youtube.model.repository;
 
 import androidx.lifecycle.LiveData;
-import androidx.lifecycle.MutableLiveData;
+
 import androidx.room.Room;
 
 import com.example.youtube.api.CommentAPI;
@@ -14,7 +14,6 @@ import java.util.List;
 
 public class CommentsRepository {
     private final CommentDao commentDao;
-    private MutableLiveData<List<Comment>> commentsByVideoId;
     private final CommentAPI commentAPI;
 
     public CommentsRepository() {
@@ -23,8 +22,7 @@ public class CommentsRepository {
                 .allowMainThreadQueries()
                 .build();
         commentDao = db.commentDao();
-        commentsByVideoId = new MutableLiveData<>();
-        commentAPI = new CommentAPI(commentsByVideoId, commentDao);
+        commentAPI = new CommentAPI( commentDao);
     }
 
 
@@ -32,7 +30,7 @@ public class CommentsRepository {
         new Thread(() -> {
             commentAPI.fetchCommentsByVideoId(videoId);
         }).start();
-        return commentsByVideoId;
+        return commentDao.getCommentsByVideoId(videoId); // Return LiveData from Room
     }
 
     public void add(Comment comment) {
@@ -43,13 +41,13 @@ public class CommentsRepository {
 
     public void delete(Comment comment) {
         new Thread(() -> {
-            commentDao.delete(comment);
+            commentAPI.delete(comment);
         }).start();
     }
 
     public void update(Comment comment) {
         new Thread(() -> {
-            commentDao.update(comment);
+            commentAPI.update(comment);
         }).start();
     }
 }

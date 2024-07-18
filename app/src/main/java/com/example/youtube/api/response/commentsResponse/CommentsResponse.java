@@ -1,10 +1,10 @@
-package com.example.youtube.api.response;
+package com.example.youtube.api.response.commentsResponse;
 
 import com.example.youtube.model.Comment;
 
 import java.util.List;
 
-public class CommentResponse {
+public class CommentsResponse {
     private String message;
     private List<Comment> comments;
 

@@ -1,5 +1,6 @@
 package com.example.youtube.model.daos;
 
+import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
 import androidx.room.Delete;
 import androidx.room.Insert;
@@ -15,7 +16,7 @@ import java.util.List;
 public interface CommentDao {
     // Query to get comments by video ID
     @Query("SELECT * FROM comment WHERE videoId = :videoId")
-    List<Comment> getCommentsByVideoId(String videoId);
+    LiveData<List<Comment>> getCommentsByVideoId(String videoId);
 
     @Query("SELECT * FROM comment")
     List<Comment> index();

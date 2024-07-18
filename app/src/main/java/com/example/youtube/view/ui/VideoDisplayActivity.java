@@ -3,8 +3,12 @@ package com.example.youtube.view.ui;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Base64;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
@@ -33,7 +37,9 @@ import com.example.youtube.model.Video;
 import com.example.youtube.utils.CustomToast;
 import com.example.youtube.view.adapter.CommentAdapter;
 import com.example.youtube.viewModel.CommentViewModel;
+import com.example.youtube.viewModel.UserViewModel;
 import com.example.youtube.viewModel.VideoViewModel;
+import com.google.android.material.imageview.ShapeableImageView;
 
 import java.util.List;
 
@@ -51,6 +57,8 @@ public class VideoDisplayActivity extends AppCompatActivity implements CommentAd
     private VideoViewModel videoViewModel;
     private CommentViewModel commentViewModel;
     private User currentUser;
+    private ShapeableImageView profileImageView;
+    private User artistUser;
 
 
     @Override
@@ -63,7 +71,7 @@ public class VideoDisplayActivity extends AppCompatActivity implements CommentAd
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_video_display);
 
-
+        UserViewModel userViewModel = new ViewModelProvider(this).get(UserViewModel.class);
         videoViewModel = new ViewModelProvider(this).get(VideoViewModel.class);
         commentViewModel = new ViewModelProvider(this).get(CommentViewModel.class);
         currentUser = UserManager.getInstance().getCurrentUser();
@@ -87,6 +95,12 @@ public class VideoDisplayActivity extends AppCompatActivity implements CommentAd
         videoViewModel.update(video);
         tv_views.setText("Views: " + video.getViews());
 
+        userViewModel.getUserByUsername(video.getArtist()).observe(this,user -> {
+            artistUser=user;
+        });
+        profileImageView = findViewById(R.id.profileImageView);
+//        loadUserPic(artistUser);
+
         // Set the video URI and start playing
         vvVideo.setVideoURI(Uri.parse(video.getVideoUrl()));
         vvVideo.start();
@@ -101,7 +115,6 @@ public class VideoDisplayActivity extends AppCompatActivity implements CommentAd
             commentAdapter.setComments(comments);
             commentList = comments;
         });
-
 
 
         // New comment function
@@ -265,4 +278,26 @@ public class VideoDisplayActivity extends AppCompatActivity implements CommentAd
         commentAdapter.notifyItemRangeChanged(position, commentList.size());
         commentViewModel.delete(comment);
     }
+
+    private void loadUserPic(User user) {
+        String profileImageBase64 = user.getAvatar();
+        if (user.getAvatar().equals("/localPhotos/Maayan.png")) {
+            profileImageView.setImageResource(R.drawable.maayan);
+        } else if (user.getAvatar().equals("/localPhotos/Alon.png")) {
+            profileImageView.setImageResource(R.drawable.alon);
+        } else if (user.getAvatar().equals("/localPhotos/Tom.png")) {
+            profileImageView.setImageResource(R.drawable.tom);
+        } else if (profileImageBase64 != null && !profileImageBase64.isEmpty()) {
+            if (!profileImageBase64.startsWith("data:image/")) {
+                profileImageBase64 = "data:image/jpeg;base64," + profileImageBase64;
+            }
+            byte[] decodedString = Base64.decode(profileImageBase64.split(",")[1], Base64.DEFAULT);
+            Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
+            profileImageView.setImageBitmap(decodedByte);
+
+        } else {
+            profileImageView.setImageResource(R.drawable.profile_pic);
+        }
+    }
 }
+

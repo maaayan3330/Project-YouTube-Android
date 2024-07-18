@@ -7,6 +7,7 @@ import androidx.room.Room;
 import com.example.youtube.api.VideoAPI;
 import com.example.youtube.model.AppDB;
 import com.example.youtube.model.Video;
+import com.example.youtube.model.daos.CommentDao;
 import com.example.youtube.model.daos.VideoDao;
 import com.example.youtube.utils.MyApplication;
 
@@ -16,6 +17,7 @@ import java.util.List;
 public class VideosRepository {
     private final VideoDao videoDao;
     private VideoListData videoListData;
+
     private final VideoAPI videoAPI;
 
     public VideosRepository() {
@@ -25,7 +27,7 @@ public class VideosRepository {
                 .build();
         videoDao = db.videoDao();
         videoListData = new VideoListData();
-        videoAPI=new VideoAPI(videoListData,videoDao);
+        videoAPI = new VideoAPI(videoListData, videoDao);
     }
 
     class VideoListData extends MutableLiveData<List<Video>> {
@@ -43,34 +45,52 @@ public class VideosRepository {
         }
     }
 
+
+    //get all local data
     public LiveData<List<Video>> getAll() {
         return videoListData;
     }
-    public List<Video> getVideosByUserId(String userId) {
-        return videoDao.getVideosByUserId(userId);
+
+
+    //fetch all videos  from the server
+    public void reload() {
+        new Thread(videoAPI::fetchAllVideos).start();
     }
 
+
+    // get videos by user ID
+    public LiveData<List<Video>> getVideosByUserId(String userId) {
+        return videoAPI.fetchVideosByUserId(userId);
+    }
+
+
+    // get a specific video
+    public void getVideo(String userId, String videoId) {
+        videoAPI.getVideo(userId, videoId);
+    }
+
+
+    // Add a new video
     public void add(Video video) {
         new Thread(() -> {
-            videoDao.insert(video);
+            videoAPI.add(video);
         }).start();
     }
 
+
+    // Delete a video
     public void delete(Video video) {
         new Thread(() -> {
-            videoDao.delete(video);
+            videoAPI.delete(video);
         }).start();
     }
 
+
+    // update a video
     public void update(Video video) {
         new Thread(() -> {
-            videoDao.update(video);
+            videoAPI.update(video);
         }).start();
-    }
-
-
-    public void reload() {
-        new Thread(videoAPI::get).start();
     }
 }
 

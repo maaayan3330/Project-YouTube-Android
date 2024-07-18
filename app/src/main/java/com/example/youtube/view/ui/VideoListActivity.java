@@ -194,13 +194,29 @@ public class VideoListActivity extends AppCompatActivity implements VideoListAda
                 }
                 return true;
             }
-            else if (itemId == R.id.Help) {
-                CustomToast.showToast(VideoListActivity.this, "Help");
-                return true;
-             }
-            else {
-                return false;
+            return true;
+        } else if (itemId == R.id.Help) {
+            CustomToast.showToast(VideoListActivity.this, "Help");
+            return true;
+        } else if (itemId == R.id.delete_user) {
+            if (UserManager.getInstance().getCurrentUser() != null) {
+                CustomToast.showToast(VideoListActivity.this, "Delete User");
+                userViewModel.delete(UserManager.getInstance().getCurrentUser()); //delete user from database
+                UserManager.getInstance().clearCurrentUser(); //clear logged in user from user manager
+                UserManager.getInstance().clearToken(); //clear token from user manager
+                Intent intentForDeleteUser = new Intent(VideoListActivity.this, SignUpActivity.class);
+                startActivity(intentForDeleteUser);
+                finish(); // Close the current activity
+            } else {
+                CustomToast.showToast(VideoListActivity.this, "You need to log in to delete user");
             }
+            return true;
+        } else if (itemId == R.id.Help) {
+            CustomToast.showToast(VideoListActivity.this, "Help");
+            return true;
+        } else {
+            return false;
+        }
 
     }
 
@@ -224,12 +240,13 @@ public class VideoListActivity extends AppCompatActivity implements VideoListAda
             } else if (currentUser.getAvatar().equals("/localPhotos/defualtAvatar.png")) {
                 profileImageView.setImageResource(R.drawable.profile_pic);
             } else if (profileImageBase64 != null && !profileImageBase64.isEmpty()) {
-                if (!profileImageBase64.startsWith("data:image/")) {
-                    profileImageBase64 = "data:image/jpeg;base64," + profileImageBase64;
-                }
-                byte[] decodedString = Base64.decode(profileImageBase64.split(",")[1], Base64.DEFAULT);
-                Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
-                profileImageView.setImageBitmap(decodedByte);
+                    if (!profileImageBase64.startsWith("data:image/")) {
+                        profileImageBase64 = "data:image/jpeg;base64," + profileImageBase64;
+                    }
+                    byte[] decodedString = Base64.decode(profileImageBase64.split(",")[1], Base64.DEFAULT);
+                    Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
+                    profileImageView.setImageBitmap(decodedByte);
+
             } else {
                 profileImageView.setImageResource(R.drawable.profile_pic);
             }
