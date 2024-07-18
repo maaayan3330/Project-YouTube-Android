@@ -1,10 +1,9 @@
 package com.example.youtube.view.ui;
 
 import android.Manifest;
-import android.content.pm.PackageManager;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
@@ -22,52 +21,11 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.example.youtube.R;
+import com.example.youtube.model.User;
 import com.example.youtube.utils.PasswordValidator;
-import com.example.youtube.model.User;
 import com.example.youtube.utils.UploadImage;
-import com.example.youtube.R;
 import com.example.youtube.viewModel.UserViewModel;
-import android.content.Intent;
-import android.content.res.Configuration;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.os.Bundle;
-import android.util.Base64;
-import android.util.Log;
-import android.view.MenuItem;
-import android.view.View;
-import android.widget.EditText;
-import android.widget.LinearLayout;
-import android.widget.Toast;
-
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.ActionBarDrawerToggle;
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.app.AppCompatDelegate;
-import androidx.appcompat.widget.SearchView;
-import androidx.appcompat.widget.Toolbar;
-import androidx.core.view.GravityCompat;
-import androidx.drawerlayout.widget.DrawerLayout;
-import androidx.lifecycle.ViewModelProvider;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
-
-import com.example.youtube.R;
-import com.example.youtube.model.User;
-import com.example.youtube.utils.CustomToast;
-import com.example.youtube.model.Video;
-import com.example.youtube.view.adapter.VideoListAdapter;
-import com.example.youtube.viewModel.UserViewModel;
-import com.example.youtube.viewModel.VideoViewModel;
-import com.google.android.material.navigation.NavigationView;
-import com.google.android.material.imageview.ShapeableImageView;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import com.example.youtube.model.UserManager;
 
 public class RegistrationActivity2 extends AppCompatActivity {
     private static final int REQUEST_PERMISSION_CODE = 100;
@@ -91,9 +49,9 @@ public class RegistrationActivity2 extends AppCompatActivity {
             return insets;
         });
 
-        passwordValidator = new PasswordValidator();
-        uploadImage = new UploadImage(this);
         userViewModel = new ViewModelProvider(this).get(UserViewModel.class);
+        passwordValidator = new PasswordValidator(userViewModel);
+        uploadImage = new UploadImage(this);
 
         usernameEditText = findViewById(R.id.TextUserName);
         passwordEditText = findViewById(R.id.TextPassword);
@@ -119,29 +77,33 @@ public class RegistrationActivity2 extends AppCompatActivity {
 
         Button registerButton = findViewById(R.id.registerButton);
         registerButton.setOnClickListener(v -> {
-            String resultMessage = passwordValidator.registerUser(
+            passwordValidator.registerUser(
                     RegistrationActivity2.this,
                     usernameEditText.getText().toString(),
                     passwordEditText.getText().toString(),
                     confirmPasswordEditText.getText().toString(),
-                    nicknameEditText.getText().toString()
+                    nicknameEditText.getText().toString(),
+                    new PasswordValidator.ValidationCallback() {
+                        @Override
+                        public void onValidationResult(String resultMessage) {
+                            showCustomToast(resultMessage);
+
+                            if (resultMessage.equals("User registered successfully")) {
+                                String avatarBase64 = profileImageBase64 != null ? profileImageBase64 : "";
+                                if (avatarBase64.isEmpty()) {
+                                    avatarBase64 = "/localPhotos/defualtAvatar.png";
+                                } else if (!avatarBase64.startsWith("data:image/")) {
+                                    avatarBase64 = "data:image/jpeg;base64," + avatarBase64;
+                                }
+                                User newUser = new User(usernameEditText.getText().toString(), passwordEditText.getText().toString(),
+                                        nicknameEditText.getText().toString(), avatarBase64);
+                                userViewModel.insert(newUser);
+                                Intent intent = new Intent(RegistrationActivity2.this, SignUpActivity.class);
+                                startActivity(intent);
+                            }
+                        }
+                    }
             );
-
-            showCustomToast(resultMessage);
-
-            if (resultMessage.equals("User registered successfully")) {
-                String avatarBase64 = profileImageBase64 != null ? profileImageBase64 : "";
-                if (avatarBase64 == "") {
-                    avatarBase64 = "/localPhotos/defualtAvatar.png";
-                } else if (!avatarBase64.startsWith("data:image/")) {
-                    avatarBase64 = "data:image/jpeg;base64," + avatarBase64;
-                }
-                User newUser = new User(usernameEditText.getText().toString(), passwordEditText.getText().toString(),
-                        nicknameEditText.getText().toString(), avatarBase64);
-                userViewModel.insert(newUser);
-                Intent intent = new Intent(RegistrationActivity2.this, SignUpActivity.class);
-                startActivity(intent);
-            }
         });
     }
 
