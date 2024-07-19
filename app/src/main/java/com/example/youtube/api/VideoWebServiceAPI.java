@@ -50,6 +50,7 @@ public interface VideoWebServiceAPI {
             @Part("subscribers") RequestBody subscribers,
             @Part("likes") RequestBody likes,
             @Part("avatar") RequestBody avatar,
+            @Part("comments") RequestBody comments,
             @Header("Authorization") String token
     );
 

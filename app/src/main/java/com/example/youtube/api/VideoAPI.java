@@ -170,7 +170,8 @@ public class VideoAPI {
     // Add a new video
     public void addVideo(Video video) {
         String token = "Bearer " + userManager.getToken();
-        File videoFile = new File(video.getVideoUrl());
+        String videoUrl= video.getVideoUrl();
+        File videoFile = new File(videoUrl);
         RequestBody videoRequestBody = RequestBody.create(MediaType.parse("video/*"), videoFile);
         MultipartBody.Part videoPart = MultipartBody.Part.createFormData("video", videoFile.getName(), videoRequestBody);
 
@@ -181,9 +182,10 @@ public class VideoAPI {
         RequestBody subscribers = RequestBody.create(MediaType.parse("text/plain"), String.valueOf(video.getSubscribers()));
         RequestBody likes = RequestBody.create(MediaType.parse("text/plain"), String.valueOf(video.getLikes()));
         RequestBody avatar = RequestBody.create(MediaType.parse("text/plain"), video.getAvatar());
+        RequestBody comments = RequestBody.create(MediaType.parse("application/json"), "[]"); // Empty JSON array
 
         Call<VideoResponse> call = videoWebServiceAPI.addVideo(video.getUserId(), videoPart,
-                title, description, artist, views, subscribers, likes, avatar, token);
+                title, description, artist, views, subscribers, likes, avatar,comments, token);
         call.enqueue(new Callback<VideoResponse>() {
             @Override
             public void onResponse(Call<VideoResponse> call, Response<VideoResponse> response) {
