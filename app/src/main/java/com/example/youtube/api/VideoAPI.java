@@ -248,13 +248,6 @@ public class VideoAPI {
             @Override
             public void onResponse(Call<Void> call, Response<Void> response) {
                 if (response.isSuccessful()) {
-
-//                    CommentsRepository commentsRepository =new CommentsRepository();
-//                    List<Comment> comments = (List<Comment>) commentsRepository.getCommentsByVideoId(video.getApiId());
-//                    for (Comment comment :comments){
-//                        commentsRepository.delete(comment);
-//                    }
-
                     videoDao.delete(video);
                 } else {
                     Log.e("apiVideo", "Server error: " + response.code() + " " + response.message());

@@ -52,7 +52,6 @@ public class VideoListActivity extends AppCompatActivity implements VideoListAda
     private ActionBarDrawerToggle drawerToggle;
     private Toolbar toolbar;
     private ShapeableImageView profileImageView;
-    private String profileImageBase64; // Variable to store the profile image Base64
     private VideoViewModel videoViewModel;
     private UserViewModel userViewModel;
     private List<Video> currentVideos;
