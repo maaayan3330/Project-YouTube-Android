@@ -8,7 +8,6 @@ import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Base64;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
@@ -41,7 +40,6 @@ import com.example.youtube.viewModel.UserViewModel;
 import com.example.youtube.viewModel.VideoViewModel;
 import com.google.android.material.imageview.ShapeableImageView;
 
-import java.io.Serializable;
 import java.util.List;
 
 /**
@@ -90,7 +88,7 @@ public class VideoDisplayActivity extends AppCompatActivity implements CommentAd
         TextView tv_views = findViewById(R.id.tv_view);
         TextView tv_author = findViewById(R.id.tv_author);
         tv_like.setText("Likes: " + video.getLikes());
-        tv_author.setText("Artist: " + video.getArtist());
+        tv_author.setText("Artist: " + video.getUserName());
         // Increment views count when the video starts playing
         video.setViews(video.getViews() + 1);
         videoViewModel.update(video);
@@ -98,10 +96,12 @@ public class VideoDisplayActivity extends AppCompatActivity implements CommentAd
 
 
         profileImageView = findViewById(R.id.siv_profile_pic);
-        userViewModel.getUserByUsername(video.getArtist()).observe(this, user -> {
-            artistUser = user;
-            loadUserPic(artistUser);
-        });
+        artistUser=userViewModel.getUserByUsername(video.getUserName()).getValue();
+        loadUserPic(artistUser);
+//        userViewModel.getUserByUsername(video.getUserName()).observe(this, user -> {
+//            artistUser = user;
+//            loadUserPic(artistUser);
+//        });
 
 
         // Set the video URI and start playing

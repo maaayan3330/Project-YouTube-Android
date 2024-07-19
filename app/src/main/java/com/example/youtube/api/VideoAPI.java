@@ -8,7 +8,6 @@ import androidx.lifecycle.MutableLiveData;
 import com.example.youtube.R;
 import com.example.youtube.api.response.videoResponse.VideoResponse;
 import com.example.youtube.api.response.videoResponse.VideosResponse;
-import com.example.youtube.model.Comment;
 import com.example.youtube.model.UserManager;
 import com.example.youtube.model.Video;
 import com.example.youtube.model.daos.VideoDao;
@@ -177,15 +176,15 @@ public class VideoAPI {
 
         RequestBody title = RequestBody.create(MediaType.parse("text/plain"), video.getTitle());
         RequestBody description = RequestBody.create(MediaType.parse("text/plain"), video.getDescription());
-        RequestBody artist = RequestBody.create(MediaType.parse("text/plain"), video.getArtist());
+        RequestBody artist = RequestBody.create(MediaType.parse("text/plain"), video.getUserName());
         RequestBody views = RequestBody.create(MediaType.parse("text/plain"), String.valueOf(video.getViews()));
         RequestBody subscribers = RequestBody.create(MediaType.parse("text/plain"), String.valueOf(video.getSubscribers()));
         RequestBody likes = RequestBody.create(MediaType.parse("text/plain"), String.valueOf(video.getLikes()));
         RequestBody avatar = RequestBody.create(MediaType.parse("text/plain"), video.getAvatar());
         RequestBody comments = RequestBody.create(MediaType.parse("application/json"), "[]"); // Empty JSON array
-        RequestBody userIdPart = RequestBody.create(MediaType.parse("text/plain"), video.getUserId()); // Add userId as part
+        RequestBody userIdPart = RequestBody.create(MediaType.parse("text/plain"), video.getUserApiId()); // Add userId as part
 
-        Call<VideoResponse> call = videoWebServiceAPI.addVideo(video.getUserId(), videoPart,
+        Call<VideoResponse> call = videoWebServiceAPI.addVideo(video.getUserApiId(), videoPart,
                 title, description, artist, views, subscribers, likes, avatar, comments, userIdPart, token);
         call.enqueue(new Callback<VideoResponse>() {
             @Override
@@ -226,7 +225,7 @@ public class VideoAPI {
         }
         String token = "Bearer " + userManager.getToken();
         adjustVideoUrl(video);
-        Call<VideoResponse> call = videoWebServiceAPI.update(video.getUserId(), video.getApiId(), video, token);
+        Call<VideoResponse> call = videoWebServiceAPI.update(video.getUserApiId(), video.getApiId(), video, token);
         call.enqueue(new Callback<VideoResponse>() {
             @Override
             public void onResponse(Call<VideoResponse> call, Response<VideoResponse> response) {
@@ -247,9 +246,9 @@ public class VideoAPI {
 
     // Delete a video
     public void delete(Video video) {
-        Log.e("apiVideo", video.getUserId() + "/videos/" + video.getApiId());
+        Log.e("apiVideo", video.getUserApiId() + "/videos/" + video.getApiId());
 
-        Call<Void> call = videoWebServiceAPI.delete(video.getUserId(), video.getApiId(),
+        Call<Void> call = videoWebServiceAPI.delete(video.getUserApiId(), video.getApiId(),
                 "Bearer " + userManager.getToken());
         call.enqueue(new Callback<Void>() {
             @Override

@@ -40,6 +40,6 @@ public interface VideoDao {
     // Insert a list of videos
     @Insert
     void insertList(List<Video> videoList);
-    @Query("SELECT * FROM video WHERE userId = :userId")
+    @Query("SELECT * FROM video WHERE userApiId = :userId")
     List<Video> getVideosByUserId(String userId);
 }

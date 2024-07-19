@@ -104,7 +104,7 @@ public class VideoListAdapter extends RecyclerView.Adapter<VideoListAdapter.Vide
         holder.tvDescription.setText("Description: "+ video.getDescription());
         holder.tvViews.setText("Views: " + video.getViews());
         holder.tvLikes.setText("Likes: " + video.getLikes());
-        holder.tvAuthor.setText("Author: " + video.getArtist());
+        holder.tvAuthor.setText("Author: " + video.getUserName());
 
         holder.vvVideo.setOnErrorListener(new MediaPlayer.OnErrorListener() {
             @Override
@@ -166,7 +166,7 @@ public class VideoListAdapter extends RecyclerView.Adapter<VideoListAdapter.Vide
         });
         //edit function
         holder.tv_edit.setOnClickListener(v -> {
-            if (currentUser != null && currentUser.getUsername().equals(video.getArtist())){
+            if (currentUser != null && currentUser.getUsername().equals(video.getUserName())){
 
                 listener.onEditVideo(video, position);
                 holder.llCollapse.setVisibility(View.GONE); // Collapse after editing
@@ -174,7 +174,7 @@ public class VideoListAdapter extends RecyclerView.Adapter<VideoListAdapter.Vide
         });
         //delete function
         holder.tv_delete.setOnClickListener(v -> {
-            if (currentUser != null && currentUser.getUsername().equals(video.getArtist())) {
+            if (currentUser != null && currentUser.getUsername().equals(video.getUserName())) {
                 listener.onDeleteVideo(video,position);
             }else {CustomToast.showToast(context, "Option available just for the author user");} });
     }
