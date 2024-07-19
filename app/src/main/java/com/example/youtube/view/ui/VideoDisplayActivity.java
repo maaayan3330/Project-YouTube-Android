@@ -96,12 +96,12 @@ public class VideoDisplayActivity extends AppCompatActivity implements CommentAd
 
 
         profileImageView = findViewById(R.id.siv_profile_pic);
-        artistUser=userViewModel.getUserByUsername(video.getUserName()).getValue();
-        loadUserPic(artistUser);
-//        userViewModel.getUserByUsername(video.getUserName()).observe(this, user -> {
-//            artistUser = user;
-//            loadUserPic(artistUser);
-//        });
+//        artistUser=userViewModel.getUserByUsername(video.getUserName()).getValue();
+//        loadUserPic(artistUser);
+        userViewModel.getUserByUsername(video.getUserName()).observe(this, user -> {
+            artistUser = user;
+            loadUserPic(artistUser);
+        });
 
 
         // Set the video URI and start playing

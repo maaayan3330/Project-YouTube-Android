@@ -26,7 +26,6 @@ public class Video implements Serializable {
     private String videoUrl;
     @SerializedName("artist")// URl of the video
     private String userName;      // Author of the video
-    private String nickname;
     private int likes;          // Number of likes
     private int views;          // Number of views
     private int subscribers;
@@ -34,12 +33,11 @@ public class Video implements Serializable {
 
 
 
-    public Video(String userApiId, String title, String description, String videoUrl, String userName,String nickname, int likes, int views, int subscribers, String avatar) {
+    public Video(String userApiId, String title, String description, String videoUrl, String userName, int likes, int views, int subscribers, String avatar) {
         this.title = title;
         this.description = description;
         this.videoUrl = videoUrl;
         this.userName = userName;
-        this.nickname=nickname;
         this.likes = likes;
         this.views = views;
         this.subscribers = subscribers;
@@ -138,11 +136,4 @@ public class Video implements Serializable {
         this.apiId = apiId;
     }
 
-    public String getNickname() {
-        return nickname;
-    }
-
-    public void setNickname(String nickname) {
-        this.nickname = nickname;
-    }
 }

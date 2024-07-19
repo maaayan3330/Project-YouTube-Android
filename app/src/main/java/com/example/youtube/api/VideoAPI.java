@@ -193,16 +193,10 @@ public class VideoAPI {
                     Log.e("apiVideo", response.message());
                     Video newVideo = response.body().getVideo();
                     newVideo.setRoomId(video.getRoomId());
+                    adjustVideoUrl(newVideo);
                     videoDao.insert(newVideo);
-                    // Retrieve the current list of videos
-                    List<Video> currentVideos = videoListData.getValue();
-                    if (currentVideos == null) {
-                        currentVideos = new ArrayList<>();
-                    }
-                    // Add the new video to the list
-                    currentVideos.add(newVideo);
                     // Post the updated list to videoListData
-                    videoListData.postValue(currentVideos);
+                    videoListData.postValue(videoDao.index());
 
                 } else {
                     Log.e("apiVideoAdd", "Server error: " + response.code() + " " + response.message());
