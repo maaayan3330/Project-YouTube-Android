@@ -113,7 +113,7 @@ public class AddVideoActivity extends AppCompatActivity {
         }
 
         User currentUser = UserManager.getInstance().getCurrentUser();
-        String userId = String.valueOf(currentUser.getRoomId());
+        String userId = String.valueOf(currentUser.getApiId());
         String artist = currentUser.getNickname();
         String avatar = currentUser.getAvatar();
 

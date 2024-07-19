@@ -51,6 +51,7 @@ public interface VideoWebServiceAPI {
             @Part("likes") RequestBody likes,
             @Part("avatar") RequestBody avatar,
             @Part("comments") RequestBody comments,
+            @Part("userId") RequestBody userIdPart,  //userId as part of the request body
             @Header("Authorization") String token
     );
 
