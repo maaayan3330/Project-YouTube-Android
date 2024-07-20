@@ -39,9 +39,7 @@ public class VideosRepository {
         @Override
         protected void onActive() {
             super.onActive();
-            new Thread(() -> {
-                videoListData.postValue(videoDao.index());
-            }).start();
+            new Thread(() -> videoListData.postValue(videoDao.index())).start();
         }
     }
 
@@ -72,25 +70,19 @@ public class VideosRepository {
 
     // Add a new video
     public void add(Video video) {
-        new Thread(() -> {
-            videoAPI.add(video);
-        }).start();
+        new Thread(() -> videoAPI.addVideo(video)).start();
     }
 
 
     // Delete a video
     public void delete(Video video) {
-        new Thread(() -> {
-            videoAPI.delete(video);
-        }).start();
+        new Thread(() -> videoAPI.delete(video)).start();
     }
 
 
     // update a video
     public void update(Video video) {
-        new Thread(() -> {
-            videoAPI.update(video);
-        }).start();
+        new Thread(() -> videoAPI.update(video)).start();
     }
 }
 

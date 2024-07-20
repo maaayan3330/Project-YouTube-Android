@@ -52,5 +52,6 @@
     <string name="profile">prooooooooooooooo</string>
     <string name="check">check</string>
     <string name="BaseUrl">http://10.0.2.2:80/api/</string>
+    <string name="welcome">Yo, yo, yo! Welcome to my crib on the web, where the beats are fresh and the vibes are always fly.</string>
 
 </resources>

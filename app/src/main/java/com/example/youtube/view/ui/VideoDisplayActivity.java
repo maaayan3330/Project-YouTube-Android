@@ -8,7 +8,6 @@ import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Base64;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
@@ -89,17 +88,21 @@ public class VideoDisplayActivity extends AppCompatActivity implements CommentAd
         TextView tv_views = findViewById(R.id.tv_view);
         TextView tv_author = findViewById(R.id.tv_author);
         tv_like.setText("Likes: " + video.getLikes());
-        tv_author.setText("Artist: " + video.getArtist());
+        tv_author.setText("Artist: " + video.getUserName());
         // Increment views count when the video starts playing
         video.setViews(video.getViews() + 1);
         videoViewModel.update(video);
         tv_views.setText("Views: " + video.getViews());
 
-        userViewModel.getUserByUsername(video.getArtist()).observe(this,user -> {
-            artistUser=user;
-        });
-        profileImageView = findViewById(R.id.profileImageView);
+
+        profileImageView = findViewById(R.id.siv_profile_pic);
+//        artistUser=userViewModel.getUserByUsername(video.getUserName()).getValue();
 //        loadUserPic(artistUser);
+        userViewModel.getUserByUsername(video.getUserName()).observe(this, user -> {
+            artistUser = user;
+            loadUserPic(artistUser);
+        });
+
 
         // Set the video URI and start playing
         vvVideo.setVideoURI(Uri.parse(video.getVideoUrl()));
@@ -145,6 +148,12 @@ public class VideoDisplayActivity extends AppCompatActivity implements CommentAd
 
         // Show control buttons when user touches the video
         vvVideo.setOnClickListener(v -> showControls(clControl));
+
+        profileImageView.setOnClickListener(v -> {
+            Intent intent = new Intent(this, ProfileActivity.class);
+            intent.putExtra("extra_user", artistUser);
+            startActivity(intent);
+        });
     }
 
     private void playPause(View view) {

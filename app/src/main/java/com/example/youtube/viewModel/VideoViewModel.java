@@ -21,8 +21,13 @@ public class VideoViewModel extends ViewModel {
     public LiveData<List<Video>> get() {
         return videos;
     }
+
     public LiveData<List<Video>> getVideosByUserId(String userId) {
-       return repository.getVideosByUserId(userId);
+        return repository.getVideosByUserId(userId);
+    }
+
+    public void getVideo(String userId, String videoId) {
+        repository.getVideo(userId, videoId);
     }
 
     public void add(Video video) {

@@ -3,7 +3,9 @@ package com.example.youtube.view.adapter;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
+import android.media.MediaPlayer;
 import android.net.Uri;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -102,7 +104,46 @@ public class VideoListAdapter extends RecyclerView.Adapter<VideoListAdapter.Vide
         holder.tvDescription.setText("Description: "+ video.getDescription());
         holder.tvViews.setText("Views: " + video.getViews());
         holder.tvLikes.setText("Likes: " + video.getLikes());
-        holder.tvAuthor.setText("Author: " + video.getArtist());
+        holder.tvAuthor.setText("Author: " + video.getUserName());
+
+        holder.vvVideo.setOnErrorListener(new MediaPlayer.OnErrorListener() {
+            @Override
+            public boolean onError(MediaPlayer mp, int what, int extra) {
+                String errorMessage;
+                switch (what) {
+                    case MediaPlayer.MEDIA_ERROR_UNKNOWN:
+                        errorMessage = "Unknown media error";
+                        break;
+                    case MediaPlayer.MEDIA_ERROR_SERVER_DIED:
+                        errorMessage = "Media server died";
+                        break;
+                    default:
+                        errorMessage = "Media error: " + what + " , " + extra;
+                        break;
+                }
+
+                switch (extra) {
+                    case MediaPlayer.MEDIA_ERROR_IO:
+                        errorMessage += " (IO error)";
+                        break;
+                    case MediaPlayer.MEDIA_ERROR_MALFORMED:
+                        errorMessage += " (Malformed media)";
+                        break;
+                    case MediaPlayer.MEDIA_ERROR_UNSUPPORTED:
+                        errorMessage += " (Unsupported format)";
+                        break;
+                    case MediaPlayer.MEDIA_ERROR_TIMED_OUT:
+                        errorMessage += " (Media timeout)";
+                        break;
+                    default:
+                        errorMessage += " (Unknown error: " + extra + ")";
+                        break;
+                }
+
+                Log.e("vvVideoError", errorMessage);
+                return true; // Returning true indicates we handled the error
+            }
+        });
 
         // Set the video URI
         holder.vvVideo.setVideoURI(Uri.parse(video.getVideoUrl()));
@@ -125,7 +166,7 @@ public class VideoListAdapter extends RecyclerView.Adapter<VideoListAdapter.Vide
         });
         //edit function
         holder.tv_edit.setOnClickListener(v -> {
-            if (currentUser != null && currentUser.getUsername().equals(video.getArtist())){
+            if (currentUser != null && currentUser.getUsername().equals(video.getUserName())){
 
                 listener.onEditVideo(video, position);
                 holder.llCollapse.setVisibility(View.GONE); // Collapse after editing
@@ -133,7 +174,7 @@ public class VideoListAdapter extends RecyclerView.Adapter<VideoListAdapter.Vide
         });
         //delete function
         holder.tv_delete.setOnClickListener(v -> {
-            if (currentUser != null && currentUser.getUsername().equals(video.getArtist())) {
+            if (currentUser != null && currentUser.getUsername().equals(video.getUserName())) {
                 listener.onDeleteVideo(video,position);
             }else {CustomToast.showToast(context, "Option available just for the author user");} });
     }

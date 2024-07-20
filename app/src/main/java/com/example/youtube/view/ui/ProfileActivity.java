@@ -2,8 +2,11 @@ package com.example.youtube.view.ui;
 
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Base64;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
@@ -48,9 +51,10 @@ public class ProfileActivity extends AppCompatActivity implements VideoListAdapt
     private ShapeableImageView profileImageView;
     private Uri profileImageUri; // Variable to store the profile image URI
     private VideoViewModel videoViewModel;
-    private UserViewModel userViewModel;
+    private ShapeableImageView artistProfile;
+
     private List<Video> currentVideos;
-    private User currentUser;
+    private User artistUser;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,7 +62,7 @@ public class ProfileActivity extends AppCompatActivity implements VideoListAdapt
         setContentView(R.layout.activity_profile);
 
         videoViewModel = new ViewModelProvider(this).get(VideoViewModel.class);
-        userViewModel = new ViewModelProvider(this).get(UserViewModel.class);
+        artistUser= (User) getIntent().getSerializableExtra("extra_user");
 
         // RecyclerView for displaying the video list
         RecyclerView rvListVideo = findViewById(R.id.rvListVideo);
@@ -66,18 +70,15 @@ public class ProfileActivity extends AppCompatActivity implements VideoListAdapt
         videoListAdapter = new VideoListAdapter(this, this);
         rvListVideo.setAdapter(videoListAdapter);
 
-        UserManager userManager = UserManager.getInstance();
-        currentUser = userManager.getCurrentUser();
-        //
-//        userViewModel.getCurrentUser().observe(this, user -> {
-//            currentUser = user;
-//        });
 
-        videoViewModel.getVideosByUserId(currentUser.getApiId()).observe(this, videos -> {
+        videoViewModel.getVideosByUserId(artistUser.getApiId()).observe(this, videos -> {
             currentVideos = videos;
             videoListAdapter.setVideos(currentVideos);
         });
 
+
+        artistProfile = findViewById(R.id.siv_profile_pic);
+        loadUserPic(artistUser);
 
         // Initialize Toolbar
         toolbar = findViewById(R.id.toolbar);
@@ -287,5 +288,27 @@ public class ProfileActivity extends AppCompatActivity implements VideoListAdapt
         currentVideos.remove(position);
         videoListAdapter.notifyItemRemoved(position);
         videoListAdapter.notifyItemRangeChanged(position, currentVideos.size());
+    }
+
+
+    private void loadUserPic(User user) {
+        String profileImageBase64 = user.getAvatar();
+        if (user.getAvatar().equals("/localPhotos/Maayan.png")) {
+            artistProfile.setImageResource(R.drawable.maayan);
+        } else if (user.getAvatar().equals("/localPhotos/Alon.png")) {
+            artistProfile.setImageResource(R.drawable.alon);
+        } else if (user.getAvatar().equals("/localPhotos/Tom.png")) {
+            artistProfile.setImageResource(R.drawable.tom);
+        } else if (profileImageBase64 != null && !profileImageBase64.isEmpty()) {
+            if (!profileImageBase64.startsWith("data:image/")) {
+                profileImageBase64 = "data:image/jpeg;base64," + profileImageBase64;
+            }
+            byte[] decodedString = Base64.decode(profileImageBase64.split(",")[1], Base64.DEFAULT);
+            Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
+            artistProfile.setImageBitmap(decodedByte);
+
+        } else {
+            artistProfile.setImageResource(R.drawable.profile_pic);
+        }
     }
 }

@@ -2,6 +2,7 @@ package com.example.youtube.view.ui;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 
@@ -14,6 +15,7 @@ import androidx.core.view.WindowInsetsCompat;
 import androidx.lifecycle.ViewModelProvider;
 
 import android.content.Intent;
+import android.provider.MediaStore;
 import android.util.Log;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -89,8 +91,9 @@ public class AddVideoActivity extends AppCompatActivity {
                 int takeFlags = data.getFlags() & (Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
                 getContentResolver().takePersistableUriPermission(selectedVideoUri, takeFlags);
 
-                videoPath = selectedVideoUri.toString();
-                Log.d("alon12", videoPath);
+//                videoPath = selectedVideoUri.toString();
+                videoPath=getRealPathFromURI(selectedVideoUri);
+                Log.d("videoPath", videoPath);
                 CustomToast.showToast(this, "Video Selected: " + videoPath);
                 VideoView vvVideo = findViewById(R.id.vvTest);
                 vvVideo.setVideoURI(selectedVideoUri);
@@ -110,15 +113,28 @@ public class AddVideoActivity extends AppCompatActivity {
         }
 
         User currentUser = UserManager.getInstance().getCurrentUser();
-        String userId = String.valueOf(currentUser.getRoomId());
-        String artist = currentUser.getNickname();
+        String userId = String.valueOf(currentUser.getApiId());
+        String username =currentUser.getUsername();
         String avatar = currentUser.getAvatar();
 
         // Create a new Video object
-        Video newVideo = new Video(userId,title, description, videoPath, artist, 0, 0, 0, avatar);
+        Video newVideo = new Video(userId,title, description, videoPath, username, 0, 0, 0, avatar);
         videoViewModel.add(newVideo);
 
         Intent intent = new Intent(AddVideoActivity.this, VideoListActivity.class);
         startActivity(intent);
+    }
+
+    private String getRealPathFromURI(Uri contentUri) {
+        String[] proj = { MediaStore.Video.Media.DATA };
+        Cursor cursor = getContentResolver().query(contentUri, proj, null, null, null);
+        if (cursor != null) {
+            int column_index = cursor.getColumnIndexOrThrow(MediaStore.Video.Media.DATA);
+            cursor.moveToFirst();
+            String path = cursor.getString(column_index);
+            cursor.close();
+            return path;
+        }
+        return null;
     }
 }

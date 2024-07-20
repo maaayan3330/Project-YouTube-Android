@@ -19,12 +19,13 @@ public class Video implements Serializable {
     private int roomId;
     @SerializedName("_id")
     private String apiId;
-
-    private String userId;
+    @SerializedName("userId")
+    private String userApiId;
     private String title;       // Title of the video
     private String description; // Description of the video
-    private String videoUrl;       // URl of the video
-    private String artist;      // Author of the video
+    private String videoUrl;
+    @SerializedName("artist")// URl of the video
+    private String userName;      // Author of the video
     private int likes;          // Number of likes
     private int views;          // Number of views
     private int subscribers;
@@ -32,16 +33,16 @@ public class Video implements Serializable {
 
 
 
-    public Video(String userId, String title, String description, String videoUrl, String artist, int likes, int views, int subscribers, String avatar) {
+    public Video(String userApiId, String title, String description, String videoUrl, String userName, int likes, int views, int subscribers, String avatar) {
         this.title = title;
         this.description = description;
         this.videoUrl = videoUrl;
-        this.artist = artist;
+        this.userName = userName;
         this.likes = likes;
         this.views = views;
         this.subscribers = subscribers;
         this.avatar = avatar;
-        this.userId = userId;
+        this.userApiId = userApiId;
         this.apiId =new String();
     }
 
@@ -55,12 +56,12 @@ public class Video implements Serializable {
         this.roomId = roomId;
     }
 
-    public String getUserId() {
-        return userId;
+    public String getUserApiId() {
+        return userApiId;
     }
 
-    public void setUserId(String userId) {
-        this.userId = userId;
+    public void setUserApiId(String userApiId) {
+        this.userApiId = userApiId;
     }
 
     public String getTitle() {
@@ -87,12 +88,12 @@ public class Video implements Serializable {
         this.videoUrl = videoUrl;
     }
 
-    public String getArtist() {
-        return artist;
+    public String getUserName() {
+        return userName;
     }
 
-    public void setArtist(String artist) {
-        this.artist = artist;
+    public void setUserName(String userName) {
+        this.userName = userName;
     }
 
     public int getLikes() {
