@@ -57,7 +57,7 @@ public class VideoDisplayActivity extends AppCompatActivity implements CommentAd
     private CommentViewModel commentViewModel;
     private User currentUser;
     private ShapeableImageView profileImageView;
-    private User artistUser;
+    private boolean exist;
 
 
     @Override
@@ -96,12 +96,7 @@ public class VideoDisplayActivity extends AppCompatActivity implements CommentAd
 
 
         profileImageView = findViewById(R.id.siv_profile_pic);
-//        artistUser=userViewModel.getUserByUsername(video.getUserName()).getValue();
-//        loadUserPic(artistUser);
-        userViewModel.getUserByUsername(video.getUserName()).observe(this, user -> {
-            artistUser = user;
-            loadUserPic(artistUser);
-        });
+        loadUserPic(video.getAvatar());
 
 
         // Set the video URI and start playing
@@ -150,9 +145,15 @@ public class VideoDisplayActivity extends AppCompatActivity implements CommentAd
         vvVideo.setOnClickListener(v -> showControls(clControl));
 
         profileImageView.setOnClickListener(v -> {
-            Intent intent = new Intent(this, ProfileActivity.class);
-            intent.putExtra("extra_user", artistUser);
-            startActivity(intent);
+            userViewModel.isExist(video.getUserName()).observe(this, bol -> {
+                exist = bol;
+            });
+            if (exist) {
+                Intent intent = new Intent(this, ProfileActivity.class);
+                intent.putExtra("extra_avatar", video.getAvatar());
+                intent.putExtra("extra_userId", video.getUserApiId());
+                startActivity(intent);
+            }
         });
     }
 
@@ -288,14 +289,19 @@ public class VideoDisplayActivity extends AppCompatActivity implements CommentAd
         commentViewModel.delete(comment);
     }
 
-    private void loadUserPic(User user) {
-        String profileImageBase64 = user.getAvatar();
-        if (user.getAvatar().equals("/localPhotos/Maayan.png")) {
+    private void loadUserPic(String avatar) {
+        if (avatar.startsWith(" ")){
+           avatar= avatar.replace(" ","");
+        }
+        String profileImageBase64 = avatar;
+        if (avatar.equals("/localPhotos/Maayan.png")) {
             profileImageView.setImageResource(R.drawable.maayan);
-        } else if (user.getAvatar().equals("/localPhotos/Alon.png")) {
+        } else if (avatar.equals("/localPhotos/Alon.png")) {
             profileImageView.setImageResource(R.drawable.alon);
-        } else if (user.getAvatar().equals("/localPhotos/Tom.png")) {
+        } else if (avatar.equals("/localPhotos/Tom.png")) {
             profileImageView.setImageResource(R.drawable.tom);
+        } else if (avatar.equals("/localPhotos/defualtAvatar.png")) {
+            profileImageView.setImageResource(R.drawable.profile_pic);
         } else if (profileImageBase64 != null && !profileImageBase64.isEmpty()) {
             if (!profileImageBase64.startsWith("data:image/")) {
                 profileImageBase64 = "data:image/jpeg;base64," + profileImageBase64;
