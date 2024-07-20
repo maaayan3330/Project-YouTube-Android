@@ -52,9 +52,10 @@ public class ProfileActivity extends AppCompatActivity implements VideoListAdapt
     private Uri profileImageUri; // Variable to store the profile image URI
     private VideoViewModel videoViewModel;
     private ShapeableImageView artistProfile;
-
+    String artistAvatar;
+    String artistUserId;
     private List<Video> currentVideos;
-    private User artistUser;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,7 +63,8 @@ public class ProfileActivity extends AppCompatActivity implements VideoListAdapt
         setContentView(R.layout.activity_profile);
 
         videoViewModel = new ViewModelProvider(this).get(VideoViewModel.class);
-        artistUser= (User) getIntent().getSerializableExtra("extra_user");
+        artistAvatar = (String) getIntent().getSerializableExtra("extra_avatar");
+        artistUserId = (String) getIntent().getSerializableExtra("extra_userId");
 
         // RecyclerView for displaying the video list
         RecyclerView rvListVideo = findViewById(R.id.rvListVideo);
@@ -71,14 +73,14 @@ public class ProfileActivity extends AppCompatActivity implements VideoListAdapt
         rvListVideo.setAdapter(videoListAdapter);
 
 
-        videoViewModel.getVideosByUserId(artistUser.getApiId()).observe(this, videos -> {
+        videoViewModel.getVideosByUserId(artistUserId).observe(this, videos -> {
             currentVideos = videos;
             videoListAdapter.setVideos(currentVideos);
         });
 
 
         artistProfile = findViewById(R.id.siv_profile_pic);
-        loadUserPic(artistUser);
+        loadUserPic(artistAvatar);
 
         // Initialize Toolbar
         toolbar = findViewById(R.id.toolbar);
@@ -291,15 +293,19 @@ public class ProfileActivity extends AppCompatActivity implements VideoListAdapt
     }
 
 
-    private void loadUserPic(User user) {
-        String profileImageBase64 = user.getAvatar();
-        if (user.getAvatar().equals("/localPhotos/Maayan.png")) {
+    private void loadUserPic(String artistAvatar) {
+        String profileImageBase64 = artistAvatar;
+        if (artistAvatar.equals(" /localPhotos/Maayan.png")) {
             artistProfile.setImageResource(R.drawable.maayan);
-        } else if (user.getAvatar().equals("/localPhotos/Alon.png")) {
+        } else if (artistAvatar.equals(" /localPhotos/Alon.png")) {
             artistProfile.setImageResource(R.drawable.alon);
-        } else if (user.getAvatar().equals("/localPhotos/Tom.png")) {
+        } else if (artistAvatar.equals(" /localPhotos/Tom.png")) {
             artistProfile.setImageResource(R.drawable.tom);
-        } else if (profileImageBase64 != null && !profileImageBase64.isEmpty()) {
+        }
+        else if (artistAvatar.equals(" /localPhotos/defualtAvatar.png")) {
+            profileImageView.setImageResource(R.drawable.profile_pic);
+        }
+        else if (profileImageBase64 != null && !profileImageBase64.isEmpty()) {
             if (!profileImageBase64.startsWith("data:image/")) {
                 profileImageBase64 = "data:image/jpeg;base64," + profileImageBase64;
             }
