@@ -21,6 +21,7 @@ and create new folder where you want to do the cloning.
 In a few minutes the project is loaded💕
 
 **Functionalities:**
+
   **Upload video:**
   Notice that you need to sign in first - it is protected by token.
   Enter the title ,description of your video, select a video from your phone with the select button and add your new video.
