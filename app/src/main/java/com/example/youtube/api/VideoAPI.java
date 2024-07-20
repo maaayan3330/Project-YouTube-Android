@@ -269,7 +269,10 @@ public class VideoAPI {
             adjustedVideoUrl = video.getVideoUrl().replace("http://10.0.2.2:80", "");
         } else if (adjustedVideoUrl.startsWith("http://localhost")) {
             adjustedVideoUrl = video.getVideoUrl().replace("http://localhost", "http://10.0.2.2");
-        } else if (adjustedVideoUrl.startsWith("/localVideos")) {
+        }
+        else if (adjustedVideoUrl.startsWith("/localVideos")) {
+            adjustedVideoUrl = "http://10.0.2.2:80" + adjustedVideoUrl;
+        }else if (adjustedVideoUrl.startsWith("\\localVideos")) {
             adjustedVideoUrl = "http://10.0.2.2:80" + adjustedVideoUrl;
         }
         video.setVideoUrl(adjustedVideoUrl);
