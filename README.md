@@ -17,31 +17,32 @@ Video player app inspired by youtube , our app has 6 activities
 
 2- Open a new project click "VCS" in the menu and click "get version control".
 Copy the link of our project's Rhypsotry https://github.com/maaayan3330/Project-YouTube-Android.git
-and create new folder where you want to do the cloning
-A few minutes the project is loaded💕
+and create new folder where you want to do the cloning.
+In a few minutes the project is loaded💕
 
-**Functionality:**
-  upload video:
+**Functionalities:**
+  **Upload video:**
   Notice that you need to sign in first - it is protected by token.
   Enter the title ,description of your video, select a video from your phone with the select button and add your new video.
-  You can see the new video it in the end of the video list at home page.
+  You can see the new video it in the video list at home page. If you can't, it because the random generator did not display it, just search for it in the search bar :)
 
   **Video display:**
   Touch the video to see video control buttons (pause ,play ,forward ,backwards , full screen display ).
   Like the video on the heart button ❤️.
   Share the video with the share button.
-  Add a comment in the text input and touch the send button on the right, to send (you need to be sign in first ).
-  You can delete and edit comments at the three dots button  (you need to be sign in first ).
+  Add a comment in the text input and touch the send button on the right, to send (you need to sign in first ).
+  You can delete and edit comments at the three dots button (you need to be sign in first ).
 
   **video list:**
   Search name of video in the search input at the top bar **notice** you need to touch exactly at the magnifying glass.
-  touch a video at the list to display it.
-  touch the 3 dots button under each video to delete or edit it (you need to be sign in first - it is protected by token.).
-  touch the 3 lines button at the top bar to open menu ,there you can navigate through pages to login logout upload video, change to dark/light mode and see the profile details.
+  Touch a video at the list to display it.
+  Touch the 3 dots button under each video to delete or edit it (you need to be sign in first - it is protected by token.).
+  Touch the 3 lines button at the top bar to open menu ,there you can navigate through pages to login logout upload video, change to dark/light mode and see your profile's details.
 
   **sign in:**
-  A login screen is displayed, in this page the user can put his username and password only if there registered already, if they not register yet and try to sign in the system will print     an error message according to the problem - user name doesn’t exist/password doesn’t  match.
-  if the user doesn’t exist he needs to register by clicking the register button .
+  A login screen is displayed, in this page the user can put his username and password only if there registered already, if they did not register yet and try to sign in the system will print
+  an error message, according to the problem - user name doesn’t exist/password doesn’t match.
+  If the user doesn’t exist he needs to register by clicking the register button .
   notice rhe logo is all so a link to home page.
   
   **registration**:
