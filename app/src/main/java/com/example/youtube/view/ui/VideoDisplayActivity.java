@@ -153,8 +153,6 @@ public class VideoDisplayActivity extends AppCompatActivity implements CommentAd
                 intent.putExtra("extra_avatar", video.getAvatar());
                 intent.putExtra("extra_userId", video.getUserApiId());
                 startActivity(intent);
-            } else {
-                CustomToast.showToast(this, "Profile doesn't exist");
             }
         });
     }
@@ -292,14 +290,17 @@ public class VideoDisplayActivity extends AppCompatActivity implements CommentAd
     }
 
     private void loadUserPic(String avatar) {
+        if (avatar.startsWith(" ")){
+           avatar= avatar.replace(" ","");
+        }
         String profileImageBase64 = avatar;
-        if (avatar.equals(" /localPhotos/Maayan.png")) {
+        if (avatar.equals("/localPhotos/Maayan.png")) {
             profileImageView.setImageResource(R.drawable.maayan);
-        } else if (avatar.equals(" /localPhotos/Alon.png")) {
+        } else if (avatar.equals("/localPhotos/Alon.png")) {
             profileImageView.setImageResource(R.drawable.alon);
-        } else if (avatar.equals(" /localPhotos/Tom.png")) {
+        } else if (avatar.equals("/localPhotos/Tom.png")) {
             profileImageView.setImageResource(R.drawable.tom);
-        } else if (avatar.equals(" /localPhotos/defualtAvatar.png")) {
+        } else if (avatar.equals("/localPhotos/defualtAvatar.png")) {
             profileImageView.setImageResource(R.drawable.profile_pic);
         } else if (profileImageBase64 != null && !profileImageBase64.isEmpty()) {
             if (!profileImageBase64.startsWith("data:image/")) {

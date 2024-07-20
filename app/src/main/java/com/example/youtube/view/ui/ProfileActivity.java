@@ -294,18 +294,19 @@ public class ProfileActivity extends AppCompatActivity implements VideoListAdapt
 
 
     private void loadUserPic(String artistAvatar) {
+        if (artistAvatar.startsWith(" ")) {
+            artistAvatar = artistAvatar.replace(" ", "");
+        }
         String profileImageBase64 = artistAvatar;
-        if (artistAvatar.equals(" /localPhotos/Maayan.png")) {
+        if (artistAvatar.equals("/localPhotos/Maayan.png")) {
             artistProfile.setImageResource(R.drawable.maayan);
-        } else if (artistAvatar.equals(" /localPhotos/Alon.png")) {
+        } else if (artistAvatar.equals("/localPhotos/Alon.png")) {
             artistProfile.setImageResource(R.drawable.alon);
-        } else if (artistAvatar.equals(" /localPhotos/Tom.png")) {
+        } else if (artistAvatar.equals("/localPhotos/Tom.png")) {
             artistProfile.setImageResource(R.drawable.tom);
-        }
-        else if (artistAvatar.equals(" /localPhotos/defualtAvatar.png")) {
+        } else if (artistAvatar.equals("/localPhotos/defualtAvatar.png")) {
             profileImageView.setImageResource(R.drawable.profile_pic);
-        }
-        else if (profileImageBase64 != null && !profileImageBase64.isEmpty()) {
+        } else if (profileImageBase64 != null && !profileImageBase64.isEmpty()) {
             if (!profileImageBase64.startsWith("data:image/")) {
                 profileImageBase64 = "data:image/jpeg;base64," + profileImageBase64;
             }
