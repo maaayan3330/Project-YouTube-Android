@@ -84,6 +84,10 @@ public class VideosRepository {
     public void update(Video video) {
         new Thread(() -> videoAPI.update(video)).start();
     }
+
+    public void addView(Video video){
+        videoAPI.addView( video);
+    }
 }
 
 

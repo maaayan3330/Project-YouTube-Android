@@ -261,6 +261,29 @@ public class VideoAPI {
         });
     }
 
+    public void addView(Video video){
+
+        Call<VideoResponse> call = videoWebServiceAPI.addView(video.getApiId());
+        call.enqueue(new Callback<VideoResponse>() {
+            @Override
+            public void onResponse(Call<VideoResponse> call, Response<VideoResponse> response) {
+                if (response.isSuccessful()) {
+                    Log.e("apiVideoAddView", response.message());
+                    adjustVideoUrl(video);
+                    videoDao.update(video);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<VideoResponse> call, Throwable t) {
+                Log.e("apiVideoAddView", t.getMessage());
+            }
+        });
+
+    }
+
+
+
 
     //adjust the url to fit the localhost
     private void adjustVideoUrl(Video video) {

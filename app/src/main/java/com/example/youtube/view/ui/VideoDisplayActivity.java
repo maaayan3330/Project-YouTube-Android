@@ -91,9 +91,8 @@ public class VideoDisplayActivity extends AppCompatActivity implements CommentAd
         tv_author.setText("Artist: " + video.getUserName());
         // Increment views count when the video starts playing
         video.setViews(video.getViews() + 1);
-        videoViewModel.update(video);
         tv_views.setText("Views: " + video.getViews());
-
+        videoViewModel.addView(video);
 
         profileImageView = findViewById(R.id.siv_profile_pic);
         loadUserPic(video.getAvatar());

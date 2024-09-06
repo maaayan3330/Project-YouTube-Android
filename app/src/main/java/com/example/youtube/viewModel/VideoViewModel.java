@@ -42,6 +42,10 @@ public class VideoViewModel extends ViewModel {
         repository.update(video);
     }
 
+    public void addView(Video video) {
+        repository.addView(video);
+    }
+
     public void reload() {
         repository.reload();
     }
