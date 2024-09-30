@@ -35,6 +35,7 @@ import com.example.youtube.model.UserManager;
 import com.example.youtube.model.Video;
 import com.example.youtube.utils.CustomToast;
 import com.example.youtube.view.adapter.CommentAdapter;
+import com.example.youtube.view.adapter.VideoListAdapter;
 import com.example.youtube.viewModel.CommentViewModel;
 import com.example.youtube.viewModel.UserViewModel;
 import com.example.youtube.viewModel.VideoViewModel;
@@ -45,14 +46,16 @@ import java.util.List;
 /**
  * Activity to display and play a selected video.
  */
-public class VideoDisplayActivity extends AppCompatActivity implements CommentAdapter.CommentAdapterListener {
+public class VideoDisplayActivity extends AppCompatActivity implements CommentAdapter.CommentAdapterListener, VideoListAdapter.VideoAdapterListener {
     private VideoView vvVideo; // VideoView for playing the video
     private ConstraintLayout clControl; // Control buttons layout
     private boolean isFullScreen = false; // Fullscreen indicator
-    List<Comment> commentList;
+    private List<Comment> commentList;
+    private List<Video> recommendedVideos;
 
     private Video video;
     private CommentAdapter commentAdapter;
+    private VideoListAdapter videoAdapter;
     private VideoViewModel videoViewModel;
     private CommentViewModel commentViewModel;
     private User currentUser;
@@ -111,6 +114,17 @@ public class VideoDisplayActivity extends AppCompatActivity implements CommentAd
         commentViewModel.getCommentsByVideoId(video.getApiId()).observe(this, comments -> {
             commentAdapter.setComments(comments);
             commentList = comments;
+        });
+
+        //Recommended Videos list
+        RecyclerView rvRecommendedVideos = findViewById(R.id.rvRecommendedVideos);
+        rvRecommendedVideos.setLayoutManager(new LinearLayoutManager(this));
+        videoAdapter=new VideoListAdapter(this,this);
+        rvRecommendedVideos.setAdapter(videoAdapter);
+        videoViewModel.getRecommendedVideos(currentUser.getApiId(), video.getApiId()).observe(this, videos -> {
+            recommendedVideos = videos;
+            videoAdapter.setVideos(recommendedVideos);
+
         });
 
 
@@ -289,8 +303,8 @@ public class VideoDisplayActivity extends AppCompatActivity implements CommentAd
     }
 
     private void loadUserPic(String avatar) {
-        if (avatar.startsWith(" ")){
-           avatar= avatar.replace(" ","");
+        if (avatar.startsWith(" ")) {
+            avatar = avatar.replace(" ", "");
         }
         String profileImageBase64 = avatar;
         if (avatar.equals("/localPhotos/Maayan.png")) {
@@ -312,6 +326,16 @@ public class VideoDisplayActivity extends AppCompatActivity implements CommentAd
         } else {
             profileImageView.setImageResource(R.drawable.profile_pic);
         }
+    }
+
+    @Override
+    public void onEditVideo(Video video, int position) {
+        CustomToast.showToast(this, "Option unavailable for recommendations");
+    }
+
+    @Override
+    public void onDeleteVideo(Video video, int position) {
+        CustomToast.showToast(this, "Option unavailable for recommendations");
     }
 }
 

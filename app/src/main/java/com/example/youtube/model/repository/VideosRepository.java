@@ -7,7 +7,6 @@ import androidx.room.Room;
 import com.example.youtube.api.VideoAPI;
 import com.example.youtube.model.AppDB;
 import com.example.youtube.model.Video;
-import com.example.youtube.model.daos.CommentDao;
 import com.example.youtube.model.daos.VideoDao;
 import com.example.youtube.utils.MyApplication;
 
@@ -85,9 +84,16 @@ public class VideosRepository {
         new Thread(() -> videoAPI.update(video)).start();
     }
 
-    public void addView(Video video){
-        videoAPI.addView( video);
+    //add view to video
+    public void addView(Video video) {
+        videoAPI.addView(video);
     }
+
+
+    public LiveData<List<Video>> getRecommendedVideos(String userId, String videoId) {
+        return videoAPI.getRecommendedVideos(userId, videoId);
+    }
+
 }
 
 

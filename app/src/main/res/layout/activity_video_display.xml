@@ -194,10 +194,21 @@
         android:id="@+id/rvComments"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/rvRecommendedVideos"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/commentLayout" />
+
+
+    <!-- RecyclerView for displaying recommended videos -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rvRecommendedVideos"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/rvComments" />
 
     <!-- Layout for comment input and post button -->
     <LinearLayout

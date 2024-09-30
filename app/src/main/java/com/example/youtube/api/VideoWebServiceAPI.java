@@ -66,8 +66,12 @@ public interface VideoWebServiceAPI {
     @PUT("videos/{userId}/videos/{videoId}")
     Call<VideoResponse> update(@Path("userId") String userId, @Path("videoId") String videoId,
                                @Body Video video, @Header("Authorization") String token);
-
+    //add view to video
     @PUT("videos/videos/{videoId}")
     Call<VideoResponse> addView(@Path("videoId") String videoId);
+
+    // Fetches recommended videos based on userId and videoId.
+    @GET("recommendations/{userId}/{videoId}")
+    Call<VideosResponse> getRecommendedVideos(@Path("userId") String userId, @Path("videoId") String videoId);
 
 }

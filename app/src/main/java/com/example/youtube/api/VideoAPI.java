@@ -144,25 +144,26 @@ public class VideoAPI {
 
     // Fetch a specific video by user ID and video ID
     public Video getVideo(String userId, String videoId) {
-        final MutableLiveData<Video> video = new MutableLiveData<>();
+        final MutableLiveData<Video> videoLiveData = new MutableLiveData<>();
         Call<VideoResponse> call = videoWebServiceAPI.getVideo(userId, videoId);
         call.enqueue(new Callback<VideoResponse>() {
             @Override
             public void onResponse(Call<VideoResponse> call, Response<VideoResponse> response) {
                 if (response.isSuccessful() && response.body() != null) {
                     Log.e("apiVideo", response.message());
-                    video.setValue(response.body().getVideo());
-
+                    Video video=response.body().getVideo();
+                    adjustVideoUrl(video);
+                    videoLiveData.setValue(video);
                 }
             }
 
             @Override
             public void onFailure(Call<VideoResponse> call, Throwable t) {
                 Log.e("apiVideo", t.getMessage());
-                video.setValue(null);
+                videoLiveData.setValue(null);
             }
         });
-        return video.getValue();
+        return videoLiveData.getValue();
     }
 
 
@@ -261,6 +262,7 @@ public class VideoAPI {
         });
     }
 
+    //add view to video
     public void addView(Video video){
 
         Call<VideoResponse> call = videoWebServiceAPI.addView(video.getApiId());
@@ -281,6 +283,43 @@ public class VideoAPI {
         });
 
     }
+
+
+    /**
+     * Fetch recommended videos for a specific user and video.
+     *
+     * @param userId  ID of the user.
+     * @param videoId ID of the video.
+     */
+    public LiveData<List<Video>> getRecommendedVideos(String userId, String videoId) {
+        final MutableLiveData<List<Video>> recommendedVideosLiveData = new MutableLiveData<>();
+        Call<VideosResponse> call = videoWebServiceAPI.getRecommendedVideos(userId, videoId);
+
+        call.enqueue(new Callback<VideosResponse>() {
+            @Override
+            public void onResponse(Call<VideosResponse> call, Response<VideosResponse> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    List<Video> recommendedVideos = response.body().getVideos();
+                    adjustVideosUrls(recommendedVideos); // Adjust URLs to fit localhost
+
+                    // Post the recommended videos to LiveData
+                    recommendedVideosLiveData.setValue(recommendedVideos);
+                } else {
+                    Log.e("apiRecommendation", "Failed to fetch recommended videos: " + response.message());
+                    recommendedVideosLiveData.setValue(null);  // Post null in case of failure
+                }
+            }
+
+            @Override
+            public void onFailure(Call<VideosResponse> call, Throwable t) {
+                Log.e("apiRecommendation", "Failed to fetch recommended videos: " + t.getMessage());
+                recommendedVideosLiveData.setValue(null);  // Post null in case of failure
+            }
+        });
+
+        return recommendedVideosLiveData;  // Return LiveData that will be observed in UI
+    }
+
 
 
 
