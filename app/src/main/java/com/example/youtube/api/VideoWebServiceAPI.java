@@ -71,7 +71,7 @@ public interface VideoWebServiceAPI {
     Call<VideoResponse> addView(@Path("videoId") String videoId);
 
     // Fetches recommended videos based on userId and videoId.
-    @GET("recommendations/{userId}/{videoId}")
+    @GET("videos/recommendations/{userId}/{videoId}")
     Call<VideosResponse> getRecommendedVideos(@Path("userId") String userId, @Path("videoId") String videoId);
 
 }

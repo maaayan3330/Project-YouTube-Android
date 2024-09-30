@@ -336,7 +336,9 @@ public class VideoAPI {
             adjustedVideoUrl = "http://10.0.2.2:80" + adjustedVideoUrl;
         }else if (adjustedVideoUrl.startsWith("\\localVideos")) {
             adjustedVideoUrl = "http://10.0.2.2:80" + adjustedVideoUrl;
-        }
+        }  else if (adjustedVideoUrl.startsWith("\\localVideos")) {
+        adjustedVideoUrl = "http://10.0.2.2:80" + adjustedVideoUrl;
+    }
         video.setVideoUrl(adjustedVideoUrl);
     }
 

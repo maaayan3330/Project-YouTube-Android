@@ -121,11 +121,13 @@ public class VideoDisplayActivity extends AppCompatActivity implements CommentAd
         rvRecommendedVideos.setLayoutManager(new LinearLayoutManager(this));
         videoAdapter=new VideoListAdapter(this,this);
         rvRecommendedVideos.setAdapter(videoAdapter);
-        videoViewModel.getRecommendedVideos(currentUser.getApiId(), video.getApiId()).observe(this, videos -> {
-            recommendedVideos = videos;
-            videoAdapter.setVideos(recommendedVideos);
+        if(currentUser != null) {
+            videoViewModel.getRecommendedVideos(currentUser.getApiId(), video.getApiId()).observe(this, videos -> {
+                recommendedVideos = videos;
+                videoAdapter.setVideos(recommendedVideos);
 
-        });
+            });
+        }
 
 
         // New comment function
